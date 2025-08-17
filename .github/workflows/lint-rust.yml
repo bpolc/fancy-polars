@@ -12,7 +12,7 @@ on:
       - .github/workflows/lint-rust.yml
   push:
     branches:
-      - main
+      - fancy
     paths:
       - crates/**
       - docs/source/src/rust/**
@@ -41,7 +41,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Run cargo clippy with all features enabled
         run: cargo clippy --workspace --all-targets --all-features --locked -- -D warnings -D clippy::dbg_macro
@@ -61,13 +61,13 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Run cargo clippy
         run: cargo clippy --all-targets --locked -- -D warnings -D clippy::dbg_macro
 
   rustfmt:
-    if: github.ref_name != 'main'
+    if: github.ref_name != 'fancy'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -79,7 +79,7 @@ jobs:
         run: cargo fmt --all --check
 
   miri:
-    if: github.ref_name != 'main'
+    if: github.ref_name != 'fancy'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4

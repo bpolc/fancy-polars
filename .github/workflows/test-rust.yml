@@ -9,7 +9,7 @@ on:
       - .github/workflows/test-rust.yml
   push:
     branches:
-      - main
+      - fancy
     paths:
       - crates/**
       - examples/**
@@ -41,7 +41,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Compile tests
         run: >
@@ -60,7 +60,7 @@ jobs:
           -p polars-utils
 
       - name: Run tests
-        if: github.ref_name != 'main'
+        if: github.ref_name != 'fancy'
         run: >
           cargo test --all-features
           -p polars-arrow
@@ -92,13 +92,13 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Compile integration tests
         run: cargo test --all-features -p polars --test it --no-run
 
       - name: Run integration tests
-        if: github.ref_name != 'main'
+        if: github.ref_name != 'fancy'
         run: cargo test --all-features -p polars --test it
 
   check-features:
@@ -112,7 +112,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Install cargo hack
         uses: taiki-e/install-action@v2
@@ -135,7 +135,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Install cargo hack
         uses: taiki-e/install-action@v2

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'main'
+      - 'fancy'
     paths:
       - crates/**
   pull_request:
@@ -19,7 +19,7 @@ env:
 
 jobs:
   main:
-    if: ${{ github.ref == 'refs/heads/main' || github.event.label.name == 'needs-bench' }}
+    if: ${{ github.ref == 'refs/heads/fancy' || github.event.label.name == 'needs-bench' }}
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
           "$HOME/py-polars-cache/run-benchmarks.sh" | tee ../py-polars/benchmark-results
 
       - name: Cache the Polars build
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/fancy' }}
         working-directory: py-polars
         run: |
           "$HOME/py-polars-cache/add-data.py" "$PWD/polars" < ./benchmark-results

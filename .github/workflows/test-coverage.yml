@@ -8,7 +8,7 @@ on:
       - .github/workflows/test-coverage.yml
   push:
     branches:
-      - main
+      - fancy
     paths:
       - '**.rs'
       - '**.py'
@@ -49,7 +49,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Prepare coverage
         run: cargo llvm-cov clean --workspace
@@ -124,7 +124,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Prepare coverage
         run: cargo llvm-cov clean --workspace

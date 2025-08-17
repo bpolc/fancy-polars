@@ -3,7 +3,7 @@ name: Release Python
 on:
   workflow_dispatch:
     inputs:
-      # Latest commit to include with the release. If omitted, use the latest commit on the main branch.
+      # Latest commit to include with the release. If omitted, use the latest commit on the fancy branch.
       sha:
         description: Commit SHA
         type: string

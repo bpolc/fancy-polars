@@ -7,7 +7,7 @@ on:
       - .github/workflows/docs-rust.yml
   push:
     branches:
-      - main
+      - fancy
     paths:
       - crates/**
       - .github/workflows/docs-rust.yml
@@ -27,7 +27,7 @@ jobs:
       - name: Cache Rust
         uses: Swatinem/rust-cache@v2
         with:
-          save-if: ${{ github.ref_name == 'main' }}
+          save-if: ${{ github.ref_name == 'fancy' }}
 
       - name: Build Rust documentation
         env:
@@ -36,13 +36,13 @@ jobs:
         run: make doctest
 
       - name: Create redirect to Polars crate and set no-jekyll
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ github.ref_name == 'fancy' }}
         run: |
           echo '<meta http-equiv=refresh content=0;url=polars/index.html>' > target/doc/index.html
           touch target/doc/.nojekyll
 
       - name: Deploy Rust docs
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ github.ref_name == 'fancy' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           folder: target/doc
@@ -51,5 +51,5 @@ jobs:
 
       # Make sure documentation artifacts are not cached
       - name: Clean up documentation artifacts
-        if: ${{ github.ref_name == 'main' }}
+        if: ${{ github.ref_name == 'fancy' }}
         run: rm -rf target/doc

@@ -10,7 +10,7 @@ on:
       - .github/workflows/test-pyodide.yml
   push:
     branches:
-      - main
+      - fancy
     paths:
       - Cargo.lock
       - crates/**
