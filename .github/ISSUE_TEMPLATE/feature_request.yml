@@ -1,5 +1,5 @@
 name: '✨ Feature request'
-description: Suggest a new feature or enhancement for Polars.
+description: Suggest a new feature or enhancement for Fancy Polars.
 labels: [enhancement]
 
 body:
