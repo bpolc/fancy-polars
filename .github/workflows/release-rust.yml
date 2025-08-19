@@ -3,7 +3,7 @@ name: Release Rust
 on:
   push:
     tags:
-      - rs-*
+      - fancy-rs-*
 
 # TODO: Implement
 jobs:

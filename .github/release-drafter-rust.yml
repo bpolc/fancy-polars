@@ -1,8 +1,8 @@
-_extends: polars:.github/release-drafter.yml
+_extends: fancy-polars:.github/release-drafter.yml
 
-name-template: Rust Polars $RESOLVED_VERSION
-tag-template: rs-$RESOLVED_VERSION
-tag-prefix: rs-
+name-template: Rust Fancy Polars $RESOLVED_VERSION
+tag-template: fancy-rs-$RESOLVED_VERSION
+tag-prefix: fancy-rs-
 
 include-labels:
   - rust

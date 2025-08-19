@@ -427,8 +427,8 @@ jobs:
         uses: release-drafter/release-drafter@v6
         with:
           config-name: release-drafter-python.yml
-          name: Python Polars ${{ steps.version.outputs.version }}
-          tag: py-${{ steps.version.outputs.version }}
+          name: Python Fancy Polars ${{ steps.version.outputs.version }}
+          tag: fancy-py-${{ steps.version.outputs.version }}
           version: ${{ steps.version.outputs.version }}
           prerelease: ${{ steps.version.outputs.is_prerelease }}
           commitish: ${{ inputs.sha || github.sha }}
