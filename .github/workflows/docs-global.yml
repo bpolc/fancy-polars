@@ -1,14 +1,14 @@
 name: Build documentation
 
 on:
-  pull_request:
-    paths:
-      - docs/**
-      - mkdocs.yml
-      - .github/workflows/docs-global.yml
-  repository_dispatch:
-    types:
-      - python-release-docs
+#   pull_request:
+#     paths:
+#       - docs/**
+#       - mkdocs.yml
+#       - .github/workflows/docs-global.yml
+#   repository_dispatch:
+#     types:
+#       - python-release-docs
   workflow_dispatch:
 
 jobs:

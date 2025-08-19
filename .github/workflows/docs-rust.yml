@@ -1,16 +1,17 @@
 name: Build Rust documentation
 
 on:
-  pull_request:
-    paths:
-      - crates/**
-      - .github/workflows/docs-rust.yml
-  push:
-    branches:
-      - fancy
-    paths:
-      - crates/**
-      - .github/workflows/docs-rust.yml
+  # pull_request:
+  #   paths:
+  #     - crates/**
+  #     - .github/workflows/docs-rust.yml
+  # push:
+  #   branches:
+  #     - fancy
+  #   paths:
+  #     - crates/**
+  #     - .github/workflows/docs-rust.yml
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}

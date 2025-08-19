@@ -1,21 +1,21 @@
 name: Build Python documentation
 
 on:
-  pull_request:
-    paths:
-      - py-polars/docs/**
-      - py-polars/polars/**
-      - .github/workflows/docs-python.yml
-  push:
-    branches:
-      - fancy
-    paths:
-      - py-polars/docs/**
-      - py-polars/polars/**
-      - .github/workflows/docs-python.yml
-  repository_dispatch:
-    types:
-      - python-release
+#   pull_request:
+#     paths:
+#       - py-polars/docs/**
+#       - py-polars/polars/**
+#       - .github/workflows/docs-python.yml
+#   push:
+#     branches:
+#       - fancy
+#     paths:
+#       - py-polars/docs/**
+#       - py-polars/polars/**
+#       - .github/workflows/docs-python.yml
+#   repository_dispatch:
+#     types:
+#       - python-release
   # To build older versions, specify the commit and the version
   workflow_dispatch:
     inputs:
