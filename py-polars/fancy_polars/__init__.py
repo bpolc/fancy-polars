@@ -1,4 +1,5 @@
 import contextlib
+import sys
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
     # This must be done before importing the Polars Rust bindings, otherwise we
@@ -468,3 +469,10 @@ def __getattr__(name: str) -> Any:
 
     msg = f"module {__name__!r} has no attribute {name!r}"
     raise AttributeError(msg)
+
+
+# If the 'polars' module is not present, register 'fancy_polars' as its replacement
+# Restores compatibility with dependencies such as: narwhals, great_tables, fastexcel
+if "polars" not in sys.modules:
+    fancy_polars_module = sys.modules[__name__]
+    sys.modules["polars"] = fancy_polars_module
