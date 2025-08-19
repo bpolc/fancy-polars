@@ -9,12 +9,12 @@ import numpy as np
 import pytest
 from hypothesis import assume, given
 
-import polars as pl
-from polars.exceptions import ComputeError, InvalidOperationError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError, InvalidOperationError
+from fancy_polars.testing import assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import Roll, TimeUnit
+    from fancy_polars._typing import Roll, TimeUnit
 
 from zoneinfo import ZoneInfo
 

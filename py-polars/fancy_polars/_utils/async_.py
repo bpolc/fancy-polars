@@ -3,14 +3,14 @@ from __future__ import annotations
 from collections.abc import Awaitable
 from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
-from polars._utils.wrap import wrap_df
-from polars.dependencies import _GEVENT_AVAILABLE
+from fancy_polars._utils.wrap import wrap_df
+from fancy_polars.dependencies import _GEVENT_AVAILABLE
 
 if TYPE_CHECKING:
     from asyncio.futures import Future
     from collections.abc import Generator
 
-    from polars.polars import PyDataFrame
+    from fancy_polars.fancy_polars import PyDataFrame
 
 
 T = TypeVar("T")
@@ -23,7 +23,7 @@ class _GeventDataFrameResult(Generic[T]):
         if not _GEVENT_AVAILABLE:
             msg = (
                 "gevent is required for using LazyFrame.collect_async(gevent=True) or"
-                "polars.collect_all_async(gevent=True)"
+                "fancy_polars.collect_all_async(gevent=True)"
             )
             raise ImportError(msg)
 

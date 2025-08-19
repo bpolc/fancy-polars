@@ -4,13 +4,15 @@ import contextlib
 from io import StringIO
 from typing import TYPE_CHECKING, Any
 
-from polars.io.csv.functions import read_csv
+from fancy_polars.io.csv.functions import read_csv
 
 with contextlib.suppress(ImportError):
-    from polars.polars import read_clipboard_string as _read_clipboard_string
+    from fancy_polars.fancy_polars import (
+        read_clipboard_string as _read_clipboard_string,
+    )
 
 if TYPE_CHECKING:
-    from polars import DataFrame
+    from fancy_polars import DataFrame
 
 
 def read_clipboard(separator: str = "\t", **kwargs: Any) -> DataFrame:

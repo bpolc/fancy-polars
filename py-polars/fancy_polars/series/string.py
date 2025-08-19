@@ -2,17 +2,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars._utils.deprecation import deprecate_function, deprecate_nonkeyword_arguments
-from polars._utils.unstable import unstable
-from polars._utils.various import no_default
-from polars.datatypes.constants import N_INFER_DEFAULT
-from polars.series.utils import expr_dispatch
+from fancy_polars._utils.deprecation import (
+    deprecate_function,
+    deprecate_nonkeyword_arguments,
+)
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.various import no_default
+from fancy_polars.datatypes.constants import N_INFER_DEFAULT
+from fancy_polars.series.utils import expr_dispatch
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from polars import Expr, Series
-    from polars._typing import (
+    from fancy_polars import Expr, Series
+    from fancy_polars._typing import (
         Ambiguous,
         IntoExpr,
         IntoExprColumn,
@@ -22,8 +25,8 @@ if TYPE_CHECKING:
         TransferEncoding,
         UnicodeForm,
     )
-    from polars._utils.various import NoDefault
-    from polars.polars import PySeries
+    from fancy_polars._utils.various import NoDefault
+    from fancy_polars.fancy_polars import PySeries
 
 
 @expr_dispatch

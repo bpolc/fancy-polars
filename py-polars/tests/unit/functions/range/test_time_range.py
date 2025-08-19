@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import ClosedInterval
+    from fancy_polars._typing import ClosedInterval
 
 
 def test_time_range_schema() -> None:

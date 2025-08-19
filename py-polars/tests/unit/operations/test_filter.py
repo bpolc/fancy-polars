@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING
 import numpy as np
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_simplify_expression_lit_true_4376() -> None:

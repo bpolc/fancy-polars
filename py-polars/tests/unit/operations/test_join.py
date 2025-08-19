@@ -10,19 +10,19 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import polars as pl
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars.exceptions import (
     ColumnNotFoundError,
     ComputeError,
     DuplicateError,
     InvalidOperationError,
     SchemaError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import with_string_cache_if_auto_streaming
 
 if TYPE_CHECKING:
-    from polars._typing import JoinStrategy, PolarsDataType
+    from fancy_polars._typing import JoinStrategy, PolarsDataType
 
 
 def test_semi_anti_join() -> None:

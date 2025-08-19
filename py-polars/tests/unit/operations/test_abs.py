@@ -7,13 +7,13 @@ from typing import TYPE_CHECKING, cast
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import FLOAT_DTYPES, SIGNED_INTEGER_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_abs() -> None:

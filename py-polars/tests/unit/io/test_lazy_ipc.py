@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars.testing.asserts.frame import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing.asserts.frame import assert_frame_equal
 
 if TYPE_CHECKING:
     from pathlib import Path

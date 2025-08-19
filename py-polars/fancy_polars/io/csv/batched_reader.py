@@ -4,23 +4,23 @@ import contextlib
 from collections.abc import Sequence
 from typing import TYPE_CHECKING
 
-from polars._utils.various import (
+from fancy_polars._utils.various import (
     _process_null_values,
     normalize_filepath,
 )
-from polars._utils.wrap import wrap_df
-from polars.datatypes import N_INFER_DEFAULT, parse_into_dtype
-from polars.io._utils import parse_columns_arg, parse_row_index_args
-from polars.io.csv._utils import _update_columns
+from fancy_polars._utils.wrap import wrap_df
+from fancy_polars.datatypes import N_INFER_DEFAULT, parse_into_dtype
+from fancy_polars.io._utils import parse_columns_arg, parse_row_index_args
+from fancy_polars.io.csv._utils import _update_columns
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyBatchedCsv
+    from fancy_polars.fancy_polars import PyBatchedCsv
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars import DataFrame
-    from polars._typing import CsvEncoding, PolarsDataType, SchemaDict
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import CsvEncoding, PolarsDataType, SchemaDict
 
 
 class BatchedCsvReader:

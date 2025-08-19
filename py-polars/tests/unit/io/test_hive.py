@@ -12,9 +12,9 @@ from typing import Any, Callable
 import pyarrow.parquet as pq
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError, SchemaFieldNotFoundError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError, SchemaFieldNotFoundError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 def impl_test_hive_partitioned_predicate_pushdown(
@@ -948,11 +948,11 @@ def test_hive_parquet_prefiltered_20894_21327(
 import os
 os.environ["POLARS_MAX_THREADS"] = "{n_threads}"
 
-import polars as pl
+import fancy_polars as pl
 import datetime
 import base64
 
-from polars.testing import assert_frame_equal
+from fancy_polars.testing import assert_frame_equal
 
 assert pl.thread_pool_size() == {n_threads}
 

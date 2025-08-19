@@ -7,13 +7,13 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import polars as pl
-from polars.testing import assert_frame_equal
-from polars.testing.asserts.series import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
+from fancy_polars.testing.asserts.series import assert_series_equal
 from tests.unit.conftest import with_string_cache_if_auto_streaming
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_index_not_silently_excluded() -> None:
@@ -338,9 +338,11 @@ def test_untrusted_categorical_input() -> None:
 @pytest.fixture
 def _set_pyarrow_unavailable(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        "polars._utils.construction.dataframe._PYARROW_AVAILABLE", False
+        "fancy_polars._utils.construction.dataframe._PYARROW_AVAILABLE", False
     )
-    monkeypatch.setattr("polars._utils.construction.series._PYARROW_AVAILABLE", False)
+    monkeypatch.setattr(
+        "fancy_polars._utils.construction.series._PYARROW_AVAILABLE", False
+    )
 
 
 @pytest.mark.usefixtures("_set_pyarrow_unavailable")
@@ -386,7 +388,8 @@ def test_from_pandas_pyarrow_not_available_fails() -> None:
 
 def test_from_pandas_nan_to_null_16453(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(
-        "polars._utils.construction.dataframe._MIN_NUMPY_SIZE_FOR_MULTITHREADING", 2
+        "fancy_polars._utils.construction.dataframe._MIN_NUMPY_SIZE_FOR_MULTITHREADING",
+        2,
     )
     df = pd.DataFrame(
         {"a": [np.nan, 1.0, 2], "b": [1.0, 2.0, 3.0], "c": [4.0, 5.0, 6.0]}

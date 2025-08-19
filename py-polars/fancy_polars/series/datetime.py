@@ -2,17 +2,20 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars._utils.deprecation import deprecate_function, deprecate_nonkeyword_arguments
-from polars._utils.unstable import unstable
-from polars._utils.wrap import wrap_s
-from polars.series.utils import expr_dispatch
+from fancy_polars._utils.deprecation import (
+    deprecate_function,
+    deprecate_nonkeyword_arguments,
+)
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.wrap import wrap_s
+from fancy_polars.series.utils import expr_dispatch
 
 if TYPE_CHECKING:
     import datetime as dt
     from collections.abc import Iterable
 
-    from polars import Series
-    from polars._typing import (
+    from fancy_polars import Series
+    from fancy_polars._typing import (
         Ambiguous,
         EpochTimeUnit,
         IntoExpr,
@@ -22,7 +25,7 @@ if TYPE_CHECKING:
         TemporalLiteral,
         TimeUnit,
     )
-    from polars.polars import PySeries
+    from fancy_polars.fancy_polars import PySeries
 
 
 @expr_dispatch

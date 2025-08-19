@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import Any
 
-from polars._utils.polars_version import get_polars_version
+from fancy_polars._utils.polars_version import get_polars_version
 
 try:
-    from polars.polars import __build__
+    from fancy_polars.fancy_polars import __build__
 except ImportError:
     __build__ = {}
 

@@ -5,18 +5,18 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from polars._utils.various import normalize_filepath
-from polars._utils.wrap import wrap_df
-from polars.datatypes import N_INFER_DEFAULT
+from fancy_polars._utils.various import normalize_filepath
+from fancy_polars._utils.wrap import wrap_df
+from fancy_polars.datatypes import N_INFER_DEFAULT
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame
+    from fancy_polars.fancy_polars import PyDataFrame
 
 if TYPE_CHECKING:
     from io import IOBase
 
-    from polars import DataFrame
-    from polars._typing import SchemaDefinition
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import SchemaDefinition
 
 
 def read_json(

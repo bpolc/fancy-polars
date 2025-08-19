@@ -5,9 +5,9 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import ComputeError
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import ComputeError
 from tests.unit.conftest import NUMERIC_DTYPES
 
 if TYPE_CHECKING:

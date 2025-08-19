@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars._utils.wrap import wrap_df
+from fancy_polars._utils.wrap import wrap_df
 
 if TYPE_CHECKING:
-    from polars import DataFrame
-    from polars.polars import PyInProcessQuery
+    from fancy_polars import DataFrame
+    from fancy_polars.fancy_polars import PyInProcessQuery
 
 
 class InProcessQuery:

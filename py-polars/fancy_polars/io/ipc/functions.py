@@ -5,37 +5,37 @@ import os
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Literal
 
-import polars._reexport as pl
-import polars.functions as F
-from polars._utils.deprecation import deprecate_renamed_parameter
-from polars._utils.various import (
+import fancy_polars._reexport as pl
+import fancy_polars.functions as F
+from fancy_polars._utils.deprecation import deprecate_renamed_parameter
+from fancy_polars._utils.various import (
     is_path_or_str_sequence,
     is_str_sequence,
     normalize_filepath,
 )
-from polars._utils.wrap import wrap_df, wrap_ldf
-from polars.dependencies import import_optional
-from polars.io._utils import (
+from fancy_polars._utils.wrap import wrap_df, wrap_ldf
+from fancy_polars.dependencies import import_optional
+from fancy_polars.io._utils import (
     is_glob_pattern,
     is_local_file,
     parse_columns_arg,
     parse_row_index_args,
     prepare_file_arg,
 )
-from polars.io.cloud.credential_provider._builder import (
+from fancy_polars.io.cloud.credential_provider._builder import (
     _init_credential_provider_builder,
 )
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame, PyLazyFrame
-    from polars.polars import read_ipc_schema as _read_ipc_schema
+    from fancy_polars.fancy_polars import PyDataFrame, PyLazyFrame
+    from fancy_polars.fancy_polars import read_ipc_schema as _read_ipc_schema
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from polars import DataFrame, DataType, LazyFrame
-    from polars._typing import SchemaDict
-    from polars.io.cloud import CredentialProviderFunction
+    from fancy_polars import DataFrame, DataType, LazyFrame
+    from fancy_polars._typing import SchemaDict
+    from fancy_polars.io.cloud import CredentialProviderFunction
 
 
 @deprecate_renamed_parameter("row_count_name", "row_index_name", version="0.20.4")

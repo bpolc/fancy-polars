@@ -5,9 +5,9 @@ from pathlib import Path
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.testing import assert_frame_equal
 
 
 @pytest.fixture

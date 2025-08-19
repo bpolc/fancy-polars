@@ -19,16 +19,16 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import column, dataframes
-from polars.testing.parametric.strategies.core import series
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import column, dataframes
+from fancy_polars.testing.parametric.strategies.core import series
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars._typing import ParallelStrategy, ParquetCompression
+    from fancy_polars._typing import ParallelStrategy, ParquetCompression
     from tests.unit.conftest import MemoryUsage
 
 

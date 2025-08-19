@@ -8,12 +8,12 @@ import hypothesis.strategies as st
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars._utils.convert import parse_as_duration_string
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars._utils.convert import parse_as_duration_string
+from fancy_polars.testing import assert_series_equal
 
 if TYPE_CHECKING:
-    from polars.type_aliases import TimeUnit
+    from fancy_polars.type_aliases import TimeUnit
 
 
 @pytest.mark.parametrize("time_zone", [None, "Asia/Kathmandu"])

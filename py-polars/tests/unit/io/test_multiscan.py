@@ -7,9 +7,9 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-import polars as pl
-from polars.meta.index_type import get_index_type
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.meta.index_type import get_index_type
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
     from pathlib import Path

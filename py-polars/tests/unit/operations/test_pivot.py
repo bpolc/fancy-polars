@@ -5,13 +5,13 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import ComputeError, DuplicateError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import ComputeError, DuplicateError
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PivotAgg, PolarsIntegerType
+    from fancy_polars._typing import PivotAgg, PolarsIntegerType
 
 
 def test_pivot() -> None:

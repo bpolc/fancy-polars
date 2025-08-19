@@ -6,25 +6,25 @@ from datetime import date, datetime, time, timedelta, timezone
 from typing import TYPE_CHECKING, Any
 from zoneinfo import ZoneInfo
 
-import polars._reexport as pl
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import Date, Datetime, Duration
-from polars.dependencies import (
+import fancy_polars._reexport as pl
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import Date, Datetime, Duration
+from fancy_polars.dependencies import (
     _check_for_numpy,
     _check_for_pytz,
     _check_for_torch,
     pytz,
     torch,
 )
-from polars.dependencies import numpy as np
+from fancy_polars.dependencies import numpy as np
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 
 if TYPE_CHECKING:
-    from polars import Expr
-    from polars._typing import PolarsDataType, TimeUnit
+    from fancy_polars import Expr
+    from fancy_polars._typing import PolarsDataType, TimeUnit
 
 
 def lit(

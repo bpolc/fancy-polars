@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ShapeError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ShapeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 def test_shuffle_group_by_reseed() -> None:

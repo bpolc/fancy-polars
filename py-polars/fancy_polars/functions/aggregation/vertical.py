@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import polars.functions as F
+import fancy_polars.functions as F
 
 if TYPE_CHECKING:
-    from polars import Expr
+    from fancy_polars import Expr
 
 
 def all(*names: str, ignore_nulls: bool = True) -> Expr:

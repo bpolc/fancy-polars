@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, overload
 
-from polars._utils.deprecation import deprecate_renamed_function
-from polars._utils.serde import serialize_polars_object
-from polars._utils.various import display_dot_graph
-from polars._utils.wrap import wrap_expr
-from polars.exceptions import ComputeError
+from fancy_polars._utils.deprecation import deprecate_renamed_function
+from fancy_polars._utils.serde import serialize_polars_object
+from fancy_polars._utils.various import display_dot_graph
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.exceptions import ComputeError
 
 if TYPE_CHECKING:
     from io import IOBase
     from pathlib import Path
 
-    from polars import Expr
-    from polars._typing import SerializationFormat
+    from fancy_polars import Expr
+    from fancy_polars._typing import SerializationFormat
 
 
 class ExprMetaNameSpace:
@@ -121,7 +121,7 @@ class ExprMetaNameSpace:
 
         Examples
         --------
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> e = pl.col("foo")
         >>> e.meta.is_column_selection()
         True

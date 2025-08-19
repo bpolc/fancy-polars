@@ -3,15 +3,15 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, Any
 
-from polars._utils.construction.dataframe import dataframe_to_pydf
-from polars._utils.wrap import wrap_df, wrap_s
+from fancy_polars._utils.construction.dataframe import dataframe_to_pydf
+from fancy_polars._utils.wrap import wrap_df, wrap_s
 
 with contextlib.suppress(ImportError):
-    from polars.polars import PySeries
+    from fancy_polars.fancy_polars import PySeries
 
 if TYPE_CHECKING:
-    from polars import DataFrame
-    from polars._typing import SchemaDefinition, SchemaDict
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import SchemaDefinition, SchemaDict
 
 
 def is_pycapsule(obj: Any) -> bool:

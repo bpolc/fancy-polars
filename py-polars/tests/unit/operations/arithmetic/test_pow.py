@@ -1,4 +1,4 @@
-import polars as pl
+import fancy_polars as pl
 
 
 def test_pow_dtype() -> None:

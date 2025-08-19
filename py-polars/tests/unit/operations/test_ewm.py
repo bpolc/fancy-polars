@@ -7,10 +7,10 @@ import numpy as np
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.expr.expr import _prepare_alpha
-from polars.testing import assert_series_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.expr.expr import _prepare_alpha
+from fancy_polars.testing import assert_series_equal
+from fancy_polars.testing.parametric import series
 
 
 def test_ewm_mean() -> None:

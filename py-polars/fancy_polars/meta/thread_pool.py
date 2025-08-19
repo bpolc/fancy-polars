@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import contextlib
 
-from polars._utils.deprecation import deprecate_renamed_function
+from fancy_polars._utils.deprecation import deprecate_renamed_function
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 
 def thread_pool_size() -> int:

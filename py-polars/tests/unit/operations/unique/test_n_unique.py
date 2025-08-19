@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_n_unique() -> None:

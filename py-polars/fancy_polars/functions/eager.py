@@ -6,21 +6,21 @@ from functools import reduce
 from itertools import chain
 from typing import TYPE_CHECKING, get_args
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._typing import ConcatMethod
-from polars._utils.various import ordered_unique, qualified_type_name
-from polars._utils.wrap import wrap_df, wrap_expr, wrap_ldf, wrap_s
-from polars.exceptions import InvalidOperationError
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._typing import ConcatMethod
+from fancy_polars._utils.various import ordered_unique, qualified_type_name
+from fancy_polars._utils.wrap import wrap_df, wrap_expr, wrap_ldf, wrap_s
+from fancy_polars.exceptions import InvalidOperationError
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import DataFrame, Expr, LazyFrame, Series
-    from polars._typing import FrameType, JoinStrategy, PolarsType
+    from fancy_polars import DataFrame, Expr, LazyFrame, Series
+    from fancy_polars._typing import FrameType, JoinStrategy, PolarsType
 
 
 def concat(

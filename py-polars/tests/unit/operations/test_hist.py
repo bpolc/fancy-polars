@@ -3,10 +3,10 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-import polars as pl
-from polars import StringCache
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars import StringCache
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal
 
 inf = float("inf")
 

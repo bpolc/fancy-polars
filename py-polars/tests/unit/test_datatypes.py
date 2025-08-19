@@ -6,9 +6,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-import polars as pl
-from polars import datatypes
-from polars.datatypes import (
+import fancy_polars as pl
+from fancy_polars import datatypes
+from fancy_polars.datatypes import (
     DTYPE_TEMPORAL_UNITS,
     Field,
     Int64,
@@ -16,12 +16,12 @@ from polars.datatypes import (
     Struct,
     parse_into_dtype,
 )
-from polars.datatypes.group import DataTypeGroup
+from fancy_polars.datatypes.group import DataTypeGroup
 from tests.unit.conftest import DATETIME_DTYPES, NUMERIC_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
-    from polars.datatypes.classes import DataTypeClass
+    from fancy_polars._typing import PolarsDataType
+    from fancy_polars.datatypes.classes import DataTypeClass
 
 SIMPLE_DTYPES: list[DataTypeClass] = [
     *[dt.base_type() for dt in NUMERIC_DTYPES],

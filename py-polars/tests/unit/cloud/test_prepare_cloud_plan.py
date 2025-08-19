@@ -3,9 +3,9 @@ from pathlib import Path
 
 import pytest
 
-import polars as pl
-from polars._utils.cloud import prepare_cloud_plan
-from polars.exceptions import ComputeError, InvalidOperationError
+import fancy_polars as pl
+from fancy_polars._utils.cloud import prepare_cloud_plan
+from fancy_polars.exceptions import ComputeError, InvalidOperationError
 
 CLOUD_SOURCE = "s3://my-nonexistent-bucket/dataset"
 DST = "s3://my-nonexistent-bucket/output"

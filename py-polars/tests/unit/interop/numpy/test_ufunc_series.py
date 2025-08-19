@@ -4,9 +4,9 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_series_equal
 
 
 def test_ufunc() -> None:

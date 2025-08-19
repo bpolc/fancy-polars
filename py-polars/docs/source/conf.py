@@ -241,10 +241,10 @@ def linkcode_resolve(domain: str, info: dict[str, Any]) -> str | None:
     linespec = f"#L{lineno}-L{lineno + len(source) - 1}" if lineno else ""
 
     conf_dir_path = Path(__file__).absolute().parent
-    polars_root = (conf_dir_path.parent.parent / "polars").absolute()
+    polars_root = (conf_dir_path.parent.parent / "fancy_polars").absolute()
 
     fn = os.path.relpath(fn, start=polars_root)
-    return f"{github_root}/blob/{git_ref}/py-polars/polars/{fn}{linespec}"
+    return f"{github_root}/blob/{git_ref}/py-polars/fancy_polars/{fn}{linespec}"
 
 
 def _minify_classpaths(s: str) -> str:

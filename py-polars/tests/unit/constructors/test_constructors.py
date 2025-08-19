@@ -14,20 +14,20 @@ import pytest
 from packaging.version import parse as parse_version
 from pydantic import BaseModel, Field, TypeAdapter
 
-import polars as pl
-import polars.selectors as cs
-from polars._utils.construction.utils import try_get_type_hints
-from polars.datatypes import numpy_char_code_to_dtype
-from polars.dependencies import dataclasses, pydantic
-from polars.exceptions import DuplicateError, ShapeError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars._utils.construction.utils import try_get_type_hints
+from fancy_polars.datatypes import numpy_char_code_to_dtype
+from fancy_polars.dependencies import dataclasses, pydantic
+from fancy_polars.exceptions import DuplicateError, ShapeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.utils.pycapsule_utils import PyCapsuleArrayHolder, PyCapsuleStreamHolder
 
 if TYPE_CHECKING:
     import sys
     from collections.abc import Callable
 
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
     if sys.version_info >= (3, 11):
         from typing import Self
@@ -1523,7 +1523,7 @@ def test_nested_schema_construction2() -> None:
 
 
 def test_arrow_to_pyseries_with_one_chunk_does_not_copy_data() -> None:
-    from polars._utils.construction import arrow_to_pyseries
+    from fancy_polars._utils.construction import arrow_to_pyseries
 
     original_array = pa.chunked_array([[1, 2, 3]], type=pa.int64())
     pyseries = arrow_to_pyseries("", original_array)

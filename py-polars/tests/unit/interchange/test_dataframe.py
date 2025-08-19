@@ -2,10 +2,10 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.interchange.dataframe import PolarsDataFrame
-from polars.interchange.protocol import CopyNotAllowedError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.interchange.dataframe import PolarsDataFrame
+from fancy_polars.interchange.protocol import CopyNotAllowedError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 def test_dataframe_dunder() -> None:

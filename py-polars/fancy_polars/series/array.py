@@ -2,17 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable
 
-from polars import functions as F
-from polars._utils.wrap import wrap_s
-from polars.series.utils import expr_dispatch
+from fancy_polars import functions as F
+from fancy_polars._utils.wrap import wrap_s
+from fancy_polars.series.utils import expr_dispatch
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
     from datetime import date, datetime, time
 
-    from polars import Series
-    from polars._typing import IntoExpr, IntoExprColumn
-    from polars.polars import PySeries
+    from fancy_polars import Series
+    from fancy_polars._typing import IntoExpr, IntoExprColumn
+    from fancy_polars.fancy_polars import PySeries
 
 
 @expr_dispatch

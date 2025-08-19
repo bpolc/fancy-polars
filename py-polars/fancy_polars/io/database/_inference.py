@@ -6,7 +6,7 @@ from contextlib import suppress
 from inspect import isclass
 from typing import TYPE_CHECKING, Any
 
-from polars.datatypes import (
+from fancy_polars.datatypes import (
     Binary,
     Boolean,
     Date,
@@ -28,14 +28,14 @@ from polars.datatypes import (
     UInt32,
     UInt64,
 )
-from polars.datatypes._parse import parse_py_type_into_dtype
-from polars.datatypes.group import (
+from fancy_polars.datatypes._parse import parse_py_type_into_dtype
+from fancy_polars.datatypes.group import (
     INTEGER_DTYPES,
     UNSIGNED_INTEGER_DTYPES,
 )
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def _infer_dtype_from_database_typename(

@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-import polars as pl
-from polars.interchange.protocol import DtypeKind, Endianness
-from polars.interchange.utils import (
+import fancy_polars as pl
+from fancy_polars.interchange.protocol import DtypeKind, Endianness
+from fancy_polars.interchange.utils import (
     dtype_to_polars_dtype,
     get_buffer_length_in_elements,
     polars_dtype_to_data_buffer_dtype,
@@ -14,8 +14,8 @@ from polars.interchange.utils import (
 )
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
-    from polars.interchange.protocol import Dtype
+    from fancy_polars._typing import PolarsDataType
+    from fancy_polars.interchange.protocol import Dtype
 
 NE = Endianness.NATIVE
 

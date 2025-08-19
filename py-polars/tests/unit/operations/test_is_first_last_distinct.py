@@ -5,12 +5,12 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_is_first_distinct() -> None:

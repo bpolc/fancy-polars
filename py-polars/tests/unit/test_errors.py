@@ -9,9 +9,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import polars as pl
-from polars.datatypes.convert import dtype_to_py_type
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars.datatypes.convert import dtype_to_py_type
+from fancy_polars.exceptions import (
     ColumnNotFoundError,
     ComputeError,
     InvalidOperationError,
@@ -24,7 +24,7 @@ from polars.exceptions import (
 from tests.unit.conftest import TEMPORAL_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import ConcatMethod
+    from fancy_polars._typing import ConcatMethod
 
 
 def test_error_on_empty_group_by() -> None:

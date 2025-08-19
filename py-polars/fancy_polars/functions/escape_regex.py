@@ -2,11 +2,11 @@ from __future__ import annotations
 
 import contextlib
 
-from polars._utils.various import qualified_type_name
+from fancy_polars._utils.various import qualified_type_name
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
-import polars._reexport as pl
+    import fancy_polars.fancy_polars as plr
+import fancy_polars._reexport as pl
 
 
 def escape_regex(s: str) -> str:

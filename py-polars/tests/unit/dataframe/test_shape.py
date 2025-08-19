@@ -1,6 +1,6 @@
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 # TODO: remove this skip when streaming raises

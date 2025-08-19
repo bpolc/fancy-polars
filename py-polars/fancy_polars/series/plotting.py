@@ -3,21 +3,21 @@ from __future__ import annotations
 import inspect
 from typing import TYPE_CHECKING, Callable
 
-from polars.dependencies import altair as alt
+from fancy_polars.dependencies import altair as alt
 
 if TYPE_CHECKING:
     import sys
 
     from altair.typing import EncodeKwds
 
-    from polars.dataframe.plotting import Encodings
+    from fancy_polars.dataframe.plotting import Encodings
 
     if sys.version_info >= (3, 11):
         from typing import Unpack
     else:
         from typing_extensions import Unpack
 
-    from polars import Series
+    from fancy_polars import Series
 
 
 class SeriesPlot:

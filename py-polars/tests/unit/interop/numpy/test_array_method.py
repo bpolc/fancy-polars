@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 from numpy.testing import assert_array_equal
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_series_array_method_copy_false() -> None:

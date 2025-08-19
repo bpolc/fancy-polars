@@ -20,7 +20,7 @@ import logging
 import numpy as np
 from numpy.random import default_rng
 
-import polars as pl
+import fancy_polars as pl
 
 logging.basicConfig(level=logging.INFO)
 

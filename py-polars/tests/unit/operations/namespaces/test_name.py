@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from collections import OrderedDict
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_name_change_case() -> None:

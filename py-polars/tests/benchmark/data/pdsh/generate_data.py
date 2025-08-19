@@ -23,7 +23,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-import polars as pl
+import fancy_polars as pl
 
 logging.basicConfig(level=logging.INFO)
 

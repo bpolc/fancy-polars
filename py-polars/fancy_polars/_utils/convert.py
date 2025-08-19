@@ -12,7 +12,7 @@ from typing import (
 )
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from polars._utils.constants import (
+from fancy_polars._utils.constants import (
     EPOCH,
     EPOCH_DATE,
     EPOCH_UTC,
@@ -28,7 +28,7 @@ if TYPE_CHECKING:
     from datetime import date, tzinfo
     from decimal import Decimal
 
-    from polars._typing import TimeUnit
+    from fancy_polars._typing import TimeUnit
 
 
 @overload

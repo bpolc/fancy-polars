@@ -1,4 +1,4 @@
-from polars.functions.aggregation import (
+from fancy_polars.functions.aggregation import (
     all,
     all_horizontal,
     any,
@@ -13,7 +13,7 @@ from polars.functions.aggregation import (
     sum,
     sum_horizontal,
 )
-from polars.functions.as_datatype import (
+from fancy_polars.functions.as_datatype import (
     concat_arr,
     concat_list,
     concat_str,
@@ -21,14 +21,14 @@ from polars.functions.as_datatype import (
     format,
     struct,
 )
-from polars.functions.as_datatype import date_ as date
-from polars.functions.as_datatype import datetime_ as datetime
-from polars.functions.as_datatype import time_ as time
-from polars.functions.business import business_day_count
-from polars.functions.col import col
-from polars.functions.eager import align_frames, concat
-from polars.functions.escape_regex import escape_regex
-from polars.functions.lazy import (
+from fancy_polars.functions.as_datatype import date_ as date
+from fancy_polars.functions.as_datatype import datetime_ as datetime
+from fancy_polars.functions.as_datatype import time_ as time
+from fancy_polars.functions.business import business_day_count
+from fancy_polars.functions.col import col
+from fancy_polars.functions.eager import align_frames, concat
+from fancy_polars.functions.escape_regex import escape_regex
+from fancy_polars.functions.lazy import (
     approx_n_unique,
     arctan2,
     arctan2d,
@@ -70,10 +70,10 @@ from polars.functions.lazy import (
     tail,
     var,
 )
-from polars.functions.len import len
-from polars.functions.lit import lit
-from polars.functions.random import set_random_seed
-from polars.functions.range import (
+from fancy_polars.functions.len import len
+from fancy_polars.functions.lit import lit
+from fancy_polars.functions.random import set_random_seed
+from fancy_polars.functions.range import (
     arange,
     date_range,
     date_ranges,
@@ -86,8 +86,8 @@ from polars.functions.range import (
     time_range,
     time_ranges,
 )
-from polars.functions.repeat import ones, repeat, zeros
-from polars.functions.whenthen import when
+from fancy_polars.functions.repeat import ones, repeat, zeros
+from fancy_polars.functions.whenthen import when
 
 __all__ = [
     # polars.functions.aggregation

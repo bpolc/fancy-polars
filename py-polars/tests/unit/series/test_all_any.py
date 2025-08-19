@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.exceptions import SchemaError
+import fancy_polars as pl
+from fancy_polars.exceptions import SchemaError
 
 
 @pytest.mark.parametrize(

@@ -1,9 +1,9 @@
 from typing import Any
 
-from polars import DataFrame
-from polars._typing import IndexOrder
-from polars.datatypes import Array, List
-from polars.dependencies import numpy as np
+from fancy_polars import DataFrame
+from fancy_polars._typing import IndexOrder
+from fancy_polars.datatypes import Array, List
+from fancy_polars.dependencies import numpy as np
 
 
 def frame_to_numpy(

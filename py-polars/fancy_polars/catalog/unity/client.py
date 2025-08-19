@@ -6,9 +6,9 @@ import os
 import sys
 from typing import TYPE_CHECKING, Any, Literal
 
-from polars._utils.unstable import issue_unstable_warning
-from polars._utils.wrap import wrap_ldf
-from polars.catalog.unity.models import (
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars._utils.wrap import wrap_ldf
+from fancy_polars.catalog.unity.models import (
     CatalogInfo,
     ColumnInfo,
     NamespaceInfo,
@@ -21,18 +21,20 @@ if TYPE_CHECKING:
 
     import deltalake
 
-    from polars._typing import SchemaDict
-    from polars.catalog.unity.models import DataSourceFormat, TableType
-    from polars.dataframe.frame import DataFrame
-    from polars.io.cloud import (
+    from fancy_polars._typing import SchemaDict
+    from fancy_polars.catalog.unity.models import DataSourceFormat, TableType
+    from fancy_polars.dataframe.frame import DataFrame
+    from fancy_polars.io.cloud import (
         CredentialProviderFunction,
         CredentialProviderFunctionReturn,
     )
-    from polars.io.cloud.credential_provider._builder import CredentialProviderBuilder
-    from polars.lazyframe import LazyFrame
+    from fancy_polars.io.cloud.credential_provider._builder import (
+        CredentialProviderBuilder,
+    )
+    from fancy_polars.lazyframe import LazyFrame
 
 with contextlib.suppress(ImportError):
-    from polars.polars import PyCatalogClient
+    from fancy_polars.fancy_polars import PyCatalogClient
 
     PyCatalogClient.init_classes(
         catalog_info_cls=CatalogInfo,
@@ -249,7 +251,7 @@ class Catalog:
         )
 
         if data_source_format in ["DELTA", "DELTASHARING"]:
-            from polars.io.delta import scan_delta
+            from fancy_polars.io.delta import scan_delta
 
             return scan_delta(
                 storage_location,
@@ -612,7 +614,7 @@ class Catalog:
         CredentialProviderBuilder | None,
         dict[str, Any] | None,
     ]:
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             CredentialProviderBuilder,
         )
 
@@ -667,7 +669,7 @@ class Catalog:
         # credentials API fails for whatever reason, we fallback to our built-in
         # credential provider resolution.
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 

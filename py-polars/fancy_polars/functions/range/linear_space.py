@@ -3,19 +3,19 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, overload
 
-from polars import functions as F
-from polars._utils.parse import parse_into_expression
-from polars._utils.unstable import unstable
-from polars._utils.wrap import wrap_expr
+from fancy_polars import functions as F
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.wrap import wrap_expr
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 from typing import Literal
 
 if TYPE_CHECKING:
-    from polars import Expr, Series
-    from polars._typing import (
+    from fancy_polars import Expr, Series
+    from fancy_polars._typing import (
         ClosedInterval,
         IntoExpr,
         IntoExprColumn,

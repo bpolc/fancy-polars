@@ -6,9 +6,9 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.plugins import (
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.plugins import (
     _is_dynamic_lib,
     _resolve_plugin_path,
     _serialize_kwargs,

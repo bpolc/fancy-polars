@@ -3,10 +3,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars._utils.unstable import issue_unstable_warning
-from polars.dataframe import DataFrame
-from polars.expr import Expr
-from polars.selectors import exclude
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars.dataframe import DataFrame
+from fancy_polars.expr import Expr
+from fancy_polars.selectors import exclude
 
 if TYPE_CHECKING:
     import sys

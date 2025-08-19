@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any
 
-import polars as pl
+import fancy_polars as pl
 
 
 def exec_op_with_series(lhs: pl.Series, rhs: pl.Series, op: Any) -> pl.Series:

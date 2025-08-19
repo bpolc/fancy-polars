@@ -5,16 +5,16 @@ from typing import TYPE_CHECKING, Any, Callable
 
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError, ShapeError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError, ShapeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.operations.arithmetic.utils import (
     BROADCAST_SERIES_COMBINATIONS,
     EXEC_OP_COMBINATIONS,
 )
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 @pytest.mark.parametrize(

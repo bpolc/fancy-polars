@@ -5,8 +5,8 @@ from typing import Callable
 
 import pytest
 
-import polars as pl
-from polars.testing.asserts.frame import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing.asserts.frame import assert_frame_equal
 
 READ_WRITE_FUNC_PARAM = [
     (pl.read_parquet, pl.DataFrame.write_parquet),

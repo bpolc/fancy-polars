@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars._utils.unstable import unstable
-from polars.io.pyarrow_dataset.anonymous_scan import _scan_pyarrow_dataset
+from fancy_polars._utils.unstable import unstable
+from fancy_polars.io.pyarrow_dataset.anonymous_scan import _scan_pyarrow_dataset
 
 if TYPE_CHECKING:
-    from polars import LazyFrame
-    from polars.dependencies import pyarrow as pa
+    from fancy_polars import LazyFrame
+    from fancy_polars.dependencies import pyarrow as pa
 
 
 @unstable()

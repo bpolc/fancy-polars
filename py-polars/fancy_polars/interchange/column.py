@@ -2,23 +2,27 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars.datatypes import Boolean, Categorical, Enum, String
-from polars.interchange.buffer import PolarsBuffer
-from polars.interchange.protocol import (
+from fancy_polars.datatypes import Boolean, Categorical, Enum, String
+from fancy_polars.interchange.buffer import PolarsBuffer
+from fancy_polars.interchange.protocol import (
     Column,
     ColumnNullType,
     CopyNotAllowedError,
     DtypeKind,
     Endianness,
 )
-from polars.interchange.utils import polars_dtype_to_dtype
+from fancy_polars.interchange.utils import polars_dtype_to_dtype
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from typing import Any
 
-    from polars import Series
-    from polars.interchange.protocol import CategoricalDescription, ColumnBuffers, Dtype
+    from fancy_polars import Series
+    from fancy_polars.interchange.protocol import (
+        CategoricalDescription,
+        ColumnBuffers,
+        Dtype,
+    )
 
 
 class PolarsColumn(Column):

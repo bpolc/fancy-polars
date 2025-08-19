@@ -3,8 +3,8 @@ from __future__ import annotations
 import zoneinfo  # noqa: F401
 from datetime import date, datetime, time, timedelta, timezone
 
-import polars as pl
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_to_init_repr() -> None:

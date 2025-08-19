@@ -6,9 +6,9 @@ from collections.abc import Iterable
 from datetime import datetime, timedelta
 from typing import TYPE_CHECKING
 
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import Datetime, Duration, is_polars_dtype, parse_into_dtype
-from polars.datatypes.group import (
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import Datetime, Duration, is_polars_dtype, parse_into_dtype
+from fancy_polars.datatypes.group import (
     DATETIME_DTYPES,
     DURATION_DTYPES,
     FLOAT_DTYPES,
@@ -16,11 +16,11 @@ from polars.datatypes.group import (
 )
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType, PythonDataType
-    from polars.expr.expr import Expr
+    from fancy_polars._typing import PolarsDataType, PythonDataType
+    from fancy_polars.expr.expr import Expr
 
     if not sys.version_info >= (3, 11):
         from typing import Any
@@ -138,7 +138,7 @@ class Col:
 
     Examples
     --------
-    >>> from polars import col
+    >>> from fancy_polars import col
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": [1, 2],
@@ -228,7 +228,7 @@ class Col:
 
         Use dot syntax to save keystrokes for quick prototyping.
 
-        >>> from polars import col as c
+        >>> from fancy_polars import col as c
         >>> df.select(c.foo + c.ham)
         shape: (2, 1)
         ┌─────┐
@@ -342,7 +342,7 @@ class Col:
 
         Examples
         --------
-        >>> from polars import col as c
+        >>> from fancy_polars import col as c
         >>> df = pl.DataFrame(
         ...     {
         ...         "foo": [1, 2],

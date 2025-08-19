@@ -12,10 +12,10 @@ from typing import (
     overload,
 )
 
-from polars import functions as F
-from polars._utils.parse.expr import _parse_inputs_as_iterable
-from polars._utils.various import is_column, re_escape
-from polars.datatypes import (
+from fancy_polars import functions as F
+from fancy_polars._utils.parse.expr import _parse_inputs_as_iterable
+from fancy_polars._utils.various import is_column, re_escape
+from fancy_polars.datatypes import (
     Binary,
     Boolean,
     Categorical,
@@ -28,7 +28,7 @@ from polars.datatypes import (
     Time,
     is_polars_dtype,
 )
-from polars.datatypes.group import (
+from fancy_polars.datatypes.group import (
     FLOAT_DTYPES,
     INTEGER_DTYPES,
     NUMERIC_DTYPES,
@@ -36,14 +36,19 @@ from polars.datatypes.group import (
     TEMPORAL_DTYPES,
     UNSIGNED_INTEGER_DTYPES,
 )
-from polars.expr import Expr
+from fancy_polars.expr import Expr
 
 if TYPE_CHECKING:
     import sys
     from collections.abc import Iterable
 
-    from polars import DataFrame, LazyFrame
-    from polars._typing import PolarsDataType, PythonDataType, SelectorType, TimeUnit
+    from fancy_polars import DataFrame, LazyFrame
+    from fancy_polars._typing import (
+        PolarsDataType,
+        PythonDataType,
+        SelectorType,
+        TimeUnit,
+    )
 
     if sys.version_info >= (3, 11):
         from typing import Self
@@ -99,8 +104,8 @@ def is_selector(obj: Any) -> bool:
 
     Examples
     --------
-    >>> from polars.selectors import is_selector
-    >>> import polars.selectors as cs
+    >>> from fancy_polars.selectors import is_selector
+    >>> import fancy_polars.selectors as cs
     >>> is_selector(pl.col("colx"))
     False
     >>> is_selector(cs.first() | cs.last())
@@ -137,7 +142,7 @@ def expand_selector(
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "colx": ["a", "b", "c"],
@@ -176,7 +181,7 @@ def expand_selector(
     ('count', 'value')
     """
     if isinstance(target, Mapping):
-        from polars.dataframe import DataFrame
+        from fancy_polars.dataframe import DataFrame
 
         target = DataFrame(schema=target)
 
@@ -201,8 +206,8 @@ def _expand_selectors(frame: DataFrame | LazyFrame, *items: Any) -> list[Any]:
 
     Examples
     --------
-    >>> from polars.selectors import _expand_selectors
-    >>> import polars.selectors as cs
+    >>> from fancy_polars.selectors import _expand_selectors
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "colw": ["a", "b"],
@@ -474,7 +479,7 @@ class _selector_proxy_(Expr):
 
         Examples
         --------
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df = pl.DataFrame(
         ...     {
         ...         "colx": ["aa", "bb", "cc"],
@@ -542,7 +547,7 @@ def all() -> SelectorType:
     Examples
     --------
     >>> from datetime import date
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "dt": [date(1999, 12, 31), date(2024, 1, 1)],
@@ -602,8 +607,8 @@ def alpha(ascii_only: bool = False, *, ignore_spaces: bool = False) -> SelectorT
 
     Examples
     --------
-    >>> import polars as pl
-    >>> import polars.selectors as cs
+    >>> import fancy_polars as pl
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "no1": [100, 200, 300],
@@ -717,8 +722,8 @@ def alphanumeric(
 
     Examples
     --------
-    >>> import polars as pl
-    >>> import polars.selectors as cs
+    >>> import fancy_polars as pl
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "1st_col": [100, 200, 300],
@@ -802,7 +807,7 @@ def binary() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame({"a": [b"hello"], "b": ["world"], "c": [b"!"], "d": [":)"]})
     >>> df
     shape: (1, 4)
@@ -837,7 +842,7 @@ def boolean() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame({"n": range(1, 5)}).with_columns(n_even=pl.col("n") % 2 == 0)
     >>> df
     shape: (4, 2)
@@ -904,7 +909,7 @@ def by_dtype(
     Examples
     --------
     >>> from datetime import date
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "dt": [date(1999, 12, 31), date(2024, 1, 1), date(2010, 7, 5)],
@@ -995,7 +1000,7 @@ def by_index(*indices: int | range | Sequence[int | range]) -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "key": ["abc"],
@@ -1100,7 +1105,7 @@ def by_name(*names: str | Collection[str], require_all: bool = True) -> Selector
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -1187,7 +1192,7 @@ def categorical() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["xx", "yy"],
@@ -1243,7 +1248,7 @@ def contains(*substring: str) -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -1316,7 +1321,7 @@ def date() -> SelectorType:
     Examples
     --------
     >>> from datetime import date, datetime, time
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "dtm": [datetime(2001, 5, 7, 10, 25), datetime(2031, 12, 31, 0, 30)],
@@ -1385,7 +1390,7 @@ def datetime(
     Examples
     --------
     >>> from datetime import datetime, date, timezone
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> from zoneinfo import ZoneInfo
     >>> tokyo_tz = ZoneInfo("Asia/Tokyo")
     >>> utc_tz = timezone.utc
@@ -1523,7 +1528,7 @@ def decimal() -> SelectorType:
     Examples
     --------
     >>> from decimal import Decimal as D
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -1575,8 +1580,8 @@ def digit(ascii_only: bool = False) -> SelectorType:  # noqa: FBT001
 
     Examples
     --------
-    >>> import polars as pl
-    >>> import polars.selectors as cs
+    >>> import fancy_polars as pl
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "key": ["aaa", "bbb", "aaa", "bbb", "bbb"],
@@ -1676,7 +1681,7 @@ def duration(
     Examples
     --------
     >>> from datetime import date, timedelta
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "dt": [date(2022, 1, 31), date(2025, 7, 5)],
@@ -1782,7 +1787,7 @@ def ends_with(*suffix: str) -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -1871,7 +1876,7 @@ def exclude(
     --------
     Exclude by column name(s):
 
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "aa": [1, 2, 3],
@@ -1919,7 +1924,7 @@ def first() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -1971,7 +1976,7 @@ def float() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -2025,7 +2030,7 @@ def integer() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -2078,7 +2083,7 @@ def signed_integer() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": [-123, -456],
@@ -2143,7 +2148,7 @@ def unsigned_integer() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": [-123, -456],
@@ -2207,7 +2212,7 @@ def last() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -2264,7 +2269,7 @@ def matches(pattern: str) -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -2333,7 +2338,7 @@ def numeric() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": ["x", "y"],
@@ -2383,7 +2388,7 @@ def object() -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> from uuid import uuid4
     >>> with pl.Config(fmt_str_lengths=36):
     ...     df = pl.DataFrame(
@@ -2446,7 +2451,7 @@ def starts_with(*prefix: str) -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "foo": [1.0, 2.0],
@@ -2517,7 +2522,7 @@ def string(*, include_categorical: bool = False) -> SelectorType:
 
     Examples
     --------
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "w": ["xx", "yy", "xx", "yy", "xx"],
@@ -2584,7 +2589,7 @@ def temporal() -> SelectorType:
     Examples
     --------
     >>> from datetime import date, time
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "dt": [date(2021, 1, 1), date(2021, 1, 2)],
@@ -2649,7 +2654,7 @@ def time() -> SelectorType:
     Examples
     --------
     >>> from datetime import date, datetime, time
-    >>> import polars.selectors as cs
+    >>> import fancy_polars.selectors as cs
     >>> df = pl.DataFrame(
     ...     {
     ...         "dtm": [datetime(2001, 5, 7, 10, 25), datetime(2031, 12, 31, 0, 30)],

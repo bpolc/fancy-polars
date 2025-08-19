@@ -5,14 +5,14 @@ from collections import OrderedDict
 from collections.abc import Mapping
 from typing import TYPE_CHECKING, Literal, Union, overload
 
-from polars._typing import PythonDataType
-from polars.datatypes import DataType, DataTypeClass, is_polars_dtype
-from polars.datatypes._parse import parse_into_dtype
+from fancy_polars._typing import PythonDataType
+from fancy_polars.datatypes import DataType, DataTypeClass, is_polars_dtype
+from fancy_polars.datatypes._parse import parse_into_dtype
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import DataFrame, LazyFrame
+    from fancy_polars import DataFrame, LazyFrame
 
     if sys.version_info >= (3, 10):
         from typing import TypeAlias
@@ -181,7 +181,7 @@ class Schema(BaseSchema):
         >>> s.to_frame(eager=False)  # doctest: +IGNORE_RESULT
         <LazyFrame at 0x11BC0AD80>
         """
-        from polars import DataFrame, LazyFrame
+        from fancy_polars import DataFrame, LazyFrame
 
         return DataFrame(schema=self) if eager else LazyFrame(schema=self)
 

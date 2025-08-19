@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Union
 
-import polars._reexport as pl
+import fancy_polars._reexport as pl
 
 if TYPE_CHECKING:
-    from polars import DataFrame, LazyFrame, Series
+    from fancy_polars import DataFrame, LazyFrame, Series
 
     FrameOrSeries = Union["DataFrame", "Series"]
 

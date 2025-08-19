@@ -6,15 +6,15 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars._utils.constants import MS_PER_SECOND, NS_PER_SECOND, US_PER_SECOND
-from polars.exceptions import ComputeError, InvalidOperationError
-from polars.testing import assert_frame_equal
-from polars.testing.asserts.series import assert_series_equal
+import fancy_polars as pl
+from fancy_polars._utils.constants import MS_PER_SECOND, NS_PER_SECOND, US_PER_SECOND
+from fancy_polars.exceptions import ComputeError, InvalidOperationError
+from fancy_polars.testing import assert_frame_equal
+from fancy_polars.testing.asserts.series import assert_series_equal
 from tests.unit.conftest import INTEGER_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType, PythonDataType
+    from fancy_polars._typing import PolarsDataType, PythonDataType
 
 
 @pytest.mark.parametrize("dtype", [pl.Date(), pl.Date, date])

@@ -4,11 +4,11 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars.exceptions import (
     StructFieldNotFoundError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 def test_list_eval_dtype_inference() -> None:

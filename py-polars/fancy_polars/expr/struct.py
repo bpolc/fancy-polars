@@ -3,15 +3,15 @@ from __future__ import annotations
 import os
 from typing import TYPE_CHECKING
 
-from polars._utils.parse import parse_into_list_of_expressions
-from polars._utils.various import qualified_type_name
-from polars._utils.wrap import wrap_expr
+from fancy_polars._utils.parse import parse_into_list_of_expressions
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars._utils.wrap import wrap_expr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
 
-    from polars import Expr
-    from polars._typing import IntoExpr
+    from fancy_polars import Expr
+    from fancy_polars._typing import IntoExpr
 
 
 class ExprStructNameSpace:

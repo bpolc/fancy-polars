@@ -9,13 +9,13 @@ import pandas as pd
 import pyarrow as pa
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import InvalidOperationError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_struct_to_list() -> None:

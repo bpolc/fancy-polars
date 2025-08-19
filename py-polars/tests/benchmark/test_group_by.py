@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 pytestmark = pytest.mark.benchmark()
 

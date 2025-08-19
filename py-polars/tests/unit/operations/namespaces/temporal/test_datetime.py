@@ -8,14 +8,14 @@ from zoneinfo import ZoneInfo
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.datatypes import DTYPE_TEMPORAL_UNITS
-from polars.exceptions import ComputeError, InvalidOperationError
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.datatypes import DTYPE_TEMPORAL_UNITS
+from fancy_polars.exceptions import ComputeError, InvalidOperationError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import series
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType, TemporalLiteral, TimeUnit
+    from fancy_polars._typing import PolarsDataType, TemporalLiteral, TimeUnit
 
 
 @pytest.fixture

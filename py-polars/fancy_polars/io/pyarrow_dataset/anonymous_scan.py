@@ -3,11 +3,11 @@ from __future__ import annotations
 from functools import partial
 from typing import TYPE_CHECKING
 
-import polars._reexport as pl
-from polars.dependencies import pyarrow as pa
+import fancy_polars._reexport as pl
+from fancy_polars.dependencies import pyarrow as pa
 
 if TYPE_CHECKING:
-    from polars import DataFrame, LazyFrame
+    from fancy_polars import DataFrame, LazyFrame
 
 
 def _scan_pyarrow_dataset(
@@ -66,18 +66,18 @@ def _scan_pyarrow_dataset_impl(
     -------
     DataFrame
     """
-    from polars import from_arrow
+    from fancy_polars import from_arrow
 
     _filter = None
 
     if predicate:
-        from polars._utils.convert import (
+        from fancy_polars._utils.convert import (
             to_py_date,
             to_py_datetime,
             to_py_time,
             to_py_timedelta,
         )
-        from polars.datatypes import Date, Datetime, Duration
+        from fancy_polars.datatypes import Date, Datetime, Duration
 
         _filter = eval(
             predicate,

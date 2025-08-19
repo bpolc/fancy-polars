@@ -12,11 +12,11 @@ from typing import Any, Callable
 import numpy as np
 import pytest
 
-import polars as pl
-from polars._utils.udfs import _NUMPY_FUNCTIONS, BytecodeParser
-from polars._utils.various import in_terminal_that_supports_colour
-from polars.exceptions import PolarsInefficientMapWarning
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars._utils.udfs import _NUMPY_FUNCTIONS, BytecodeParser
+from fancy_polars._utils.various import in_terminal_that_supports_colour
+from fancy_polars.exceptions import PolarsInefficientMapWarning
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 MY_CONSTANT = 3
 MY_DICT = {0: "a", 1: "b", 2: "c", 3: "d", 4: "e"}
@@ -299,7 +299,7 @@ def test_parse_invalid_function(func: str) -> None:
 )
 @pytest.mark.filterwarnings(
     "ignore:invalid value encountered:RuntimeWarning",
-    "ignore:.*without specifying `return_dtype`:polars.exceptions.MapWithoutReturnDtypeWarning",
+    "ignore:.*without specifying `return_dtype`:fancy_polars.exceptions.MapWithoutReturnDtypeWarning",
 )
 def test_parse_apply_functions(col: str, func: str, expr_repr: str) -> None:
     with pytest.warns(
@@ -342,7 +342,7 @@ def test_parse_apply_functions(col: str, func: str, expr_repr: str) -> None:
 
 @pytest.mark.filterwarnings(
     "ignore:invalid value encountered:RuntimeWarning",
-    "ignore:.*without specifying `return_dtype`:polars.exceptions.MapWithoutReturnDtypeWarning",
+    "ignore:.*without specifying `return_dtype`:fancy_polars.exceptions.MapWithoutReturnDtypeWarning",
 )
 def test_parse_apply_raw_functions() -> None:
     lf = pl.LazyFrame({"a": [1.1, 2.0, 3.4]})
@@ -465,7 +465,7 @@ def test_parse_apply_miscellaneous() -> None:
     ],
 )
 @pytest.mark.filterwarnings(
-    "ignore:.*without specifying `return_dtype`:polars.exceptions.MapWithoutReturnDtypeWarning"
+    "ignore:.*without specifying `return_dtype`:fancy_polars.exceptions.MapWithoutReturnDtypeWarning"
 )
 def test_parse_apply_series(
     name: str, data: list[Any], func: Callable[[Any], Any], expr_repr: str

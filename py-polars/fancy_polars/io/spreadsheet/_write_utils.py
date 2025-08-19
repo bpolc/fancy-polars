@@ -6,19 +6,19 @@ from os import PathLike
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, overload
 
-from polars import functions as F
-from polars._utils.various import qualified_type_name
-from polars.datatypes import (
+from fancy_polars import functions as F
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars.datatypes import (
     Date,
     Datetime,
     Float64,
     Int64,
     Time,
 )
-from polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES
-from polars.dependencies import json
-from polars.exceptions import DuplicateError
-from polars.selectors import _expand_selector_dicts, _expand_selectors, numeric
+from fancy_polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES
+from fancy_polars.dependencies import json
+from fancy_polars.exceptions import DuplicateError
+from fancy_polars.selectors import _expand_selector_dicts, _expand_selectors, numeric
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
@@ -28,8 +28,8 @@ if TYPE_CHECKING:
     from xlsxwriter.format import Format
     from xlsxwriter.worksheet import Worksheet
 
-    from polars import DataFrame, Schema, Series
-    from polars._typing import (
+    from fancy_polars import DataFrame, Schema, Series
+    from fancy_polars._typing import (
         ColumnFormatDict,
         ColumnTotalsDefinition,
         ConditionalFormatDict,
@@ -37,7 +37,7 @@ if TYPE_CHECKING:
         PolarsDataType,
         RowTotalsDefinition,
     )
-    from polars.expr import Expr
+    from fancy_polars.expr import Expr
 
 
 def _cluster(iterable: Iterable[Any], n: int = 2) -> Iterable[Any]:

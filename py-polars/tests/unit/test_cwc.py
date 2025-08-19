@@ -1,6 +1,6 @@
 # Tests for the optimization pass cluster WITH_COLUMNS
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_basic_cwc() -> None:

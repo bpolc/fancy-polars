@@ -23,17 +23,22 @@ if TYPE_CHECKING:
     from sqlalchemy.engine import Connection, Engine
     from sqlalchemy.orm import Session
 
-    from polars import DataFrame, Expr, LazyFrame, Series
-    from polars.datatypes import DataType, DataTypeClass, IntegerType, TemporalType
-    from polars.dependencies import numpy as np
-    from polars.dependencies import pandas as pd
-    from polars.dependencies import pyarrow as pa
-    from polars.dependencies import torch
-    from polars.lazyframe.engine_config import GPUEngine
-    from polars.selectors import _selector_proxy_
+    from fancy_polars import DataFrame, Expr, LazyFrame, Series
+    from fancy_polars.datatypes import (
+        DataType,
+        DataTypeClass,
+        IntegerType,
+        TemporalType,
+    )
+    from fancy_polars.dependencies import numpy as np
+    from fancy_polars.dependencies import pandas as pd
+    from fancy_polars.dependencies import pyarrow as pa
+    from fancy_polars.dependencies import torch
+    from fancy_polars.lazyframe.engine_config import GPUEngine
+    from fancy_polars.selectors import _selector_proxy_
 
     with contextlib.suppress(ImportError):  # Module not available when building docs
-        from polars.polars import PyPartitioning
+        from fancy_polars.fancy_polars import PyPartitioning
 
     if sys.version_info >= (3, 10):
         from typing import TypeAlias

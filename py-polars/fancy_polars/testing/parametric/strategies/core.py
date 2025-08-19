@@ -7,15 +7,23 @@ from typing import TYPE_CHECKING, Any, overload
 import hypothesis.strategies as st
 from hypothesis.errors import InvalidArgument
 
-from polars import select, when
-from polars._utils.deprecation import issue_deprecation_warning
-from polars.dataframe import DataFrame
-from polars.datatypes import Array, Boolean, DataType, DataTypeClass, List, Null, Struct
-from polars.series import Series
-from polars.string_cache import StringCache
-from polars.testing.parametric.strategies._utils import flexhash
-from polars.testing.parametric.strategies.data import data
-from polars.testing.parametric.strategies.dtype import _instantiate_dtype, dtypes
+from fancy_polars import select, when
+from fancy_polars._utils.deprecation import issue_deprecation_warning
+from fancy_polars.dataframe import DataFrame
+from fancy_polars.datatypes import (
+    Array,
+    Boolean,
+    DataType,
+    DataTypeClass,
+    List,
+    Null,
+    Struct,
+)
+from fancy_polars.series import Series
+from fancy_polars.string_cache import StringCache
+from fancy_polars.testing.parametric.strategies._utils import flexhash
+from fancy_polars.testing.parametric.strategies.data import data
+from fancy_polars.testing.parametric.strategies.dtype import _instantiate_dtype, dtypes
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Sequence
@@ -23,8 +31,8 @@ if TYPE_CHECKING:
 
     from hypothesis.strategies import DrawFn, SearchStrategy
 
-    from polars import LazyFrame
-    from polars._typing import PolarsDataType
+    from fancy_polars import LazyFrame
+    from fancy_polars._typing import PolarsDataType
 
 
 _ROW_LIMIT = 5  # max generated frame/series length
@@ -123,7 +131,7 @@ def series(
     --------
     The strategy is generally used to generate series in a unit test:
 
-    >>> from polars.testing.parametric import series
+    >>> from fancy_polars.testing.parametric import series
     >>> from hypothesis import given
     >>> @given(s=series(min_size=3, max_size=5))
     ... def test_series_len(s: pl.Series) -> None:
@@ -132,7 +140,7 @@ def series(
     Drawing examples interactively is also possible with the `.example()` method.
     This should be avoided while running tests.
 
-    >>> from polars.testing.parametric import lists
+    >>> from fancy_polars.testing.parametric import lists
     >>> s = series(strategy=lists(pl.String, select_from=["xx", "yy", "zz"]))
     >>> s.example()  # doctest: +SKIP
     shape: (4,)
@@ -396,7 +404,7 @@ def dataframes(
     --------
     The strategy is generally used to generate series in a unit test:
 
-    >>> from polars.testing.parametric import dataframes
+    >>> from fancy_polars.testing.parametric import dataframes
     >>> from hypothesis import given
     >>> @given(df=dataframes(min_size=3, max_size=5))
     ... def test_df_height(df: pl.DataFrame) -> None:
@@ -420,7 +428,7 @@ def dataframes(
 
     Use :class:`column` for more control over which exactly which columns are generated.
 
-    >>> from polars.testing.parametric import column
+    >>> from fancy_polars.testing.parametric import column
     >>> dfs = dataframes(
     ...     [
     ...         column("x", dtype=pl.Int32),
@@ -561,7 +569,7 @@ class column:
 
     Examples
     --------
-    >>> from polars.testing.parametric import column
+    >>> from fancy_polars.testing.parametric import column
     >>> dfs = dataframes(
     ...     [
     ...         column("x", dtype=pl.Int32, allow_null=True),

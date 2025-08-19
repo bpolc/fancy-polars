@@ -13,8 +13,8 @@ from typing import (
 
 import pytest
 
-import polars as pl
-from polars.datatypes._parse import (
+import fancy_polars as pl
+from fancy_polars.datatypes._parse import (
     _parse_forward_ref_into_dtype,
     _parse_generic_into_dtype,
     _parse_union_type_into_dtype,
@@ -23,7 +23,7 @@ from polars.datatypes._parse import (
 )
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def assert_dtype_equal(left: PolarsDataType, right: PolarsDataType) -> None:

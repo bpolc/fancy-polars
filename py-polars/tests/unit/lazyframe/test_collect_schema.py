@@ -1,7 +1,7 @@
 from hypothesis import given
 
-import polars as pl
-from polars.testing.parametric import dataframes
+import fancy_polars as pl
+from fancy_polars.testing.parametric import dataframes
 
 
 @given(lf=dataframes(lazy=True))

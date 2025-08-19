@@ -1,4 +1,4 @@
-import polars as pl
+import fancy_polars as pl
 
 
 def test_integer_float_functions() -> None:

@@ -4,10 +4,10 @@ import pytest
 from hypothesis import given
 from hypothesis.strategies import booleans
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import series
 
 
 def test_top_k() -> None:

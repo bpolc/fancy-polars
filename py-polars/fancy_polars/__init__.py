@@ -3,9 +3,9 @@ import contextlib
 with contextlib.suppress(ImportError):  # Module not available when building docs
     # This must be done before importing the Polars Rust bindings, otherwise we
     # might execute illegal instructions.
-    import polars._cpu_check
+    import fancy_polars._cpu_check
 
-    polars._cpu_check.check_cpu_flags()
+    fancy_polars._cpu_check.check_cpu_flags()
 
     # We also configure the allocator before importing the Polars Rust bindings.
     # See https://github.com/pola-rs/polars/issues/18088,
@@ -21,20 +21,20 @@ with contextlib.suppress(ImportError):  # Module not available when building doc
 
     # Initialize polars on the rust side. This function is highly
     # unsafe and should only be called once.
-    from polars.polars import __register_startup_deps
+    from fancy_polars.fancy_polars import __register_startup_deps
 
     __register_startup_deps()
 
 from typing import Any
 
-from polars import api, exceptions, plugins, selectors
-from polars._utils.polars_version import get_polars_version as _get_polars_version
+from fancy_polars import api, exceptions, plugins, selectors
+from fancy_polars._utils.polars_version import get_polars_version as _get_polars_version
 
 # TODO: remove need for importing wrap utils at top level
-from polars._utils.wrap import wrap_df, wrap_s  # noqa: F401
-from polars.catalog.unity import Catalog
-from polars.config import Config
-from polars.convert import (
+from fancy_polars._utils.wrap import wrap_df, wrap_s  # noqa: F401
+from fancy_polars.catalog.unity import Catalog
+from fancy_polars.config import Config
+from fancy_polars.convert import (
     from_arrow,
     from_dataframe,
     from_dict,
@@ -46,8 +46,8 @@ from polars.convert import (
     from_torch,
     json_normalize,
 )
-from polars.dataframe import DataFrame
-from polars.datatypes import (
+from fancy_polars.dataframe import DataFrame
+from fancy_polars.datatypes import (
     Array,
     Binary,
     Boolean,
@@ -79,8 +79,8 @@ from polars.datatypes import (
     Unknown,
     Utf8,
 )
-from polars.expr import Expr
-from polars.functions import (
+from fancy_polars.expr import Expr
+from fancy_polars.functions import (
     align_frames,
     all,
     all_horizontal,
@@ -167,8 +167,8 @@ from polars.functions import (
     when,
     zeros,
 )
-from polars.interchange import CompatLevel
-from polars.io import (
+from fancy_polars.interchange import CompatLevel
+from fancy_polars.io import (
     BasePartitionContext,
     KeyedPartition,
     KeyedPartitionContext,
@@ -200,7 +200,7 @@ from polars.io import (
     scan_parquet,
     scan_pyarrow_dataset,
 )
-from polars.io.cloud import (
+from fancy_polars.io.cloud import (
     CredentialProvider,
     CredentialProviderAWS,
     CredentialProviderAzure,
@@ -208,18 +208,18 @@ from polars.io.cloud import (
     CredentialProviderFunctionReturn,
     CredentialProviderGCP,
 )
-from polars.lazyframe import GPUEngine, LazyFrame
-from polars.meta import (
+from fancy_polars.lazyframe import GPUEngine, LazyFrame
+from fancy_polars.meta import (
     build_info,
     get_index_type,
     show_versions,
     thread_pool_size,
     threadpool_size,
 )
-from polars.schema import Schema
-from polars.series import Series
-from polars.sql import SQLContext, sql
-from polars.string_cache import (
+from fancy_polars.schema import Schema
+from fancy_polars.series import Series
+from fancy_polars.sql import SQLContext, sql
+from fancy_polars.string_cache import (
     StringCache,
     disable_string_cache,
     enable_string_cache,
@@ -275,7 +275,7 @@ __all__ = [
     "UInt64",
     "Unknown",
     "Utf8",
-    # polars.io
+    # fancy_polars.io
     "defer",
     "KeyedPartition",
     "BasePartitionContext",
@@ -307,23 +307,23 @@ __all__ = [
     "scan_parquet",
     "scan_pyarrow_dataset",
     "Catalog",
-    # polars.io.cloud
+    # fancy_polars.io.cloud
     "CredentialProvider",
     "CredentialProviderAWS",
     "CredentialProviderAzure",
     "CredentialProviderFunction",
     "CredentialProviderFunctionReturn",
     "CredentialProviderGCP",
-    # polars.stringcache
+    # fancy_polars.stringcache
     "StringCache",
     "disable_string_cache",
     "enable_string_cache",
     "using_string_cache",
-    # polars.config
+    # fancy_polars.config
     "Config",
-    # polars.functions.whenthen
+    # fancy_polars.functions.whenthen
     "when",
-    # polars.functions
+    # fancy_polars.functions
     "align_frames",
     "arg_where",
     "business_day_count",
@@ -339,7 +339,7 @@ __all__ = [
     "time_ranges",
     "zeros",
     "escape_regex",
-    # polars.functions.aggregation
+    # fancy_polars.functions.aggregation
     "all",
     "all_horizontal",
     "any",
@@ -353,7 +353,7 @@ __all__ = [
     "min_horizontal",
     "sum",
     "sum_horizontal",
-    # polars.functions.lazy
+    # fancy_polars.functions.lazy
     "approx_n_unique",
     "arange",
     "arctan2",
@@ -407,11 +407,11 @@ __all__ = [
     "tail",
     "time",
     "var",
-    # polars.functions.len
+    # fancy_polars.functions.len
     "len",
-    # polars.functions.random
+    # fancy_polars.functions.random
     "set_random_seed",
-    # polars.convert
+    # fancy_polars.convert
     "from_arrow",
     "from_dataframe",
     "from_dict",
@@ -422,13 +422,13 @@ __all__ = [
     "from_repr",
     "from_torch",
     "json_normalize",
-    # polars.meta
+    # fancy_polars.meta
     "build_info",
     "get_index_type",
     "show_versions",
     "thread_pool_size",
     "threadpool_size",
-    # polars.sql
+    # fancy_polars.sql
     "SQLContext",
     "sql",
     "sql_expr",
@@ -439,28 +439,28 @@ __all__ = [
 def __getattr__(name: str) -> Any:
     # Deprecate re-export of exceptions at top-level
     if name in dir(exceptions):
-        from polars._utils.deprecation import issue_deprecation_warning
+        from fancy_polars._utils.deprecation import issue_deprecation_warning
 
         issue_deprecation_warning(
             message=(
-                f"Accessing `{name}` from the top-level `polars` module is deprecated."
-                " Import it directly from the `polars.exceptions` module instead:"
-                f" from polars.exceptions import {name}"
+                f"Accessing `{name}` from the top-level `fancy_polars` module is deprecated."
+                " Import it directly from the `fancy_polars.exceptions` module instead:"
+                f" from fancy_polars.exceptions import {name}"
             ),
             version="1.0.0",
         )
         return getattr(exceptions, name)
 
     # Deprecate data type groups at top-level
-    import polars.datatypes.group as dtgroup
+    import fancy_polars.datatypes.group as dtgroup
 
     if name in dir(dtgroup):
-        from polars._utils.deprecation import issue_deprecation_warning
+        from fancy_polars._utils.deprecation import issue_deprecation_warning
 
         issue_deprecation_warning(
             message=(
                 f"`{name}` is deprecated. Define your own data type groups or use the"
-                " `polars.selectors` module for selecting columns of a certain data type."
+                " `fancy_polars.selectors` module for selecting columns of a certain data type."
             ),
             version="1.0.0",
         )

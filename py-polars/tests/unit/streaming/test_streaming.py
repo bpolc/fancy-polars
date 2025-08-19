@@ -9,12 +9,12 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.exceptions import PolarsInefficientMapWarning
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import PolarsInefficientMapWarning
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
-    from polars._typing import JoinStrategy
+    from fancy_polars._typing import JoinStrategy
 
 pytestmark = pytest.mark.xdist_group("streaming")
 

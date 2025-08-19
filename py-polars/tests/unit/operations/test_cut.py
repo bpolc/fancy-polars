@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import with_string_cache_if_auto_streaming
 
 inf = float("inf")

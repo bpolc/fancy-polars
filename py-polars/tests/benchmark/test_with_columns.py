@@ -2,8 +2,8 @@ from time import perf_counter
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
+import fancy_polars as pl
+import fancy_polars.selectors as cs
 
 
 # TODO: this is slow in streaming

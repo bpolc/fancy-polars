@@ -4,8 +4,12 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars.io._utils import looks_like_url, parse_columns_arg, parse_row_index_args
+import fancy_polars as pl
+from fancy_polars.io._utils import (
+    looks_like_url,
+    parse_columns_arg,
+    parse_row_index_args,
+)
 
 if TYPE_CHECKING:
     from collections.abc import Sequence

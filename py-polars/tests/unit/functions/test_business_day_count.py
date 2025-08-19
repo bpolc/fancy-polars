@@ -8,10 +8,10 @@ import numpy as np
 import pytest
 from hypothesis import assume, given, reject
 
-import polars as pl
-from polars._utils.various import parse_version
-from polars.exceptions import ComputeError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars._utils.various import parse_version
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_series_equal
 
 
 def test_business_day_count() -> None:

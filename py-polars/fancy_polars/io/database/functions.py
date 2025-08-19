@@ -3,11 +3,11 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Any, Literal, overload
 
-from polars._utils.various import qualified_type_name
-from polars.datatypes import N_INFER_DEFAULT
-from polars.dependencies import import_optional
-from polars.io.database._cursor_proxies import ODBCCursorProxy
-from polars.io.database._executor import ConnectionExecutor
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars.datatypes import N_INFER_DEFAULT
+from fancy_polars.dependencies import import_optional
+from fancy_polars.io.database._cursor_proxies import ODBCCursorProxy
+from fancy_polars.io.database._executor import ConnectionExecutor
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -15,8 +15,8 @@ if TYPE_CHECKING:
     from sqlalchemy.sql.elements import TextClause
     from sqlalchemy.sql.expression import Selectable
 
-    from polars import DataFrame
-    from polars._typing import ConnectionOrCursor, DbReadEngine, SchemaDict
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import ConnectionOrCursor, DbReadEngine, SchemaDict
 
 
 @overload
@@ -420,7 +420,7 @@ def read_database_uri(
     ...     engine="adbc",
     ... )  # doctest: +SKIP
     """
-    from polars.io.database._utils import _read_sql_adbc, _read_sql_connectorx
+    from fancy_polars.io.database._utils import _read_sql_adbc, _read_sql_connectorx
 
     if not isinstance(uri, str):
         msg = f"expected connection to be a URI string; found {qualified_type_name(uri)!r}"

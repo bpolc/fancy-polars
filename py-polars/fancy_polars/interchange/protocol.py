@@ -10,14 +10,14 @@ from typing import (
     TypedDict,
 )
 
-from polars._utils.unstable import issue_unstable_warning
+from fancy_polars._utils.unstable import issue_unstable_warning
 
 if TYPE_CHECKING:
     import sys
     from collections.abc import Iterable, Sequence
 
-    from polars.interchange.buffer import PolarsBuffer
-    from polars.interchange.column import PolarsColumn
+    from fancy_polars.interchange.buffer import PolarsBuffer
+    from fancy_polars.interchange.column import PolarsColumn
 
     if sys.version_info >= (3, 10):
         from typing import TypeAlias

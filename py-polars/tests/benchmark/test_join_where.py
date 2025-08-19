@@ -5,8 +5,8 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.exceptions import ColumnNotFoundError
+import fancy_polars as pl
+from fancy_polars.exceptions import ColumnNotFoundError
 
 pytestmark = pytest.mark.benchmark()
 

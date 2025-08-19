@@ -3,7 +3,7 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING
 
-from polars.datatypes import (
+from fancy_polars.datatypes import (
     Boolean,
     Categorical,
     Date,
@@ -23,12 +23,12 @@ from polars.datatypes import (
     UInt32,
     UInt64,
 )
-from polars.interchange.protocol import DtypeKind, Endianness
+from fancy_polars.interchange.protocol import DtypeKind, Endianness
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
-    from polars.datatypes import DataTypeClass
-    from polars.interchange.protocol import Dtype
+    from fancy_polars._typing import PolarsDataType
+    from fancy_polars.datatypes import DataTypeClass
+    from fancy_polars.interchange.protocol import Dtype
 
 NE = Endianness.NATIVE
 

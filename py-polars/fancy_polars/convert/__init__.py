@@ -1,4 +1,4 @@
-from polars.convert.general import (
+from fancy_polars.convert.general import (
     from_arrow,
     from_dataframe,
     from_dict,
@@ -9,7 +9,7 @@ from polars.convert.general import (
     from_repr,
     from_torch,
 )
-from polars.convert.normalize import json_normalize
+from fancy_polars.convert.normalize import json_normalize
 
 __all__ = [
     "from_arrow",

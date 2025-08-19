@@ -4,8 +4,8 @@
 import hypothesis.strategies as st
 from hypothesis import example, given
 
-import polars as pl
-from polars.testing.parametric import column, dataframes
+import fancy_polars as pl
+from fancy_polars.testing.parametric import column, dataframes
 
 
 @given(

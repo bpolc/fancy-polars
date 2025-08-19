@@ -8,10 +8,10 @@ import pandas as pd
 import pyarrow as pa
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError, UnstableWarning
-from polars.interchange.protocol import CompatLevel
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError, UnstableWarning
+from fancy_polars.interchange.protocol import CompatLevel
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.utils.pycapsule_utils import PyCapsuleStreamHolder
 
 
@@ -261,7 +261,7 @@ def test_from_arrow_with_bigquery_metadata() -> None:
 
 
 def test_from_optional_not_available() -> None:
-    from polars.dependencies import _LazyModule
+    from fancy_polars.dependencies import _LazyModule
 
     # proxy module is created dynamically if the required module is not available
     # (see the polars.dependencies source code for additional detail/comments)

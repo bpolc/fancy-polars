@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.io.database._inference import _infer_dtype_from_database_typename
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.io.database._inference import _infer_dtype_from_database_typename
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 @pytest.mark.parametrize(

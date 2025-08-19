@@ -1,4 +1,4 @@
-from polars.functions.aggregation.horizontal import (
+from fancy_polars.functions.aggregation.horizontal import (
     all_horizontal,
     any_horizontal,
     cum_sum_horizontal,
@@ -7,7 +7,7 @@ from polars.functions.aggregation.horizontal import (
     min_horizontal,
     sum_horizontal,
 )
-from polars.functions.aggregation.vertical import (
+from fancy_polars.functions.aggregation.vertical import (
     all,
     any,
     cum_sum,

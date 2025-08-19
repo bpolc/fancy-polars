@@ -5,13 +5,13 @@ from collections.abc import Sequence
 from functools import wraps
 from typing import TYPE_CHECKING, Callable, TypeVar
 
-from polars._utils.various import issue_warning
+from fancy_polars._utils.various import issue_warning
 
 if TYPE_CHECKING:
     import sys
     from collections.abc import Mapping
 
-    from polars._typing import Ambiguous
+    from fancy_polars._typing import Ambiguous
 
     if sys.version_info >= (3, 10):
         from typing import ParamSpec

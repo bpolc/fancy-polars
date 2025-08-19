@@ -5,9 +5,13 @@ from typing import Any, Literal
 
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError, SQLInterfaceError, SQLSyntaxError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import (
+    InvalidOperationError,
+    SQLInterfaceError,
+    SQLSyntaxError,
+)
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_date_func() -> None:

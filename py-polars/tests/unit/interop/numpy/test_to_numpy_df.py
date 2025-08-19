@@ -9,14 +9,14 @@ import pytest
 from hypothesis import given
 from numpy.testing import assert_array_equal, assert_equal
 
-import polars as pl
-from polars.testing import assert_frame_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
+from fancy_polars.testing.parametric import series
 
 if TYPE_CHECKING:
     import numpy.typing as npt
 
-    from polars._typing import IndexOrder, PolarsDataType
+    from fancy_polars._typing import IndexOrder, PolarsDataType
 
 
 def assert_zero_copy(s: pl.Series, arr: np.ndarray[Any, Any]) -> None:

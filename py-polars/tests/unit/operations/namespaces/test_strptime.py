@@ -12,12 +12,16 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ChronoFormatWarning, ComputeError, InvalidOperationError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import (
+    ChronoFormatWarning,
+    ComputeError,
+    InvalidOperationError,
+)
+from fancy_polars.testing import assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsTemporalType, TimeUnit
+    from fancy_polars._typing import PolarsTemporalType, TimeUnit
 
 
 def test_str_strptime() -> None:

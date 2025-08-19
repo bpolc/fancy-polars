@@ -4,34 +4,34 @@ import contextlib
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any, Callable, overload
 
-import polars._reexport as pl
-import polars.functions as F
-from polars._utils.async_ import _AioDataFrameResult, _GeventDataFrameResult
-from polars._utils.deprecation import (
+import fancy_polars._reexport as pl
+import fancy_polars.functions as F
+from fancy_polars._utils.async_ import _AioDataFrameResult, _GeventDataFrameResult
+from fancy_polars._utils.deprecation import (
     deprecate_function,
     deprecate_renamed_parameter,
     deprecate_streaming_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.parse import (
+from fancy_polars._utils.parse import (
     parse_into_expression,
     parse_into_list_of_expressions,
 )
-from polars._utils.unstable import issue_unstable_warning, unstable
-from polars._utils.various import extend_bool, qualified_type_name
-from polars._utils.wrap import wrap_df, wrap_expr
-from polars.datatypes import DTYPE_TEMPORAL_UNITS, Date, Datetime, Int64
-from polars.lazyframe.opt_flags import OptFlags
+from fancy_polars._utils.unstable import issue_unstable_warning, unstable
+from fancy_polars._utils.various import extend_bool, qualified_type_name
+from fancy_polars._utils.wrap import wrap_df, wrap_expr
+from fancy_polars.datatypes import DTYPE_TEMPORAL_UNITS, Date, Datetime, Int64
+from fancy_polars.lazyframe.opt_flags import OptFlags
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
     from collections.abc import Awaitable, Collection, Iterable
     from typing import Literal
 
-    from polars import DataFrame, Expr, LazyFrame, Series
-    from polars._typing import (
+    from fancy_polars import DataFrame, Expr, LazyFrame, Series
+    from fancy_polars._typing import (
         CorrelationMethod,
         EngineType,
         EpochTimeUnit,

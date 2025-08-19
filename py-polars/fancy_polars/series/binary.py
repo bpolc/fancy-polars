@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars.series.utils import expr_dispatch
+from fancy_polars.series.utils import expr_dispatch
 
 if TYPE_CHECKING:
-    from polars import Series
-    from polars._typing import (
+    from fancy_polars import Series
+    from fancy_polars._typing import (
         Endianness,
         IntoExpr,
         PolarsDataType,
         SizeUnit,
         TransferEncoding,
     )
-    from polars.polars import PySeries
+    from fancy_polars.fancy_polars import PySeries
 
 
 @expr_dispatch

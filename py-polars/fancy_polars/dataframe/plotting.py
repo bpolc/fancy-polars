@@ -3,7 +3,7 @@ from __future__ import annotations
 import inspect
 from typing import TYPE_CHECKING, Callable, Union
 
-from polars.dependencies import altair as alt
+from fancy_polars.dependencies import altair as alt
 
 if TYPE_CHECKING:
     import sys
@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from altair.typing import ChannelY as Y
     from altair.typing import EncodeKwds
 
-    from polars import DataFrame
+    from fancy_polars import DataFrame
 
     if sys.version_info >= (3, 10):
         from typing import TypeAlias

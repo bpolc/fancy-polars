@@ -10,8 +10,8 @@ import zoneinfo
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Callable, Optional, TypedDict, Union
 
-import polars._utils.logging
-from polars._utils.logging import eprint, verbose
+import fancy_polars._utils.logging
+from fancy_polars._utils.logging import eprint, verbose
 
 if TYPE_CHECKING:
     if sys.version_info >= (3, 10):
@@ -19,7 +19,7 @@ if TYPE_CHECKING:
     else:
         from typing_extensions import TypeAlias
 
-from polars._utils.unstable import issue_unstable_warning
+from fancy_polars._utils.unstable import issue_unstable_warning
 
 # These typedefs are here to avoid circular import issues, as
 # `CredentialProviderFunction` specifies "CredentialProvider"
@@ -251,7 +251,7 @@ class CredentialProviderAzure(CredentialProvider):
             "POLARS_AUTO_USE_AZURE_STORAGE_ACCOUNT_KEY"
         )
 
-        verbose = polars._utils.logging.verbose()
+        verbose = fancy_polars._utils.logging.verbose()
 
         if verbose:
             eprint(

@@ -7,13 +7,13 @@ import re
 from textwrap import dedent
 from typing import TYPE_CHECKING
 
-from polars.dependencies import html
+from fancy_polars.dependencies import html
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from types import TracebackType
 
-    from polars import DataFrame
+    from fancy_polars import DataFrame
 
 
 def replace_consecutive_spaces(s: str) -> str:

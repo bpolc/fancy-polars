@@ -3,8 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from polars._utils.various import is_path_or_str_sequence
-from polars.io.partition import PartitionMaxSize
+from fancy_polars._utils.various import is_path_or_str_sequence
+from fancy_polars.io.partition import PartitionMaxSize
 
 
 def _first_scan_path(

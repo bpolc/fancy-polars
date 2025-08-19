@@ -3,20 +3,20 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING
 
-from polars._utils.various import (
+from fancy_polars._utils.various import (
     BUILDING_SPHINX_DOCS,
     qualified_type_name,
     sphinx_accessor,
 )
-from polars._utils.wrap import wrap_df
-from polars.schema import Schema
-from polars.series.utils import expr_dispatch
+from fancy_polars._utils.wrap import wrap_df
+from fancy_polars.schema import Schema
+from fancy_polars.series.utils import expr_dispatch
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from polars import DataFrame, Series
-    from polars.polars import PySeries
+    from fancy_polars import DataFrame, Series
+    from fancy_polars.fancy_polars import PySeries
 elif BUILDING_SPHINX_DOCS:
     # note: we assign this way to work around an autocomplete issue in ipython/jedi
     # (ref: https://github.com/davidhalter/jedi/issues/2057)

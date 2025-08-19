@@ -6,15 +6,15 @@ from typing import TYPE_CHECKING, Any, TypedDict
 
 from hypothesis import Phase, given, settings
 
-import polars as pl
-from polars.meta import get_index_type
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric.strategies import series
+import fancy_polars as pl
+from fancy_polars.meta import get_index_type
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric.strategies import series
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from polars._typing import PythonLiteral
+    from fancy_polars._typing import PythonLiteral
 
 
 class Case(TypedDict):

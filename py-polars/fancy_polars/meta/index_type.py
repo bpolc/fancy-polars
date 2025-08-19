@@ -4,10 +4,10 @@ import contextlib
 from typing import TYPE_CHECKING
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
-    from polars.datatypes import DataType
+    from fancy_polars.datatypes import DataType
 
 
 def get_index_type() -> DataType:

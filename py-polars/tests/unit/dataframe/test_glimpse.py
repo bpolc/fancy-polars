@@ -2,7 +2,7 @@ import textwrap
 from datetime import datetime
 from typing import Any
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_glimpse(capsys: Any) -> None:

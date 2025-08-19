@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import polars._reexport as pl
+import fancy_polars._reexport as pl
 
 if TYPE_CHECKING:
-    from polars import DataFrame, Expr, LazyFrame, Series
-    from polars.polars import PyDataFrame, PyExpr, PyLazyFrame, PySeries
+    from fancy_polars import DataFrame, Expr, LazyFrame, Series
+    from fancy_polars.fancy_polars import PyDataFrame, PyExpr, PyLazyFrame, PySeries
 
 
 def wrap_df(df: PyDataFrame) -> DataFrame:

@@ -8,13 +8,13 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars._utils.wrap import wrap_s
-from polars.polars import PySeries
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars._utils.wrap import wrap_s
+from fancy_polars.fancy_polars import PySeries
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 @pytest.mark.parametrize(

@@ -2,8 +2,8 @@ from types import MappingProxyType
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ColumnNotFoundError
+import fancy_polars as pl
+from fancy_polars.exceptions import ColumnNotFoundError
 
 
 def test_lazy_rename() -> None:

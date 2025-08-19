@@ -8,13 +8,13 @@ import hypothesis.strategies as st
 import pytest
 from hypothesis import given, settings
 
-import polars as pl
-from polars.datatypes import DTYPE_TEMPORAL_UNITS
-from polars.exceptions import ComputeError, InvalidOperationError, SchemaError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.datatypes import DTYPE_TEMPORAL_UNITS
+from fancy_polars.exceptions import ComputeError, InvalidOperationError, SchemaError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import ClosedInterval, PolarsDataType, TimeUnit
+    from fancy_polars._typing import ClosedInterval, PolarsDataType, TimeUnit
 
 
 def test_datetime_range() -> None:

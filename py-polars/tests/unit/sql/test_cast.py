@@ -4,10 +4,10 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import InvalidOperationError, SQLInterfaceError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import InvalidOperationError, SQLInterfaceError
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_cast() -> None:

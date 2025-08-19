@@ -4,12 +4,12 @@ import functools
 from decimal import Decimal as PyDecimal
 from typing import TYPE_CHECKING, Any, Callable
 
-from polars import datatypes as dt
-from polars.dependencies import numpy as np
+from fancy_polars import datatypes as dt
+from fancy_polars.dependencies import numpy as np
 
 # Module not available when building docs
 try:
-    from polars.polars import PySeries
+    from fancy_polars.fancy_polars import PySeries
 
     _DOCUMENTING = False
 except ImportError:
@@ -18,7 +18,7 @@ except ImportError:
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 if not _DOCUMENTING:
     _POLARS_TYPE_TO_CONSTRUCTOR: dict[

@@ -7,8 +7,8 @@ from zoneinfo import ZoneInfo
 import pytest
 from dateutil.tz import tzoffset
 
-import polars as pl
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_literal_scalar_list_18686() -> None:

@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-from polars.testing.parametric.strategies._utils import flexhash
+from fancy_polars.testing.parametric.strategies._utils import flexhash
 
 
 @pytest.mark.parametrize(

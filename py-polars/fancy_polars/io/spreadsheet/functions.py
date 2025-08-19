@@ -11,15 +11,19 @@ from io import BufferedReader, BytesIO, StringIO, TextIOWrapper
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Callable, NoReturn, overload
 
-import polars._reexport as pl
-from polars import from_arrow
-from polars import functions as F
-from polars._utils.deprecation import (
+import fancy_polars._reexport as pl
+from fancy_polars import from_arrow
+from fancy_polars import functions as F
+from fancy_polars._utils.deprecation import (
     deprecate_renamed_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.various import deduplicate_names, normalize_filepath, parse_version
-from polars.datatypes import (
+from fancy_polars._utils.various import (
+    deduplicate_names,
+    normalize_filepath,
+    parse_version,
+)
+from fancy_polars.datatypes import (
     N_INFER_DEFAULT,
     Boolean,
     Date,
@@ -31,21 +35,21 @@ from polars.datatypes import (
     Time,
     UInt8,
 )
-from polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES, NUMERIC_DTYPES
-from polars.dependencies import import_optional
-from polars.exceptions import (
+from fancy_polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES, NUMERIC_DTYPES
+from fancy_polars.dependencies import import_optional
+from fancy_polars.exceptions import (
     ModuleUpgradeRequiredError,
     NoDataError,
     ParameterCollisionError,
 )
-from polars.functions import concat
-from polars.io._utils import looks_like_url, process_file_url
-from polars.io.csv.functions import read_csv
+from fancy_polars.functions import concat
+from fancy_polars.io._utils import looks_like_url, process_file_url
+from fancy_polars.io.csv.functions import read_csv
 
 if TYPE_CHECKING:
     from typing import Literal
 
-    from polars._typing import ExcelSpreadsheetEngine, FileSource, SchemaDict
+    from fancy_polars._typing import ExcelSpreadsheetEngine, FileSource, SchemaDict
 
 
 def _sources(source: FileSource) -> tuple[Any, bool]:
@@ -1000,7 +1004,7 @@ def _reorder_columns(
     df: pl.DataFrame, columns: Sequence[int] | Sequence[str] | None
 ) -> pl.DataFrame:
     if columns:
-        from polars.selectors import by_index, by_name
+        from fancy_polars.selectors import by_index, by_name
 
         cols = by_index(*columns) if isinstance(columns[0], int) else by_name(*columns)
         df = df.select(cols)

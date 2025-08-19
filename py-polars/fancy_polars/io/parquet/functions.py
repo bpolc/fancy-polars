@@ -5,37 +5,39 @@ import io
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any
 
-import polars.functions as F
-from polars import concat as plconcat
-from polars._utils.deprecation import deprecate_renamed_parameter
-from polars._utils.unstable import issue_unstable_warning
-from polars._utils.various import (
+import fancy_polars.functions as F
+from fancy_polars import concat as plconcat
+from fancy_polars._utils.deprecation import deprecate_renamed_parameter
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars._utils.various import (
     is_int_sequence,
     is_path_or_str_sequence,
     normalize_filepath,
 )
-from polars._utils.wrap import wrap_ldf
-from polars.convert import from_arrow
-from polars.dependencies import import_optional
-from polars.io._utils import (
+from fancy_polars._utils.wrap import wrap_ldf
+from fancy_polars.convert import from_arrow
+from fancy_polars.dependencies import import_optional
+from fancy_polars.io._utils import (
     parse_row_index_args,
     prepare_file_arg,
 )
-from polars.io.cloud.credential_provider._builder import (
+from fancy_polars.io.cloud.credential_provider._builder import (
     _init_credential_provider_builder,
 )
 
 with contextlib.suppress(ImportError):
-    from polars.polars import PyLazyFrame
-    from polars.polars import read_parquet_schema as _read_parquet_schema
+    from fancy_polars.fancy_polars import PyLazyFrame
+    from fancy_polars.fancy_polars import read_parquet_schema as _read_parquet_schema
 
 if TYPE_CHECKING:
     from typing import Literal
 
-    from polars import DataFrame, DataType, LazyFrame
-    from polars._typing import FileSource, ParallelStrategy, SchemaDict
-    from polars.io.cloud import CredentialProviderFunction
-    from polars.io.cloud.credential_provider._builder import CredentialProviderBuilder
+    from fancy_polars import DataFrame, DataType, LazyFrame
+    from fancy_polars._typing import FileSource, ParallelStrategy, SchemaDict
+    from fancy_polars.io.cloud import CredentialProviderFunction
+    from fancy_polars.io.cloud.credential_provider._builder import (
+        CredentialProviderBuilder,
+    )
 
 
 @deprecate_renamed_parameter("row_count_name", "row_index_name", version="0.20.4")

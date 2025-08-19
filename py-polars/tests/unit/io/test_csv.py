@@ -16,16 +16,16 @@ import pyarrow as pa
 import pytest
 import zstandard
 
-import polars as pl
-from polars._utils.various import normalize_filepath
-from polars.exceptions import ComputeError, InvalidOperationError, NoDataError
-from polars.io.csv import BatchedCsvReader
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars._utils.various import normalize_filepath
+from fancy_polars.exceptions import ComputeError, InvalidOperationError, NoDataError
+from fancy_polars.io.csv import BatchedCsvReader
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars._typing import TimeUnit
+    from fancy_polars._typing import TimeUnit
     from tests.unit.conftest import MemoryUsage
 
 
@@ -2247,7 +2247,7 @@ def test_csv_float_decimal() -> None:
 def test_fsspec_not_available() -> None:
     with pytest.MonkeyPatch.context() as mp:
         mp.setenv("POLARS_FORCE_ASYNC", "0")
-        mp.setattr("polars.io._utils._FSSPEC_AVAILABLE", False)
+        mp.setattr("fancy_polars.io._utils._FSSPEC_AVAILABLE", False)
 
         with pytest.raises(
             ImportError, match=r"`fsspec` is required for `storage_options` argument"

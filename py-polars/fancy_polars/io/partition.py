@@ -5,19 +5,19 @@ from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from polars import col
-from polars._typing import PartitioningScheme
-from polars._utils.unstable import issue_unstable_warning
-from polars.expr import Expr
+from fancy_polars import col
+from fancy_polars._typing import PartitioningScheme
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars.expr import Expr
 
 if TYPE_CHECKING:
     with contextlib.suppress(ImportError):  # Module not available when building docs
-        from polars.polars import PyExpr
+        from fancy_polars.fancy_polars import PyExpr
 
     from typing import IO, Any, Callable
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyPartitioning
+    from fancy_polars.fancy_polars import PyPartitioning
 
 
 class KeyedPartition:

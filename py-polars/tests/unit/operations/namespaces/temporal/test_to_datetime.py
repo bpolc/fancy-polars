@@ -8,14 +8,14 @@ import hypothesis.strategies as st
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.exceptions import ComputeError, InvalidOperationError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError, InvalidOperationError
+from fancy_polars.testing import assert_series_equal
 
 if TYPE_CHECKING:
     from hypothesis.strategies import DrawFn
 
-    from polars._typing import TimeUnit
+    from fancy_polars._typing import TimeUnit
 
 
 DATE_FORMATS = ["%Y{}%m{}%d", "%d{}%m{}%Y"]

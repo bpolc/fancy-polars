@@ -6,17 +6,17 @@ from functools import lru_cache
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
-from polars._utils.parse import parse_into_list_of_expressions
-from polars._utils.wrap import wrap_expr
+from fancy_polars._utils.parse import parse_into_list_of_expressions
+from fancy_polars._utils.wrap import wrap_expr
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import Expr
-    from polars._typing import IntoExpr
+    from fancy_polars import Expr
+    from fancy_polars._typing import IntoExpr
 
 __all__ = ["register_plugin_function"]
 

@@ -1,4 +1,4 @@
-from polars.io.cloud.credential_provider._providers import (
+from fancy_polars.io.cloud.credential_provider._providers import (
     CredentialProvider,
     CredentialProviderAWS,
     CredentialProviderAzure,

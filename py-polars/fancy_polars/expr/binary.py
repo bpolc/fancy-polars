@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars._utils.parse import parse_into_expression
-from polars._utils.various import scale_bytes
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import parse_into_dtype
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.various import scale_bytes
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import parse_into_dtype
 
 if TYPE_CHECKING:
-    from polars import Expr
-    from polars._typing import (
+    from fancy_polars import Expr
+    from fancy_polars._typing import (
         Endianness,
         IntoExpr,
         PolarsDataType,

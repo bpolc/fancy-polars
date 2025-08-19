@@ -11,7 +11,7 @@ from zoneinfo import ZoneInfo
 import hypothesis.strategies as st
 from hypothesis.errors import InvalidArgument
 
-from polars._utils.constants import (
+from fancy_polars._utils.constants import (
     EPOCH,
     I8_MAX,
     I8_MIN,
@@ -28,7 +28,7 @@ from polars._utils.constants import (
     U32_MAX,
     U64_MAX,
 )
-from polars.datatypes import (
+from fancy_polars.datatypes import (
     Array,
     Binary,
     Boolean,
@@ -57,8 +57,8 @@ from polars.datatypes import (
     UInt32,
     UInt64,
 )
-from polars.testing.parametric.strategies._utils import flexhash
-from polars.testing.parametric.strategies.dtype import (
+from fancy_polars.testing.parametric.strategies._utils import flexhash
+from fancy_polars.testing.parametric.strategies.dtype import (
     _DEFAULT_ARRAY_WIDTH_LIMIT,
     _DEFAULT_ENUM_CATEGORIES_LIMIT,
 )
@@ -69,8 +69,8 @@ if TYPE_CHECKING:
 
     from hypothesis.strategies import SearchStrategy
 
-    from polars._typing import PolarsDataType, SchemaDict, TimeUnit
-    from polars.datatypes import DataType, DataTypeClass
+    from fancy_polars._typing import PolarsDataType, SchemaDict, TimeUnit
+    from fancy_polars.datatypes import DataType, DataTypeClass
 
 _DEFAULT_LIST_LEN_LIMIT = 3
 _DEFAULT_N_CATEGORIES = 10

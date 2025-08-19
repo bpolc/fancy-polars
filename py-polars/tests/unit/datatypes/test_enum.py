@@ -12,15 +12,15 @@ from typing import Any, Callable
 
 import pytest
 
-import polars as pl
-from polars import StringCache
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars import StringCache
+from fancy_polars.exceptions import (
     ComputeError,
     InvalidOperationError,
     OutOfBoundsError,
     SchemaError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import INTEGER_DTYPES
 
 if sys.version_info >= (3, 11):

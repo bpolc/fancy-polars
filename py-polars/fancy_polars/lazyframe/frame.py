@@ -20,27 +20,27 @@ from typing import (
     overload,
 )
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._typing import (
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._typing import (
     PartitioningScheme,
 )
-from polars._utils.async_ import _AioDataFrameResult, _GeventDataFrameResult
-from polars._utils.convert import negate_duration_string, parse_as_duration_string
-from polars._utils.deprecation import (
+from fancy_polars._utils.async_ import _AioDataFrameResult, _GeventDataFrameResult
+from fancy_polars._utils.convert import negate_duration_string, parse_as_duration_string
+from fancy_polars._utils.deprecation import (
     deprecate_function,
     deprecate_renamed_parameter,
     deprecate_streaming_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.parse import (
+from fancy_polars._utils.parse import (
     parse_into_expression,
     parse_into_list_of_expressions,
 )
-from polars._utils.serde import serialize_polars_object
-from polars._utils.slice import LazyPolarsSlice
-from polars._utils.unstable import issue_unstable_warning, unstable
-from polars._utils.various import (
+from fancy_polars._utils.serde import serialize_polars_object
+from fancy_polars._utils.slice import LazyPolarsSlice
+from fancy_polars._utils.unstable import issue_unstable_warning, unstable
+from fancy_polars._utils.various import (
     _is_generator,
     display_dot_graph,
     extend_bool,
@@ -52,8 +52,8 @@ from polars._utils.various import (
     parse_percentiles,
     qualified_type_name,
 )
-from polars._utils.wrap import wrap_df, wrap_expr
-from polars.datatypes import (
+from fancy_polars._utils.wrap import wrap_df, wrap_expr
+from fancy_polars.datatypes import (
     DTYPE_TEMPORAL_UNITS,
     N_INFER_DEFAULT,
     Boolean,
@@ -81,24 +81,24 @@ from polars.datatypes import (
     is_polars_dtype,
     parse_into_dtype,
 )
-from polars.datatypes.group import DataTypeGroup
-from polars.dependencies import (
+from fancy_polars.datatypes.group import DataTypeGroup
+from fancy_polars.dependencies import (
     _PYARROW_AVAILABLE,
     import_optional,
     subprocess,
 )
-from polars.dependencies import polars_cloud as pc
-from polars.dependencies import pyarrow as pa
-from polars.exceptions import PerformanceWarning
-from polars.interchange.protocol import CompatLevel
-from polars.lazyframe.engine_config import GPUEngine
-from polars.lazyframe.group_by import LazyGroupBy
-from polars.lazyframe.in_process import InProcessQuery
-from polars.schema import Schema
-from polars.selectors import by_dtype, expand_selector
+from fancy_polars.dependencies import polars_cloud as pc
+from fancy_polars.dependencies import pyarrow as pa
+from fancy_polars.exceptions import PerformanceWarning
+from fancy_polars.interchange.protocol import CompatLevel
+from fancy_polars.lazyframe.engine_config import GPUEngine
+from fancy_polars.lazyframe.group_by import LazyGroupBy
+from fancy_polars.lazyframe.in_process import InProcessQuery
+from fancy_polars.schema import Schema
+from fancy_polars.selectors import by_dtype, expand_selector
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyLazyFrame, get_engine_affinity
+    from fancy_polars.fancy_polars import PyLazyFrame, get_engine_affinity
 
 
 if TYPE_CHECKING:
@@ -108,10 +108,10 @@ if TYPE_CHECKING:
     from typing import IO, Literal
 
     with contextlib.suppress(ImportError):  # Module not available when building docs
-        from polars.polars import PyPartitioning
+        from fancy_polars.fancy_polars import PyPartitioning
 
-    from polars import DataFrame, DataType, Expr
-    from polars._typing import (
+    from fancy_polars import DataFrame, DataType, Expr
+    from fancy_polars._typing import (
         AsofJoinStrategy,
         ClosedInterval,
         ColumnNameOrSelector,
@@ -139,8 +139,8 @@ if TYPE_CHECKING:
         SyncOnCloseMethod,
         UniqueKeepStrategy,
     )
-    from polars.dependencies import numpy as np
-    from polars.io.cloud import CredentialProviderFunction
+    from fancy_polars.dependencies import numpy as np
+    from fancy_polars.io.cloud import CredentialProviderFunction
 
     if sys.version_info >= (3, 10):
         from typing import Concatenate, ParamSpec
@@ -384,7 +384,7 @@ class LazyFrame:
         infer_schema_length: int | None = N_INFER_DEFAULT,
         nan_to_null: bool = False,
     ) -> None:
-        from polars.dataframe import DataFrame
+        from fancy_polars.dataframe import DataFrame
 
         self._ldf = (
             DataFrame(
@@ -982,7 +982,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         │ max        ┆ 3.0      ┆ 50.0     ┆ 1.0      ┆ zz   ┆ 2022-12-31          ┆ 23:15:10 │
         └────────────┴──────────┴──────────┴──────────┴──────┴─────────────────────┴──────────┘
         """  # noqa: W505
-        from polars.convert import from_dict
+        from fancy_polars.convert import from_dict
 
         schema = self.collect_schema()
 
@@ -1595,7 +1595,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         │ 2   ┆ true      ┆ 3.5 ┆ y:y:y │
         └─────┴───────────┴─────┴───────┘
         """
-        from polars.sql import SQLContext
+        from fancy_polars.sql import SQLContext
 
         issue_unstable_warning(
             "`sql` is considered **unstable** (although it is close to being considered stable)."
@@ -2681,7 +2681,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
                 "null_count": True,
             }
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -2904,7 +2904,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
             no_optimization=no_optimization,
         )
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -3194,7 +3194,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         >>> lf = pl.scan_csv("/path/to/my_larger_than_ram_file.csv")  # doctest: +SKIP
         >>> lf.sink_csv("out.csv")  # doctest: +SKIP
         """
-        from polars.io.csv._utils import _check_arg_is_1byte
+        from fancy_polars.io.csv._utils import _check_arg_is_1byte
 
         _check_arg_is_1byte("separator", separator, can_be_empty=False)
         _check_arg_is_1byte("quote_char", quote_char, can_be_empty=False)
@@ -3213,7 +3213,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
             no_optimization=no_optimization,
         )
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -3429,7 +3429,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
             no_optimization=no_optimization,
         )
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -3772,7 +3772,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
 
         Use selectors to define the columns being cast:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> lf.cast({cs.numeric(): pl.UInt32, cs.temporal(): pl.String}).collect()
         shape: (3, 3)
         ┌─────┬─────┬────────────┐
@@ -6043,7 +6043,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
 
         Drop multiple columns by passing a selector.
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> lf.drop(cs.numeric()).collect()
         shape: (3, 1)
         ┌─────┐
@@ -6737,7 +6737,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         │ 4   ┆ 13.0 │
         └─────┴──────┘
         """
-        from polars import Decimal
+        from fancy_polars import Decimal
 
         dtypes: Sequence[PolarsDataType] | None
 
@@ -7344,7 +7344,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         defined by name or with a selector. For example, dropping rows if there is
         a null in any of the integer columns:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> lf.drop_nulls(subset=cs.integer()).collect()
         shape: (2, 3)
         ┌─────┬─────┬──────┐
@@ -7429,7 +7429,7 @@ naive plan: (run LazyFrame.explain(optimized=True) to see the optimized plan)
         ...         "c": [2, 4, 6],
         ...     }
         ... )
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> lf.unpivot(cs.numeric(), index="a").collect()
         shape: (6, 3)
         ┌─────┬──────────┬───────┐

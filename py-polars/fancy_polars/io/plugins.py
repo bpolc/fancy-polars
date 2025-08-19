@@ -5,15 +5,15 @@ import sys
 from collections.abc import Iterator
 from typing import TYPE_CHECKING, Callable
 
-import polars._reexport as pl
-from polars._utils.unstable import unstable
+import fancy_polars._reexport as pl
+from fancy_polars._utils.unstable import unstable
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from typing import Callable
 
-    from polars import DataFrame, Expr, LazyFrame
-    from polars._typing import SchemaDict
+    from fancy_polars import DataFrame, Expr, LazyFrame
+    from fancy_polars._typing import SchemaDict
 
 
 @unstable()

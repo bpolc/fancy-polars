@@ -8,15 +8,15 @@ from typing import TYPE_CHECKING, Any
 import pytest
 from hypothesis import example, given
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal
-from polars.testing.parametric import dataframes
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal
+from fancy_polars.testing.parametric import dataframes
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars._typing import SerializationFormat
+    from fancy_polars._typing import SerializationFormat
 
 
 def test_df_serde_roundtrip_binary(df: pl.DataFrame) -> None:

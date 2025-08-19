@@ -5,13 +5,17 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-import polars as pl
-from polars.interchange.column import PolarsColumn
-from polars.interchange.protocol import ColumnNullType, CopyNotAllowedError, DtypeKind
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.interchange.column import PolarsColumn
+from fancy_polars.interchange.protocol import (
+    ColumnNullType,
+    CopyNotAllowedError,
+    DtypeKind,
+)
+from fancy_polars.testing import assert_series_equal
 
 if TYPE_CHECKING:
-    from polars.interchange.protocol import Dtype
+    from fancy_polars.interchange.protocol import Dtype
 
 
 def test_size() -> None:

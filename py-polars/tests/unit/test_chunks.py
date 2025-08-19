@@ -1,6 +1,6 @@
 import numpy as np
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_chunks_align_16830() -> None:

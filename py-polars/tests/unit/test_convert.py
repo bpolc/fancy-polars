@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError, NoDataError
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError, NoDataError
 
 
 def test_from_records_schema_inference() -> None:

@@ -5,11 +5,11 @@ from collections import OrderedDict
 
 import pytest
 
-import polars as pl
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars.exceptions import (
     OutOfBoundsError,
 )
-from polars.testing import assert_frame_equal
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_struct_various() -> None:

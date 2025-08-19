@@ -1,6 +1,6 @@
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_list_constructor_strictness() -> None:

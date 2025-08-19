@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-import polars as pl
-from polars.exceptions import SQLSyntaxError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import SQLSyntaxError
+from fancy_polars.testing import assert_frame_equal
 
 
 # TODO: Do not rely on I/O for these tests

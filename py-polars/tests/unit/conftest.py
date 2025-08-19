@@ -12,8 +12,8 @@ from typing import TYPE_CHECKING, Any, cast
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.testing.parametric import load_profile
+import fancy_polars as pl
+from fancy_polars.testing.parametric import load_profile
 
 if TYPE_CHECKING:
     from collections.abc import Generator
@@ -223,7 +223,7 @@ def memory_usage_without_pyarrow() -> Generator[MemoryUsage, Any, Any]:
 
     Memory usage from PyArrow is not tracked.
     """
-    if not pl.polars._debug:  # type: ignore[attr-defined]
+    if not pl.fancy_polars._debug:  # type: ignore[attr-defined]
         pytest.skip("Memory usage only available in debug/dev builds.")
 
     if os.getenv("POLARS_FORCE_ASYNC", "0") == "1":

@@ -6,9 +6,9 @@ from typing import Any
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_frame_not_equal
-from polars.testing.parametric import dataframes
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_frame_not_equal
+from fancy_polars.testing.parametric import dataframes
 
 nan = float("nan")
 pytest_plugins = ["pytester"]
@@ -405,8 +405,8 @@ def test_tracebackhide(testdir: pytest.Testdir) -> None:
     testdir.makefile(
         ".py",
         test_path="""\
-import polars as pl
-from polars.testing import assert_frame_equal, assert_frame_not_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_frame_not_equal
 
 def test_frame_equal_fail():
     df1 = pl.DataFrame({"a": [1, 2]})
@@ -433,7 +433,7 @@ def test_frame_schema_fail():
     result.assert_outcomes(passed=0, failed=4)
     stdout = "\n".join(result.outlines)
 
-    assert "polars/py-polars/polars/testing" not in stdout
+    assert "polars/py-polars/fancy_polars/testing" not in stdout
 
     # The above should catch any polars testing functions that appear in the
     # stack trace. But we keep the following checks (for specific function

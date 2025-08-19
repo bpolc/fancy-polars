@@ -2,7 +2,7 @@ from typing import cast
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_collect_all_type_coercion_21805() -> None:

@@ -1,6 +1,6 @@
 import copy
 
-import polars as pl
+import fancy_polars as pl
 
 
 # https://github.com/pola-rs/polars/issues/14771

@@ -7,9 +7,9 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError, ShapeError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError, ShapeError
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_when_then() -> None:
@@ -673,7 +673,7 @@ def test_chained_when_no_subclass_17142() -> None:
     when = pl.when(True).then(1).when(True)
 
     assert not isinstance(when, pl.Expr)
-    assert "<polars.expr.whenthen.ChainedWhen object at" in str(when)
+    assert "<fancy_polars.expr.whenthen.ChainedWhen object at" in str(when)
 
 
 def test_when_then_chunked_structs_18673() -> None:

@@ -3,21 +3,27 @@ from __future__ import annotations
 import datetime as dt
 from typing import TYPE_CHECKING
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.convert import parse_as_duration_string
-from polars._utils.deprecation import deprecate_function, deprecate_nonkeyword_arguments
-from polars._utils.parse import parse_into_expression, parse_into_list_of_expressions
-from polars._utils.unstable import unstable
-from polars._utils.various import qualified_type_name
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import DTYPE_TEMPORAL_UNITS, Date, Int32
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.convert import parse_as_duration_string
+from fancy_polars._utils.deprecation import (
+    deprecate_function,
+    deprecate_nonkeyword_arguments,
+)
+from fancy_polars._utils.parse import (
+    parse_into_expression,
+    parse_into_list_of_expressions,
+)
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import DTYPE_TEMPORAL_UNITS, Date, Int32
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import Expr
-    from polars._typing import (
+    from fancy_polars import Expr
+    from fancy_polars._typing import (
         Ambiguous,
         EpochTimeUnit,
         IntoExpr,
@@ -613,7 +619,7 @@ class ExprDateTimeNameSpace:
 
         Default format for temporal dtypes is ISO8601:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.select(cs.temporal().dt.to_string().name.prefix("s_"))
         shape: (3, 4)
         ┌────────────┬────────────────────────────┬─────────────────┬─────────────────┐

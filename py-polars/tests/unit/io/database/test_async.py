@@ -9,10 +9,10 @@ import pytest
 import sqlalchemy
 from sqlalchemy.ext.asyncio import create_async_engine
 
-import polars as pl
-from polars._utils.various import parse_version
-from polars.io.database._utils import _run_async
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars._utils.various import parse_version
+from fancy_polars.io.database._utils import _run_async
+from fancy_polars.testing import assert_frame_equal
 from tests.unit.conftest import mock_module_import
 
 if TYPE_CHECKING:

@@ -6,8 +6,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-import polars as pl
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
 from tests.unit.conftest import NUMERIC_DTYPES
 
 

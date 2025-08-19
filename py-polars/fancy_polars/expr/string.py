@@ -4,23 +4,23 @@ import warnings
 from collections.abc import Mapping
 from typing import TYPE_CHECKING
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.deprecation import (
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.deprecation import (
     deprecate_function,
     deprecate_nonkeyword_arguments,
 )
-from polars._utils.parse import parse_into_expression
-from polars._utils.unstable import unstable
-from polars._utils.various import find_stacklevel, no_default, qualified_type_name
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import Date, Datetime, Time, parse_into_dtype
-from polars.datatypes.constants import N_INFER_DEFAULT
-from polars.exceptions import ChronoFormatWarning
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.various import find_stacklevel, no_default, qualified_type_name
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import Date, Datetime, Time, parse_into_dtype
+from fancy_polars.datatypes.constants import N_INFER_DEFAULT
+from fancy_polars.exceptions import ChronoFormatWarning
 
 if TYPE_CHECKING:
-    from polars import Expr
-    from polars._typing import (
+    from fancy_polars import Expr
+    from fancy_polars._typing import (
         Ambiguous,
         IntoExpr,
         IntoExprColumn,
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
         TransferEncoding,
         UnicodeForm,
     )
-    from polars._utils.various import NoDefault
+    from fancy_polars._utils.various import NoDefault
 
 
 class ExprStringNameSpace:

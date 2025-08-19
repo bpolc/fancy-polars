@@ -8,9 +8,9 @@ from typing import Any, Callable
 
 import pytest
 
-import polars as pl
-from polars.dependencies import gevent
-from polars.exceptions import ColumnNotFoundError
+import fancy_polars as pl
+from fancy_polars.dependencies import gevent
+from fancy_polars.exceptions import ColumnNotFoundError
 
 pytestmark = pytest.mark.slow()
 

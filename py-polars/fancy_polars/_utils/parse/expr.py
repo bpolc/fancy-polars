@@ -4,17 +4,17 @@ import contextlib
 from collections.abc import Iterable
 from typing import TYPE_CHECKING, Any
 
-import polars._reexport as pl
-from polars import functions as F
-from polars.exceptions import ComputeError
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars.exceptions import ComputeError
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
-    from polars import Expr
-    from polars._typing import IntoExpr, PolarsDataType
-    from polars.polars import PyExpr
+    from fancy_polars import Expr
+    from fancy_polars._typing import IntoExpr, PolarsDataType
+    from fancy_polars.fancy_polars import PyExpr
 
 
 def parse_into_expression(

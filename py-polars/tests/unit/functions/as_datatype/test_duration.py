@@ -5,11 +5,11 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-import polars as pl
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
-    from polars._typing import TimeUnit
+    from fancy_polars._typing import TimeUnit
 
 
 def test_empty_duration() -> None:

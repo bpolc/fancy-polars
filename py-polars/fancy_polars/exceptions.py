@@ -1,5 +1,5 @@
 try:
-    from polars.polars import (
+    from fancy_polars.fancy_polars import (
         CategoricalRemappingWarning,
         ColumnNotFoundError,
         ComputeError,

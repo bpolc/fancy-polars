@@ -6,17 +6,17 @@ Used to contain private type aliases. These are now in the `polars._typing` modu
 
 from typing import Any
 
-import polars._typing as plt
-from polars._utils.deprecation import issue_deprecation_warning
+import fancy_polars._typing as plt
+from fancy_polars._utils.deprecation import issue_deprecation_warning
 
 
 def __getattr__(name: str) -> Any:
     if name in dir(plt):
         issue_deprecation_warning(
-            "The `polars.type_aliases` module is deprecated."
-            " The type aliases have moved to the `polars._typing` module to explicitly mark them as private."
-            " Please define your own type aliases, or temporarily import from the `polars._typing` module."
-            " A public `polars.typing` module will be added in the future.",
+            "The `fancy_polars.type_aliases` module is deprecated."
+            " The type aliases have moved to the `fancy_polars._typing` module to explicitly mark them as private."
+            " Please define your own type aliases, or temporarily import from the `fancy_polars._typing` module."
+            " A public `fancy_polars.typing` module will be added in the future.",
             version="1.0.0",
         )
         return getattr(plt, name)

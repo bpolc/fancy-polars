@@ -4,20 +4,20 @@ import contextlib
 from datetime import time
 from typing import TYPE_CHECKING, overload
 
-from polars import functions as F
-from polars._utils.parse import parse_into_expression
-from polars._utils.wrap import wrap_expr
-from polars.functions.range._utils import parse_interval_argument
+from fancy_polars import functions as F
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.functions.range._utils import parse_interval_argument
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
     from datetime import timedelta
     from typing import Literal
 
-    from polars import Expr, Series
-    from polars._typing import ClosedInterval, IntoExprColumn
+    from fancy_polars import Expr, Series
+    from fancy_polars._typing import ClosedInterval, IntoExprColumn
 
 
 @overload

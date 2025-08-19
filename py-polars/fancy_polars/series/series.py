@@ -19,9 +19,9 @@ from typing import (
     overload,
 )
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.construction import (
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.construction import (
     arrow_to_pyseries,
     dataframe_to_pyseries,
     iterable_to_pyseries,
@@ -30,20 +30,20 @@ from polars._utils.construction import (
     sequence_to_pyseries,
     series_to_pyseries,
 )
-from polars._utils.convert import (
+from fancy_polars._utils.convert import (
     date_to_int,
     datetime_to_int,
     time_to_int,
     timedelta_to_int,
 )
-from polars._utils.deprecation import (
+from fancy_polars._utils.deprecation import (
     deprecate_function,
     deprecate_renamed_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.getitem import get_series_item_by_key
-from polars._utils.unstable import unstable
-from polars._utils.various import (
+from fancy_polars._utils.getitem import get_series_item_by_key
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.various import (
     BUILDING_SPHINX_DOCS,
     _is_generator,
     no_default,
@@ -53,8 +53,8 @@ from polars._utils.various import (
     sphinx_accessor,
     warn_null_comparison,
 )
-from polars._utils.wrap import wrap_df
-from polars.datatypes import (
+from fancy_polars._utils.wrap import wrap_df
+from fancy_polars.datatypes import (
     Array,
     Boolean,
     Categorical,
@@ -82,8 +82,8 @@ from polars.datatypes import (
     parse_into_dtype,
     supported_numpy_char_code,
 )
-from polars.datatypes._utils import dtype_to_init_repr
-from polars.dependencies import (
+from fancy_polars.datatypes._utils import dtype_to_init_repr
+from fancy_polars.dependencies import (
     _ALTAIR_AVAILABLE,
     _PYARROW_AVAILABLE,
     _check_for_numpy,
@@ -94,23 +94,23 @@ from polars.dependencies import (
     import_optional,
     torch,
 )
-from polars.dependencies import numpy as np
-from polars.dependencies import pandas as pd
-from polars.dependencies import pyarrow as pa
-from polars.exceptions import ComputeError, ModuleUpgradeRequiredError, ShapeError
-from polars.interchange.protocol import CompatLevel
-from polars.series.array import ArrayNameSpace
-from polars.series.binary import BinaryNameSpace
-from polars.series.categorical import CatNameSpace
-from polars.series.datetime import DateTimeNameSpace
-from polars.series.list import ListNameSpace
-from polars.series.plotting import SeriesPlot
-from polars.series.string import StringNameSpace
-from polars.series.struct import StructNameSpace
-from polars.series.utils import expr_dispatch, get_ffi_func
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.dependencies import pandas as pd
+from fancy_polars.dependencies import pyarrow as pa
+from fancy_polars.exceptions import ComputeError, ModuleUpgradeRequiredError, ShapeError
+from fancy_polars.interchange.protocol import CompatLevel
+from fancy_polars.series.array import ArrayNameSpace
+from fancy_polars.series.binary import BinaryNameSpace
+from fancy_polars.series.categorical import CatNameSpace
+from fancy_polars.series.datetime import DateTimeNameSpace
+from fancy_polars.series.list import ListNameSpace
+from fancy_polars.series.plotting import SeriesPlot
+from fancy_polars.series.string import StringNameSpace
+from fancy_polars.series.struct import StructNameSpace
+from fancy_polars.series.utils import expr_dispatch, get_ffi_func
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame, PySeries
+    from fancy_polars.fancy_polars import PyDataFrame, PySeries
 
 if TYPE_CHECKING:
     from collections.abc import Collection, Generator, Mapping
@@ -118,8 +118,8 @@ if TYPE_CHECKING:
     import jax
     import numpy.typing as npt
 
-    from polars import DataFrame, DataType, Expr
-    from polars._typing import (
+    from fancy_polars import DataFrame, DataType, Expr
+    from fancy_polars._typing import (
         ArrowArrayExportable,
         ArrowStreamExportable,
         BufferInfo,
@@ -144,7 +144,7 @@ if TYPE_CHECKING:
         SizeUnit,
         TemporalLiteral,
     )
-    from polars._utils.various import (
+    from fancy_polars._utils.various import (
         NoDefault,
     )
 
@@ -5494,7 +5494,7 @@ class Series:
         -------
         Series
         """
-        from polars._utils.udfs import warn_on_inefficient_map
+        from fancy_polars._utils.udfs import warn_on_inefficient_map
 
         if return_dtype is None:
             pl_return_dtype = None

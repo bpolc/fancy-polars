@@ -2,7 +2,7 @@ from typing import Any
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_pass_name_alias_18914() -> None:

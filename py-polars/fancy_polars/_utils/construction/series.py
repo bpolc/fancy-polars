@@ -11,20 +11,20 @@ from typing import (
     Callable,
 )
 
-import polars._reexport as pl
-import polars._utils.construction as plc
-from polars._utils.construction.utils import (
+import fancy_polars._reexport as pl
+import fancy_polars._utils.construction as plc
+from fancy_polars._utils.construction.utils import (
     get_first_non_none,
     is_namedtuple,
     is_pydantic_model,
     is_simple_numpy_backed_pandas_series,
     is_sqlalchemy,
 )
-from polars._utils.various import (
+from fancy_polars._utils.various import (
     range_to_series,
 )
-from polars._utils.wrap import wrap_s
-from polars.datatypes import (
+from fancy_polars._utils.wrap import wrap_s
+from fancy_polars.datatypes import (
     Array,
     Boolean,
     Categorical,
@@ -45,30 +45,30 @@ from polars.datatypes import (
     parse_into_dtype,
     try_parse_into_dtype,
 )
-from polars.datatypes.constructor import (
+from fancy_polars.datatypes.constructor import (
     numpy_type_to_constructor,
     numpy_values_and_dtype,
     polars_type_to_constructor,
     py_type_to_constructor,
 )
-from polars.dependencies import (
+from fancy_polars.dependencies import (
     _PYARROW_AVAILABLE,
     _check_for_numpy,
     dataclasses,
 )
-from polars.dependencies import numpy as np
-from polars.dependencies import pandas as pd
-from polars.dependencies import pyarrow as pa
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.dependencies import pandas as pd
+from fancy_polars.dependencies import pyarrow as pa
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PySeries
+    from fancy_polars.fancy_polars import PySeries
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Sequence
 
-    from polars import DataFrame, Series
-    from polars._typing import PolarsDataType
-    from polars.dependencies import pandas as pd
+    from fancy_polars import DataFrame, Series
+    from fancy_polars._typing import PolarsDataType
+    from fancy_polars.dependencies import pandas as pd
 
 
 def sequence_to_pyseries(
@@ -476,7 +476,7 @@ def numpy_to_pyseries(
         original_shape = values.shape
         values_1d = values.reshape(-1)
 
-        from polars.series.utils import _with_no_check_length
+        from fancy_polars.series.utils import _with_no_check_length
 
         py_s = _with_no_check_length(
             lambda: numpy_to_pyseries(

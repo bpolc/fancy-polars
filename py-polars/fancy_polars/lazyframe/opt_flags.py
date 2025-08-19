@@ -1,7 +1,7 @@
 import contextlib
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyOptFlags
+    from fancy_polars.fancy_polars import PyOptFlags
 
 
 class OptFlags:

@@ -6,19 +6,19 @@ from typing import TYPE_CHECKING, Any, TypedDict
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.io.partition import (
+import fancy_polars as pl
+from fancy_polars.io.partition import (
     PartitionByKey,
     PartitionMaxSize,
     PartitionParted,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric.strategies import dataframes
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric.strategies import dataframes
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars.io.partition import (
+    from fancy_polars.io.partition import (
         BasePartitionContext,
     )
 

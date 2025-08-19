@@ -1,5 +1,5 @@
-from polars.expr.expr import Expr
-from polars.expr.whenthen import When
+from fancy_polars.expr.expr import Expr
+from fancy_polars.expr.whenthen import When
 
 __all__ = [
     "Expr",

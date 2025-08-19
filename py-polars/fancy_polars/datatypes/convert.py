@@ -9,7 +9,7 @@ from datetime import date, datetime, time, timedelta
 from decimal import Decimal as PyDecimal
 from typing import TYPE_CHECKING, Any, Optional, Union
 
-from polars.datatypes.classes import (
+from fancy_polars.datatypes.classes import (
     Array,
     Binary,
     Boolean,
@@ -41,11 +41,11 @@ from polars.datatypes.classes import (
     UInt64,
     Unknown,
 )
-from polars.dependencies import numpy as np
-from polars.dependencies import pyarrow as pa
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.dependencies import pyarrow as pa
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import dtype_str_repr as _dtype_str_repr
+    from fancy_polars.fancy_polars import dtype_str_repr as _dtype_str_repr
 
 
 OptionType = type(Optional[type])
@@ -57,7 +57,7 @@ else:
     UnionType = type(Union[int, float])
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType, PythonDataType, TimeUnit
+    from fancy_polars._typing import PolarsDataType, PythonDataType, TimeUnit
 
     if sys.version_info >= (3, 10):
         from typing import TypeGuard
@@ -98,7 +98,7 @@ def unpack_dtypes(
 
     Examples
     --------
-    >>> from polars.datatypes import unpack_dtypes
+    >>> from fancy_polars.datatypes import unpack_dtypes
     >>> list_dtype = [pl.List(pl.Float64)]
     >>> struct_dtype = pl.Struct(
     ...     [
@@ -337,7 +337,7 @@ def numpy_char_code_to_dtype(dtype_char: str) -> PolarsDataType:
 def maybe_cast(el: Any, dtype: PolarsDataType) -> Any:
     """Try casting a value to a value that is valid for the given Polars dtype."""
     # cast el if it doesn't match
-    from polars._utils.convert import (
+    from fancy_polars._utils.convert import (
         datetime_to_int,
         timedelta_to_int,
     )
@@ -355,7 +355,7 @@ def maybe_cast(el: Any, dtype: PolarsDataType) -> Any:
         try:
             el = py_type(el)  # type: ignore[call-arg]
         except Exception:
-            from polars._utils.various import qualified_type_name
+            from fancy_polars._utils.various import qualified_type_name
 
             msg = f"cannot convert Python type {qualified_type_name(el)!r} to {dtype!r}"
             raise TypeError(msg) from None

@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 @pytest.mark.slow

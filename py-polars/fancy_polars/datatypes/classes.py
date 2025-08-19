@@ -8,19 +8,19 @@ from datetime import tzinfo
 from inspect import isclass
 from typing import TYPE_CHECKING, Any
 
-import polars._reexport as pl
-import polars.datatypes
-import polars.functions as F
+import fancy_polars._reexport as pl
+import fancy_polars.datatypes
+import fancy_polars.functions as F
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
-    from polars.polars import dtype_str_repr as _dtype_str_repr
+    import fancy_polars.fancy_polars as plr
+    from fancy_polars.fancy_polars import dtype_str_repr as _dtype_str_repr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, Iterator, Sequence
 
-    from polars import Series
-    from polars._typing import (
+    from fancy_polars import Series
+    from fancy_polars._typing import (
         CategoricalOrdering,
         PolarsDataType,
         PythonDataType,
@@ -223,7 +223,7 @@ class DataType(metaclass=DataTypeClass):
         >>> pl.DataType.from_python(tzinfo)  # doctest: +SKIP
         TypeError: cannot parse input <class 'datetime.tzinfo'> into Polars data type
         """
-        from polars.datatypes._parse import parse_into_dtype
+        from fancy_polars.datatypes._parse import parse_into_dtype
 
         return parse_into_dtype(py_type)
 
@@ -241,7 +241,7 @@ class DataType(metaclass=DataTypeClass):
         >>> pl.Array(pl.Date(), 10).to_python()
         <class 'list'>
         """
-        from polars.datatypes import dtype_to_py_type
+        from fancy_polars.datatypes import dtype_to_py_type
 
         return dtype_to_py_type(self)
 
@@ -395,7 +395,7 @@ class Decimal(NumericType):
     ) -> None:
         # Issuing the warning on `__init__` does not trigger when the class is used
         # without being instantiated, but it's better than nothing
-        from polars._utils.unstable import issue_unstable_warning
+        from fancy_polars._utils.unstable import issue_unstable_warning
 
         issue_unstable_warning(
             "The Decimal data type is considered unstable."
@@ -771,7 +771,7 @@ class List(NestedType):
     inner: PolarsDataType
 
     def __init__(self, inner: PolarsDataType | PythonDataType) -> None:
-        self.inner = polars.datatypes.parse_into_dtype(inner)
+        self.inner = fancy_polars.datatypes.parse_into_dtype(inner)
 
     def __eq__(self, other: PolarsDataType) -> bool:  # type: ignore[override]
         # This equality check allows comparison of type classes and type instances.
@@ -836,7 +836,7 @@ class Array(NestedType):
         width: int | None = None,
     ) -> None:
         if width is not None:
-            from polars._utils.deprecation import issue_deprecation_warning
+            from fancy_polars._utils.deprecation import issue_deprecation_warning
 
             issue_deprecation_warning(
                 "The `width` parameter for `Array` is deprecated. Use `shape` instead.",
@@ -847,7 +847,7 @@ class Array(NestedType):
             msg = "Array constructor is missing the required argument `shape`"
             raise TypeError(msg)
 
-        inner_parsed = polars.datatypes.parse_into_dtype(inner)
+        inner_parsed = fancy_polars.datatypes.parse_into_dtype(inner)
         inner_shape = inner_parsed.shape if isinstance(inner_parsed, Array) else ()
 
         if isinstance(shape, int):
@@ -900,7 +900,7 @@ class Array(NestedType):
     @property
     def width(self) -> int:
         """The size of the Array."""
-        from polars._utils.deprecation import issue_deprecation_warning
+        from fancy_polars._utils.deprecation import issue_deprecation_warning
 
         issue_deprecation_warning(
             "The `width` attribute for `Array` is deprecated. Use `size` instead.",
@@ -926,7 +926,7 @@ class Field:
 
     def __init__(self, name: str, dtype: PolarsDataType) -> None:
         self.name = name
-        self.dtype = polars.datatypes.parse_into_dtype(dtype)
+        self.dtype = fancy_polars.datatypes.parse_into_dtype(dtype)
 
     def __eq__(self, other: Field) -> bool:  # type: ignore[override]
         return (self.name == other.name) & (self.dtype == other.dtype)

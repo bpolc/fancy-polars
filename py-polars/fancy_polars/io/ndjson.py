@@ -6,24 +6,24 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Literal
 
-from polars._utils.deprecation import deprecate_renamed_parameter
-from polars._utils.various import is_path_or_str_sequence, normalize_filepath
-from polars._utils.wrap import wrap_df, wrap_ldf
-from polars.datatypes import N_INFER_DEFAULT
-from polars.io._utils import parse_row_index_args
-from polars.io.cloud.credential_provider._builder import (
+from fancy_polars._utils.deprecation import deprecate_renamed_parameter
+from fancy_polars._utils.various import is_path_or_str_sequence, normalize_filepath
+from fancy_polars._utils.wrap import wrap_df, wrap_ldf
+from fancy_polars.datatypes import N_INFER_DEFAULT
+from fancy_polars.io._utils import parse_row_index_args
+from fancy_polars.io.cloud.credential_provider._builder import (
     _init_credential_provider_builder,
 )
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame, PyLazyFrame
+    from fancy_polars.fancy_polars import PyDataFrame, PyLazyFrame
 
 if TYPE_CHECKING:
     from io import IOBase
 
-    from polars import DataFrame, LazyFrame
-    from polars._typing import SchemaDefinition
-    from polars.io.cloud import CredentialProviderFunction
+    from fancy_polars import DataFrame, LazyFrame
+    from fancy_polars._typing import SchemaDefinition
+    from fancy_polars.io.cloud import CredentialProviderFunction
 
 
 def read_ndjson(

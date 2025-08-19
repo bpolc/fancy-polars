@@ -13,15 +13,15 @@ import pytest
 import pytz
 from hypothesis import given
 
-import polars as pl
-import polars.selectors as cs
-from polars.datatypes import DTYPE_TEMPORAL_UNITS
-from polars.exceptions import (
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.datatypes import DTYPE_TEMPORAL_UNITS
+from fancy_polars.exceptions import (
     ComputeError,
     InvalidOperationError,
     PolarsInefficientMapWarning,
 )
-from polars.testing import (
+from fancy_polars.testing import (
     assert_frame_equal,
     assert_series_equal,
     assert_series_not_equal,
@@ -29,7 +29,7 @@ from polars.testing import (
 from tests.unit.conftest import DATETIME_DTYPES, TEMPORAL_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import (
+    from fancy_polars._typing import (
         Ambiguous,
         PolarsTemporalType,
         TimeUnit,

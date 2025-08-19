@@ -1,4 +1,4 @@
-from polars.series.series import Series
+from fancy_polars.series.series import Series
 
 __all__ = [
     "Series",

@@ -9,7 +9,7 @@ from decimal import Decimal as PyDecimal
 from inspect import isclass
 from typing import TYPE_CHECKING, Any, ForwardRef, NoReturn, Union, get_args
 
-from polars.datatypes.classes import (
+from fancy_polars.datatypes.classes import (
     Binary,
     Boolean,
     Date,
@@ -26,10 +26,10 @@ from polars.datatypes.classes import (
     Time,
     Unknown,
 )
-from polars.datatypes.convert import is_polars_dtype
+from fancy_polars.datatypes.convert import is_polars_dtype
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType, PythonDataType, SchemaDict
+    from fancy_polars._typing import PolarsDataType, PythonDataType, SchemaDict
 
 
 UnionTypeOld = type(Union[int, str])

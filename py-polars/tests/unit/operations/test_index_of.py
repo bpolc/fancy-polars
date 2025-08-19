@@ -9,12 +9,12 @@ import pytest
 from hypothesis import example, given
 from hypothesis import strategies as st
 
-import polars as pl
-from polars.exceptions import InvalidOperationError
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError
 
 if TYPE_CHECKING:
-    from polars._typing import IntoExpr
-from polars.testing import assert_frame_equal
+    from fancy_polars._typing import IntoExpr
+from fancy_polars.testing import assert_frame_equal
 
 
 def isnan(value: object) -> bool:

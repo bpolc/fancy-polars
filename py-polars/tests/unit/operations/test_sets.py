@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.exceptions import CategoricalRemappingWarning
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import CategoricalRemappingWarning
+from fancy_polars.testing import assert_series_equal
 
 
 def test_set_intersection_13765() -> None:

@@ -26,9 +26,9 @@ from typing import (
     overload,
 )
 
-import polars as pl
-from polars import functions as F
-from polars.datatypes import (
+import fancy_polars as pl
+from fancy_polars import functions as F
+from fancy_polars.datatypes import (
     Boolean,
     Date,
     Datetime,
@@ -38,15 +38,15 @@ from polars.datatypes import (
     String,
     Time,
 )
-from polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES
-from polars.dependencies import _check_for_numpy, import_optional, subprocess
-from polars.dependencies import numpy as np
+from fancy_polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES
+from fancy_polars.dependencies import _check_for_numpy, import_optional, subprocess
+from fancy_polars.dependencies import numpy as np
 
 if TYPE_CHECKING:
     from collections.abc import Iterator, MutableMapping, Reversible
 
-    from polars import DataFrame, Expr
-    from polars._typing import PolarsDataType, SizeUnit
+    from fancy_polars import DataFrame, Expr
+    from fancy_polars._typing import PolarsDataType, SizeUnit
 
     if sys.version_info >= (3, 13):
         from typing import TypeIs
@@ -163,7 +163,7 @@ def is_str_sequence(
 
 def is_column(obj: Any) -> bool:
     """Indicate if the given object is a basic/unaliased column."""
-    from polars.expr import Expr
+    from fancy_polars.expr import Expr
 
     return isinstance(obj, Expr) and obj.meta.is_column()
 
@@ -725,7 +725,7 @@ def qualified_type_name(obj: Any, *, qualify_polars: bool = False) -> str:
     if (
         not module
         or module == "builtins"
-        or (not qualify_polars and module.startswith("polars."))
+        or (not qualify_polars and module.startswith("fancy_polars."))
     ):
         return name
 

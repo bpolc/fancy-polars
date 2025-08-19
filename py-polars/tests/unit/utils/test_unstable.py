@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-from polars._utils.unstable import issue_unstable_warning, unstable
-from polars.exceptions import UnstableWarning
+from fancy_polars._utils.unstable import issue_unstable_warning, unstable
+from fancy_polars.exceptions import UnstableWarning
 
 
 def test_issue_unstable_warning(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -8,14 +8,14 @@ from typing import TYPE_CHECKING, Any
 import numpy as np
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import ColumnNotFoundError
-from polars.meta import get_index_type
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import ColumnNotFoundError
+from fancy_polars.meta import get_index_type
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_group_by() -> None:

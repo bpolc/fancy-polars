@@ -6,13 +6,13 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars._typing import SelectorType
-from polars._utils.various import qualified_type_name
-from polars.exceptions import ColumnNotFoundError, InvalidOperationError
-from polars.selectors import expand_selector, is_selector
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars._typing import SelectorType
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars.exceptions import ColumnNotFoundError, InvalidOperationError
+from fancy_polars.selectors import expand_selector, is_selector
+from fancy_polars.testing import assert_frame_equal
 from tests.unit.conftest import INTEGER_DTYPES, TEMPORAL_DTYPES
 
 

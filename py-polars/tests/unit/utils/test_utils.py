@@ -7,15 +7,15 @@ from zoneinfo import ZoneInfo
 import numpy as np
 import pytest
 
-import polars as pl
-from polars._utils.convert import (
+import fancy_polars as pl
+from fancy_polars._utils.convert import (
     date_to_int,
     datetime_to_int,
     parse_as_duration_string,
     time_to_int,
     timedelta_to_int,
 )
-from polars._utils.various import (
+from fancy_polars._utils.various import (
     _in_notebook,
     is_bool_sequence,
     is_int_sequence,
@@ -28,7 +28,7 @@ from polars._utils.various import (
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from polars._typing import TimeUnit
+    from fancy_polars._typing import TimeUnit
 
 
 @pytest.mark.parametrize(

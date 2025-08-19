@@ -7,8 +7,8 @@ from pathlib import Path
 
 import pytest
 
-import polars as pl
-from polars import selectors as cs
+import fancy_polars as pl
+from fancy_polars import selectors as cs
 
 # set a maximum cutoff at 0.3 secs; note that we are typically much faster
 # than this (more like ~0.07 secs, depending on hardware), but we allow a
@@ -18,16 +18,16 @@ MAX_ALLOWED_IMPORT_TIME = 300_000  # << microseconds
 
 def _import_time_from_frame(tm: pl.DataFrame) -> int:
     return int(
-        tm.filter(pl.col("import").str.strip_chars() == "polars")
+        tm.filter(pl.col("import").str.strip_chars() == "fancy_polars")
         .select("cumulative_time")
         .item()
     )
 
 
 def _import_timings() -> bytes:
-    # assemble suitable command to get polars module import timing;
+    # assemble suitable command to get fancy_polars module import timing;
     # run in a separate process to ensure clean timing results.
-    cmd = f'{sys.executable} -S -X importtime -c "import polars"'
+    cmd = f'{sys.executable} -S -X importtime -c "import fancy_polars"'
     output = subprocess.run(cmd, shell=True, capture_output=True).stderr
     if b"Traceback" in output:
         msg = f"measuring import timings failed\n\nCommand output:\n{output.decode()}"

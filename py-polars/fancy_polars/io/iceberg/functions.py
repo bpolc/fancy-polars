@@ -2,14 +2,14 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Literal
 
-from polars._utils.unstable import issue_unstable_warning
-from polars._utils.wrap import wrap_ldf
-from polars.io.iceberg.dataset import IcebergDataset
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars._utils.wrap import wrap_ldf
+from fancy_polars.io.iceberg.dataset import IcebergDataset
 
 if TYPE_CHECKING:
     from pyiceberg.table import Table
 
-    from polars.lazyframe.frame import LazyFrame
+    from fancy_polars.lazyframe.frame import LazyFrame
 
 
 def scan_iceberg(
@@ -122,7 +122,7 @@ def scan_iceberg(
     >>> snapshot_id = 7051579356916758811
     >>> pl.scan_iceberg(table_path, snapshot_id=snapshot_id).collect()  # doctest: +SKIP
     """
-    from polars.polars import PyLazyFrame
+    from fancy_polars.fancy_polars import PyLazyFrame
 
     if reader_override is not None:
         msg = "The `reader_override` parameter of `scan_iceberg()` is considered unstable."

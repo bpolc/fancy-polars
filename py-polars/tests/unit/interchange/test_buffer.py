@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.interchange.buffer import PolarsBuffer
-from polars.interchange.protocol import CopyNotAllowedError, DlpackDeviceType
+import fancy_polars as pl
+from fancy_polars.interchange.buffer import PolarsBuffer
+from fancy_polars.interchange.protocol import CopyNotAllowedError, DlpackDeviceType
 
 
 @pytest.mark.parametrize(

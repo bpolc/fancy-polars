@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import polars.polars as plr
+import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
-    from polars import LazyFrame
+    from fancy_polars import LazyFrame
 
 
 def prepare_cloud_plan(

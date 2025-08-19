@@ -4,9 +4,9 @@ import time
 from functools import lru_cache, partial
 from typing import TYPE_CHECKING, Any, Callable
 
-import polars as pl
-from polars._utils.wrap import wrap_df
-from polars.polars import _ir_nodes
+import fancy_polars as pl
+from fancy_polars._utils.wrap import wrap_df
+from fancy_polars.fancy_polars import _ir_nodes
 
 if TYPE_CHECKING:
     import pandas as pd

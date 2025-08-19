@@ -3,25 +3,25 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING, overload
 
-from polars import functions as F
-from polars._utils.parse import (
+from fancy_polars import functions as F
+from fancy_polars._utils.parse import (
     parse_into_expression,
     parse_into_list_of_expressions,
 )
-from polars._utils.unstable import issue_unstable_warning
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import Date, Struct, Time
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import Date, Struct, Time
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from typing import Literal
 
-    from polars import Expr, Series
-    from polars._typing import Ambiguous, IntoExpr, SchemaDict, TimeUnit
+    from fancy_polars import Expr, Series
+    from fancy_polars._typing import Ambiguous, IntoExpr, SchemaDict, TimeUnit
 
 
 def datetime_(

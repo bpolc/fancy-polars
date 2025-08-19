@@ -1,5 +1,5 @@
-from polars.datatypes._parse import parse_into_dtype, try_parse_into_dtype
-from polars.datatypes.classes import (
+from fancy_polars.datatypes._parse import parse_into_dtype, try_parse_into_dtype
+from fancy_polars.datatypes.classes import (
     Array,
     Binary,
     Boolean,
@@ -34,17 +34,17 @@ from polars.datatypes.classes import (
     Unknown,
     Utf8,
 )
-from polars.datatypes.constants import (
+from fancy_polars.datatypes.constants import (
     DTYPE_TEMPORAL_UNITS,
     N_INFER_DEFAULT,
 )
-from polars.datatypes.constructor import (
+from fancy_polars.datatypes.constructor import (
     numpy_type_to_constructor,
     numpy_values_and_dtype,
     polars_type_to_constructor,
     py_type_to_constructor,
 )
-from polars.datatypes.convert import (
+from fancy_polars.datatypes.convert import (
     dtype_to_ffiname,
     dtype_to_py_type,
     is_polars_dtype,

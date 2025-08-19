@@ -2,8 +2,8 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
+import fancy_polars as pl
+import fancy_polars.selectors as cs
 
 
 @pytest.fixture

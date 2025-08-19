@@ -5,7 +5,7 @@ import re
 
 from hypothesis import settings
 
-from polars._typing import ParametricProfileNames
+from fancy_polars._typing import ParametricProfileNames
 
 
 def load_profile(
@@ -32,7 +32,7 @@ def load_profile(
     Examples
     --------
     >>> # load a custom profile that will run with 1500 iterations
-    >>> from polars.testing.parametric import load_profile
+    >>> from fancy_polars.testing.parametric import load_profile
     >>> load_profile(1500)
     """
     common_settings = {"print_blob": True, "deadline": None}
@@ -89,7 +89,7 @@ def set_profile(profile: ParametricProfileNames | int) -> None:
     Examples
     --------
     >>> # prefer the 'balanced' profile for running parametric tests
-    >>> from polars.testing.parametric import set_profile
+    >>> from fancy_polars.testing.parametric import set_profile
     >>> set_profile("balanced")
     """
     profile_name = str(profile).split(".")[-1]

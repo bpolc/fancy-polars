@@ -4,15 +4,15 @@ from collections.abc import Sequence
 from itertools import accumulate
 from typing import TYPE_CHECKING
 
-from polars.interchange.column import PolarsColumn
-from polars.interchange.protocol import CopyNotAllowedError
-from polars.interchange.protocol import DataFrame as InterchangeDataFrame
+from fancy_polars.interchange.column import PolarsColumn
+from fancy_polars.interchange.protocol import CopyNotAllowedError
+from fancy_polars.interchange.protocol import DataFrame as InterchangeDataFrame
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
     from typing import Any
 
-    from polars import DataFrame
+    from fancy_polars import DataFrame
 
 
 class PolarsDataFrame(InterchangeDataFrame):

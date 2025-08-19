@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING
 
 from hypothesis import given
 
-from polars.testing.parametric import dataframes
+from fancy_polars.testing.parametric import dataframes
 
 if TYPE_CHECKING:
-    import polars as pl
+    import fancy_polars as pl
 
 
 @given(df=dataframes())

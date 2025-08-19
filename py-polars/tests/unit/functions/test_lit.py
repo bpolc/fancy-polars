@@ -11,13 +11,13 @@ import numpy as np
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.testing import assert_frame_equal
-from polars.testing.parametric.strategies import series
-from polars.testing.parametric.strategies.data import datetimes
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
+from fancy_polars.testing.parametric.strategies import series
+from fancy_polars.testing.parametric.strategies.data import datetimes
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 if sys.version_info >= (3, 11):

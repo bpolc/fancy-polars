@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Any, Callable
 import numpy as np
 import pytest
 
-import polars as pl
-from polars import (
+import fancy_polars as pl
+from fancy_polars import (
     Date,
     Float64,
     Int8,
@@ -21,12 +21,12 @@ from polars import (
     UInt32,
     UInt64,
 )
-from polars.exceptions import ColumnNotFoundError, InvalidOperationError
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.exceptions import ColumnNotFoundError, InvalidOperationError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import INTEGER_DTYPES, NUMERIC_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsIntegerType
+    from fancy_polars._typing import PolarsIntegerType
 
 
 def test_sqrt_neg_inf() -> None:

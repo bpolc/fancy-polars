@@ -5,16 +5,16 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal, TypedDict, get_args
 
-from polars._typing import EngineType
-from polars._utils.various import normalize_filepath
-from polars.dependencies import json
-from polars.lazyframe.engine_config import GPUEngine
+from fancy_polars._typing import EngineType
+from fancy_polars._utils.various import normalize_filepath
+from fancy_polars.dependencies import json
+from fancy_polars.lazyframe.engine_config import GPUEngine
 
 if TYPE_CHECKING:
     import sys
     from types import TracebackType
 
-    from polars._typing import FloatFmt
+    from fancy_polars._typing import FloatFmt
 
     if sys.version_info >= (3, 10):
         from typing import TypeAlias
@@ -80,7 +80,7 @@ _POLARS_CFG_ENV_VARS = {
 # method name paired with a callable that returns the current state of that value:
 with contextlib.suppress(ImportError, NameError):
     # note: 'plr' not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
     _POLARS_CFG_DIRECT_VARS = {
         "set_fmt_float": plr.get_float_fmt,

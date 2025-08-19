@@ -20,15 +20,15 @@ from ast import (
 from functools import singledispatch
 from typing import TYPE_CHECKING, Any, Callable
 
-from polars._utils.convert import to_py_date, to_py_datetime
-from polars.dependencies import pyiceberg
+from fancy_polars._utils.convert import to_py_date, to_py_datetime
+from fancy_polars.dependencies import pyiceberg
 
 if TYPE_CHECKING:
     from datetime import date, datetime
 
     from pyiceberg.table import Table
 
-    from polars import DataFrame, Series
+    from fancy_polars import DataFrame, Series
 
 _temporal_conversions: dict[str, Callable[..., datetime | date]] = {
     "to_py_date": to_py_date,
@@ -68,7 +68,7 @@ def _scan_pyarrow_dataset_impl(
     -------
     DataFrame
     """
-    from polars import from_arrow
+    from fancy_polars import from_arrow
 
     scan = tbl.scan(limit=n_rows, snapshot_id=snapshot_id)
 

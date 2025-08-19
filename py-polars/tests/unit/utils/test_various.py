@@ -1,7 +1,7 @@
 import pytest
 
-from polars._utils.various import issue_warning
-from polars.exceptions import PerformanceWarning
+from fancy_polars._utils.various import issue_warning
+from fancy_polars.exceptions import PerformanceWarning
 
 
 def test_issue_warning() -> None:

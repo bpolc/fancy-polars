@@ -16,14 +16,14 @@ from sqlalchemy import Integer, MetaData, Table, create_engine, func, select, te
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql.expression import cast as alchemy_cast
 
-import polars as pl
-from polars._utils.various import parse_version
-from polars.exceptions import DuplicateError, UnsuitableSQLError
-from polars.io.database._arrow_registry import ARROW_DRIVER_REGISTRY
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars._utils.various import parse_version
+from fancy_polars.exceptions import DuplicateError, UnsuitableSQLError
+from fancy_polars.io.database._arrow_registry import ARROW_DRIVER_REGISTRY
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import (
+    from fancy_polars._typing import (
         ConnectionOrCursor,
         DbReadEngine,
         SchemaDefinition,

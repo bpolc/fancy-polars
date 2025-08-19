@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable
 
 if TYPE_CHECKING:
-    from polars import Expr
+    from fancy_polars import Expr
 
 
 class ExprNameNameSpace:

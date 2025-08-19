@@ -3,14 +3,14 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Callable
 
-from polars._utils.parse import parse_into_expression
-from polars._utils.wrap import wrap_expr
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.wrap import wrap_expr
 
 if TYPE_CHECKING:
     from datetime import date, datetime, time
 
-    from polars import Expr
-    from polars._typing import IntoExpr, IntoExprColumn
+    from fancy_polars import Expr
+    from fancy_polars._typing import IntoExpr, IntoExprColumn
 
 
 class ExprArrayNameSpace:

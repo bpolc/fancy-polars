@@ -10,21 +10,21 @@ from typing import TYPE_CHECKING, Any, Callable, NoReturn, cast
 import numpy as np
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars import lit, when
-from polars.exceptions import (
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars import lit, when
+from fancy_polars.exceptions import (
     InvalidOperationError,
     PerformanceWarning,
     PolarsInefficientMapWarning,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import FLOAT_DTYPES, NUMERIC_DTYPES
 
 if TYPE_CHECKING:
     from _pytest.capture import CaptureFixture
 
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_init_signature_match() -> None:

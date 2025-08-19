@@ -2,24 +2,33 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-import polars._reexport as pl
-import polars.functions as F
-from polars._utils.various import qualified_type_name
-from polars.datatypes import Boolean, Enum, Int64, String, UInt8, UInt32
-from polars.exceptions import InvalidOperationError
-from polars.interchange.dataframe import PolarsDataFrame
-from polars.interchange.protocol import ColumnNullType, CopyNotAllowedError, DtypeKind
-from polars.interchange.utils import (
+import fancy_polars._reexport as pl
+import fancy_polars.functions as F
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars.datatypes import Boolean, Enum, Int64, String, UInt8, UInt32
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.interchange.dataframe import PolarsDataFrame
+from fancy_polars.interchange.protocol import (
+    ColumnNullType,
+    CopyNotAllowedError,
+    DtypeKind,
+)
+from fancy_polars.interchange.utils import (
     dtype_to_polars_dtype,
     get_buffer_length_in_elements,
     polars_dtype_to_data_buffer_dtype,
 )
 
 if TYPE_CHECKING:
-    from polars import DataFrame, Series
-    from polars._typing import PolarsDataType
-    from polars.interchange.protocol import Buffer, Column, Dtype, SupportsInterchange
-    from polars.interchange.protocol import DataFrame as InterchangeDataFrame
+    from fancy_polars import DataFrame, Series
+    from fancy_polars._typing import PolarsDataType
+    from fancy_polars.interchange.protocol import (
+        Buffer,
+        Column,
+        Dtype,
+        SupportsInterchange,
+    )
+    from fancy_polars.interchange.protocol import DataFrame as InterchangeDataFrame
 
 
 def from_dataframe(df: SupportsInterchange, *, allow_copy: bool = True) -> DataFrame:

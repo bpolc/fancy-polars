@@ -269,7 +269,7 @@ def import_optional(
 
     Examples
     --------
-    >>> from polars.dependencies import import_optional
+    >>> from fancy_polars.dependencies import import_optional
     >>> import_optional(
     ...     "definitely_a_real_module",
     ...     err_prefix="super-important package",
@@ -277,8 +277,8 @@ def import_optional(
     ImportError: super-important package 'definitely_a_real_module' not installed.
     Please install it using the command `pip install definitely_a_real_module`.
     """
-    from polars._utils.various import parse_version
-    from polars.exceptions import ModuleUpgradeRequiredError
+    from fancy_polars._utils.various import parse_version
+    from fancy_polars.exceptions import ModuleUpgradeRequiredError
 
     module_root = module_name.split(".", 1)[0]
     try:

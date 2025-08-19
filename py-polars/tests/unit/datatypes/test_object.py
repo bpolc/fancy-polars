@@ -7,9 +7,9 @@ from uuid import uuid4
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_series_equal
 
 
 def test_series_init_instantiated_object() -> None:

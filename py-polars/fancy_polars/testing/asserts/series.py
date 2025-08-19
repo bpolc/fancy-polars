@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from polars._utils.deprecation import deprecate_renamed_parameter
-from polars.datatypes import (
+from fancy_polars._utils.deprecation import deprecate_renamed_parameter
+from fancy_polars.datatypes import (
     Array,
     Categorical,
     List,
@@ -11,13 +11,13 @@ from polars.datatypes import (
     Struct,
     unpack_dtypes,
 )
-from polars.datatypes.group import FLOAT_DTYPES
-from polars.exceptions import ComputeError, InvalidOperationError, ShapeError
-from polars.series import Series
-from polars.testing.asserts.utils import raise_assertion_error
+from fancy_polars.datatypes.group import FLOAT_DTYPES
+from fancy_polars.exceptions import ComputeError, InvalidOperationError, ShapeError
+from fancy_polars.series import Series
+from fancy_polars.testing.asserts.utils import raise_assertion_error
 
 if TYPE_CHECKING:
-    from polars import DataType
+    from fancy_polars import DataType
 
 
 def _assert_correct_input_type(left: Any, right: Any) -> bool:
@@ -91,7 +91,7 @@ def assert_series_equal(
 
     Examples
     --------
-    >>> from polars.testing import assert_series_equal
+    >>> from fancy_polars.testing import assert_series_equal
     >>> s1 = pl.Series([1, 2, 3])
     >>> s2 = pl.Series([1, 5, 3])
     >>> assert_series_equal(s1, s2)
@@ -411,7 +411,7 @@ def assert_series_not_equal(
 
     Examples
     --------
-    >>> from polars.testing import assert_series_not_equal
+    >>> from fancy_polars.testing import assert_series_not_equal
     >>> s1 = pl.Series([1, 2, 3])
     >>> s2 = pl.Series([1, 2, 3])
     >>> assert_series_not_equal(s1, s2)

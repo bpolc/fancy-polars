@@ -9,20 +9,20 @@ import pyarrow.interchange
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars._utils.various import parse_version
-from polars.interchange.from_dataframe import (
+import fancy_polars as pl
+from fancy_polars._utils.various import parse_version
+from fancy_polars.interchange.from_dataframe import (
     from_dataframe as from_dataframe_interchange_protocol,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import dataframes
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import dataframes
 
 skip_if_broken_pandas_version = pytest.mark.skipif(
     pd.__version__.startswith("2"), reason="bug. see #20316"
 )
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 protocol_dtypes: list[PolarsDataType] = [
     pl.Int8,

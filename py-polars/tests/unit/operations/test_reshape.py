@@ -4,9 +4,9 @@ import re
 
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.testing import assert_series_equal
 
 
 def display_shape(shape: tuple[int, ...]) -> str:

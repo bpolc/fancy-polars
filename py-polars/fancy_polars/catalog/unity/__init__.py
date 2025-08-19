@@ -1,5 +1,5 @@
-from polars.catalog.unity.client import Catalog
-from polars.catalog.unity.models import (
+from fancy_polars.catalog.unity.client import Catalog
+from fancy_polars.catalog.unity.models import (
     CatalogInfo,
     ColumnInfo,
     DataSourceFormat,

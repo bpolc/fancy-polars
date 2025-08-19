@@ -4,10 +4,10 @@ import abc
 from functools import partial
 from typing import TYPE_CHECKING, Any, Callable, Literal
 
-import polars._utils.logging
-from polars._utils.logging import eprint, verbose
-from polars._utils.unstable import issue_unstable_warning
-from polars.io.cloud.credential_provider._providers import (
+import fancy_polars._utils.logging
+from fancy_polars._utils.logging import eprint, verbose
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars.io.cloud.credential_provider._providers import (
     CredentialProvider,
     CredentialProviderAWS,
     CredentialProviderAzure,
@@ -15,7 +15,7 @@ from polars.io.cloud.credential_provider._providers import (
 )
 
 if TYPE_CHECKING:
-    from polars.io.cloud.credential_provider._providers import (
+    from fancy_polars.io.cloud.credential_provider._providers import (
         CredentialProviderFunction,
         CredentialProviderFunctionReturn,
     )
@@ -73,7 +73,7 @@ class CredentialProviderBuilder:
         self,
     ) -> CredentialProvider | CredentialProviderFunction | None:
         """Instantiate a credential provider from configuration."""
-        verbose = polars._utils.logging.verbose()
+        verbose = fancy_polars._utils.logging.verbose()
 
         if verbose:
             eprint(
@@ -200,7 +200,7 @@ class AutoInitAWS(CredentialProviderBuilderImpl):
                 # without CredentialProviderAWS (the rust-side does not load
                 # aws_profile).
                 msg = f"cannot load requested aws_profile '{self.profile_name}': {e!r}"
-                raise polars.exceptions.ComputeError(msg) from e
+                raise fancy_polars.exceptions.ComputeError(msg) from e
 
             if verbose():
                 eprint(f"failed to auto-initialize {self.provider_repr}: {e!r}")
@@ -240,7 +240,7 @@ def _init_credential_provider_builder(
         # parameters. Any environment-specific behavior should take place inside
         # instantiated credential providers.
 
-        from polars.io.cloud._utils import (
+        from fancy_polars.io.cloud._utils import (
             _first_scan_path,
             _get_path_scheme,
             _is_aws_cloud,

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 import hypothesis.strategies as st
 from hypothesis.errors import InvalidArgument
 
-from polars.datatypes import (
+from fancy_polars.datatypes import (
     Array,
     Binary,
     Boolean,
@@ -39,8 +39,8 @@ if TYPE_CHECKING:
 
     from hypothesis.strategies import DrawFn, SearchStrategy
 
-    from polars._typing import CategoricalOrdering, PolarsDataType, TimeUnit
-    from polars.datatypes import DataTypeClass
+    from fancy_polars._typing import CategoricalOrdering, PolarsDataType, TimeUnit
+    from fancy_polars.datatypes import DataTypeClass
 
 
 # Supported data type classes which do not take any arguments
@@ -330,7 +330,7 @@ def _time_units() -> SearchStrategy[TimeUnit]:
 def _time_zones() -> SearchStrategy[str]:
     """Create a strategy for generating valid time zones."""
     # Not available when building docs, so just import here.
-    from polars.polars import _known_timezones
+    from fancy_polars.fancy_polars import _known_timezones
 
     chrono_known_tz = set(_known_timezones())
     return st.timezone_keys(allow_prefix=False).filter(

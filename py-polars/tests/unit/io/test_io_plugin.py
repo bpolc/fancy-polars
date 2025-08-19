@@ -7,9 +7,9 @@ from typing import TYPE_CHECKING
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.io.plugins import register_io_source
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.io.plugins import register_io_source
+from fancy_polars.testing import assert_series_equal
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

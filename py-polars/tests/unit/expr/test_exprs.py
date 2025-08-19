@@ -7,8 +7,8 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import (
     DATETIME_DTYPES,
     DURATION_DTYPES,
@@ -19,7 +19,7 @@ from tests.unit.conftest import (
 )
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_arg_true() -> None:

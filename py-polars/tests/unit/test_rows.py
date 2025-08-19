@@ -2,8 +2,8 @@ from datetime import date
 
 import pytest
 
-import polars as pl
-from polars.exceptions import NoRowsReturnedError, TooManyRowsReturnedError
+import fancy_polars as pl
+from fancy_polars.exceptions import NoRowsReturnedError, TooManyRowsReturnedError
 from tests.unit.conftest import INTEGER_DTYPES
 
 

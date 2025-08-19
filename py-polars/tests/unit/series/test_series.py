@@ -10,9 +10,9 @@ import pandas as pd
 import pyarrow as pa
 import pytest
 
-import polars as pl
-from polars._utils.construction import iterable_to_pyseries
-from polars.datatypes import (
+import fancy_polars as pl
+from fancy_polars._utils.construction import iterable_to_pyseries
+from fancy_polars.datatypes import (
     Datetime,
     Field,
     Float64,
@@ -23,20 +23,20 @@ from polars.datatypes import (
     UInt64,
     Unknown,
 )
-from polars.exceptions import (
+from fancy_polars.exceptions import (
     DuplicateError,
     InvalidOperationError,
     PolarsInefficientMapWarning,
     ShapeError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import FLOAT_DTYPES, INTEGER_DTYPES
 from tests.unit.utils.pycapsule_utils import PyCapsuleStreamHolder
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-    from polars._typing import EpochTimeUnit, PolarsDataType, TimeUnit
+    from fancy_polars._typing import EpochTimeUnit, PolarsDataType, TimeUnit
 
 
 def test_cum_agg() -> None:
@@ -193,7 +193,7 @@ def test_init_structured_objects() -> None:
     # validate init from dataclass, namedtuple, and pydantic model objects
     from typing import NamedTuple
 
-    from polars.dependencies import dataclasses, pydantic
+    from fancy_polars.dependencies import dataclasses, pydantic
 
     @dataclasses.dataclass
     class TeaShipmentDC:
@@ -2222,7 +2222,7 @@ def test_raise_invalid_is_between() -> None:
 
 
 def test_construction_large_nested_u64_17231() -> None:
-    import polars as pl
+    import fancy_polars as pl
 
     values = [{"f0": [9223372036854775808]}]
     dtype = pl.Struct({"f0": pl.List(pl.UInt64)})

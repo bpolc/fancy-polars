@@ -4,19 +4,19 @@ import contextlib
 from datetime import date
 from typing import TYPE_CHECKING
 
-from polars._utils.deprecation import deprecate_nonkeyword_arguments
-from polars._utils.parse import parse_into_expression
-from polars._utils.unstable import unstable
-from polars._utils.wrap import wrap_expr
+from fancy_polars._utils.deprecation import deprecate_nonkeyword_arguments
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.unstable import unstable
+from fancy_polars._utils.wrap import wrap_expr
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import Expr
-    from polars._typing import IntoExprColumn
+    from fancy_polars import Expr
+    from fancy_polars._typing import IntoExprColumn
 
 
 @unstable()

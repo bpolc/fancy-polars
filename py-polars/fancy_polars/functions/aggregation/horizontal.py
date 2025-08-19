@@ -3,19 +3,19 @@ from __future__ import annotations
 import contextlib
 from typing import TYPE_CHECKING
 
-import polars.functions as F
-from polars._utils.parse import parse_into_list_of_expressions
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import UInt32
+import fancy_polars.functions as F
+from fancy_polars._utils.parse import parse_into_list_of_expressions
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import UInt32
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import Expr
-    from polars._typing import IntoExpr
+    from fancy_polars import Expr
+    from fancy_polars._typing import IntoExpr
 
 
 def all_horizontal(*exprs: IntoExpr | Iterable[IntoExpr]) -> Expr:

@@ -7,14 +7,14 @@ from typing import TYPE_CHECKING, Any, no_type_check
 import pandas as pd
 import pytest
 
-import polars as pl
-from polars.interchange.protocol import CompatLevel
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.interchange.protocol import CompatLevel
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
     from pathlib import Path
 
-    from polars._typing import IpcCompression
+    from fancy_polars._typing import IpcCompression
     from tests.unit.conftest import MemoryUsage
 
 COMPRESSIONS = ["uncompressed", "lz4", "zstd"]

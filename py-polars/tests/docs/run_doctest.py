@@ -39,7 +39,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 from typing import TYPE_CHECKING, Any
 
-import polars as pl
+import fancy_polars as pl
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

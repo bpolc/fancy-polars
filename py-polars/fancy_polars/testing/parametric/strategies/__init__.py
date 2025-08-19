@@ -1,11 +1,14 @@
-from polars.testing.parametric.strategies.core import (
+from fancy_polars.testing.parametric.strategies.core import (
     column,
     dataframes,
     series,
 )
-from polars.testing.parametric.strategies.data import lists
-from polars.testing.parametric.strategies.dtype import dtypes
-from polars.testing.parametric.strategies.legacy import columns, create_list_strategy
+from fancy_polars.testing.parametric.strategies.data import lists
+from fancy_polars.testing.parametric.strategies.dtype import dtypes
+from fancy_polars.testing.parametric.strategies.legacy import (
+    columns,
+    create_list_strategy,
+)
 
 __all__ = [
     # core

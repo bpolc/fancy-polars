@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 pytestmark = pytest.mark.benchmark()
 

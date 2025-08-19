@@ -2,7 +2,7 @@ from datetime import time
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_time_to_string_cast() -> None:

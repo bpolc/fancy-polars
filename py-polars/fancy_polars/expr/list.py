@@ -5,17 +5,17 @@ import warnings
 from collections.abc import Collection, Sequence
 from typing import TYPE_CHECKING, Any, Callable
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.parse import parse_into_expression
-from polars._utils.various import find_stacklevel
-from polars._utils.wrap import wrap_expr
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.various import find_stacklevel
+from fancy_polars._utils.wrap import wrap_expr
 
 if TYPE_CHECKING:
     from datetime import date, datetime, time
 
-    from polars import Expr, Series
-    from polars._typing import (
+    from fancy_polars import Expr, Series
+    from fancy_polars._typing import (
         IntoExpr,
         IntoExprColumn,
         ListToStructWidthStrategy,

@@ -6,13 +6,13 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
 
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 @pytest.fixture(autouse=True)

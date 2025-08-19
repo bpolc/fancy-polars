@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import sys
 
-from polars._cpu_check import get_lts_cpu
-from polars._utils.polars_version import get_polars_version
-from polars.meta.index_type import get_index_type
+from fancy_polars._cpu_check import get_lts_cpu
+from fancy_polars._utils.polars_version import get_polars_version
+from fancy_polars.meta.index_type import get_index_type
 
 
 def show_versions() -> None:
@@ -58,7 +58,7 @@ def show_versions() -> None:
 
     print("\n----Optional dependencies----")
 
-    from polars.io.cloud.credential_provider import CredentialProviderAzure
+    from fancy_polars.io.cloud.credential_provider import CredentialProviderAzure
 
     print(f"{'Azure CLI':{keylen}s} ", end="", flush=True)
     print(CredentialProviderAzure._azcli_version() or "<not installed>")

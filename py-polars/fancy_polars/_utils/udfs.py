@@ -24,7 +24,7 @@ from typing import (
     Union,
 )
 
-from polars._utils.various import re_escape
+from fancy_polars._utils.various import re_escape
 
 if TYPE_CHECKING:
     from collections.abc import Iterator
@@ -524,11 +524,11 @@ class BytecodeParser:
         """Generate warning that suggests an equivalent native polars expression."""
         # Import these here so that udfs can be imported without polars installed.
 
-        from polars._utils.various import (
+        from fancy_polars._utils.various import (
             find_stacklevel,
             in_terminal_that_supports_colour,
         )
-        from polars.exceptions import PolarsInefficientMapWarning
+        from fancy_polars.exceptions import PolarsInefficientMapWarning
 
         suggested_expression = suggestion_override or self.to_expression(col)
 

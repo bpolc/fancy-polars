@@ -6,10 +6,10 @@ from typing import TYPE_CHECKING
 import numpy as np
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 if TYPE_CHECKING:
-    from polars._typing import TimeUnit
+    from fancy_polars._typing import TimeUnit
 
 
 @pytest.mark.parametrize("time_unit", ["ms", "us", "ns"])

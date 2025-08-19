@@ -6,10 +6,10 @@ from zoneinfo import ZoneInfo
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.exceptions import PanicException
-from polars.testing import assert_series_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.exceptions import PanicException
+from fancy_polars.testing import assert_series_equal
+from fancy_polars.testing.parametric import series
 from tests.unit.conftest import NUMERIC_DTYPES
 
 

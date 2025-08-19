@@ -6,16 +6,16 @@ from typing import TYPE_CHECKING, Any
 import hypothesis.strategies as st
 from hypothesis.errors import InvalidArgument
 
-from polars._utils.deprecation import deprecate_function
-from polars.datatypes import is_polars_dtype
-from polars.testing.parametric.strategies.core import _COL_LIMIT, column
-from polars.testing.parametric.strategies.data import lists
-from polars.testing.parametric.strategies.dtype import _instantiate_dtype, dtypes
+from fancy_polars._utils.deprecation import deprecate_function
+from fancy_polars.datatypes import is_polars_dtype
+from fancy_polars.testing.parametric.strategies.core import _COL_LIMIT, column
+from fancy_polars.testing.parametric.strategies.data import lists
+from fancy_polars.testing.parametric.strategies.dtype import _instantiate_dtype, dtypes
 
 if TYPE_CHECKING:
     from hypothesis.strategies import SearchStrategy
 
-    from polars._typing import OneOrMoreDataTypes, PolarsDataType
+    from fancy_polars._typing import OneOrMoreDataTypes, PolarsDataType
 
 
 @deprecate_function(
@@ -69,7 +69,7 @@ def columns(
 
     Examples
     --------
-    >>> from polars.testing.parametric import columns, dataframes
+    >>> from fancy_polars.testing.parametric import columns, dataframes
     >>> from hypothesis import given
     >>> @given(dataframes(columns(["x", "y", "z"], unique=True)))  # doctest: +SKIP
     ... def test_unique_xyz(df: pl.DataFrame) -> None:
@@ -139,7 +139,7 @@ def create_list_strategy(
     --------
     Create a strategy that generates a list of i32 values:
 
-    >>> from polars.testing.parametric import create_list_strategy
+    >>> from fancy_polars.testing.parametric import create_list_strategy
     >>> lst = create_list_strategy(inner_dtype=pl.Int32)  # doctest: +SKIP
     >>> lst.example()  # doctest: +SKIP
     [-11330, 24030, 116]

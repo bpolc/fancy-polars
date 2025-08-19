@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from hypothesis import given
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import series
 
 
 @given(s=series(allow_null=True))

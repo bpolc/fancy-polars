@@ -3,10 +3,10 @@ from datetime import time
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import series
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import series
 
 left = pl.DataFrame({"a": [42, 13, 37], "b": [3, 8, 9]})
 right = pl.DataFrame({"a": [5, 10, 1996], "b": [1, 5, 7]})

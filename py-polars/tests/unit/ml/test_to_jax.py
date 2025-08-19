@@ -4,9 +4,9 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.dependencies import _lazy_import
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.dependencies import _lazy_import
 
 # don't import jax until an actual test is triggered (the decorator already
 # ensures the tests aren't run locally; this avoids premature local import)
@@ -16,7 +16,7 @@ jxn, _ = _lazy_import("jax.numpy")
 pytestmark = pytest.mark.ci_only
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 @pytest.fixture

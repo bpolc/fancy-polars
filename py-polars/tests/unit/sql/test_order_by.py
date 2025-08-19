@@ -4,8 +4,8 @@ from pathlib import Path
 
 import pytest
 
-import polars as pl
-from polars.exceptions import SQLInterfaceError, SQLSyntaxError
+import fancy_polars as pl
+from fancy_polars.exceptions import SQLInterfaceError, SQLSyntaxError
 
 
 @pytest.fixture

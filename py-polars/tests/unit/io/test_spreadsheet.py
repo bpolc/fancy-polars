@@ -10,19 +10,19 @@ from zoneinfo import ZoneInfo
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import (
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import (
     NoDataError,
     ParameterCollisionError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import FLOAT_DTYPES, NUMERIC_DTYPES
 
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
-    from polars._typing import (
+    from fancy_polars._typing import (
         ExcelSpreadsheetEngine,
         PolarsDataType,
         SchemaDict,

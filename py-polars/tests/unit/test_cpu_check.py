@@ -2,8 +2,8 @@ from unittest.mock import Mock
 
 import pytest
 
-from polars import _cpu_check
-from polars._cpu_check import check_cpu_flags
+from fancy_polars import _cpu_check
+from fancy_polars._cpu_check import check_cpu_flags
 
 
 @pytest.fixture

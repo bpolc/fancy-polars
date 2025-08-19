@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_frame_not_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_frame_not_equal
 
 
 def test_tail_union() -> None:

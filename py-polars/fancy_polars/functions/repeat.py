@@ -5,11 +5,11 @@ from decimal import Decimal as D
 from functools import lru_cache
 from typing import TYPE_CHECKING, Any, overload
 
-from polars import functions as F
-from polars._utils.parse import parse_into_expression
-from polars._utils.various import qualified_type_name
-from polars._utils.wrap import wrap_expr
-from polars.datatypes import (
+from fancy_polars import functions as F
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.various import qualified_type_name
+from fancy_polars._utils.wrap import wrap_expr
+from fancy_polars.datatypes import (
     Array,
     Boolean,
     Decimal,
@@ -17,17 +17,17 @@ from polars.datatypes import (
     List,
     Utf8,
 )
-from polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES
+from fancy_polars.datatypes.group import FLOAT_DTYPES, INTEGER_DTYPES
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
+    import fancy_polars.fancy_polars as plr
 
 
 if TYPE_CHECKING:
     from typing import Literal
 
-    from polars import Expr, Series
-    from polars._typing import IntoExpr, PolarsDataType
+    from fancy_polars import Expr, Series
+    from fancy_polars._typing import IntoExpr, PolarsDataType
 
 
 # create a lookup of dtypes that have a reasonable one/zero mapping; for

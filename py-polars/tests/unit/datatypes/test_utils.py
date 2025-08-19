@@ -3,9 +3,9 @@ from __future__ import annotations
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.datatypes._utils import dtype_to_init_repr
-from polars.testing.parametric import dtypes
+import fancy_polars as pl
+from fancy_polars.datatypes._utils import dtype_to_init_repr
+from fancy_polars.testing.parametric import dtypes
 
 
 @given(dtype=dtypes())

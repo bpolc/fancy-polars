@@ -10,12 +10,12 @@ from typing import TYPE_CHECKING, Any
 import pandas as pd
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
-    from polars._typing import ParallelStrategy
+    from fancy_polars._typing import ParallelStrategy
 
 
 @pytest.fixture
@@ -902,8 +902,8 @@ os.environ["POLARS_MAX_THREADS"] = "2"
 
 import io
 
-import polars as pl
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
 
 f = io.BytesIO()
 

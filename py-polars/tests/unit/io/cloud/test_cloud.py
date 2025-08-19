@@ -5,8 +5,8 @@ from functools import partial
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ComputeError
+import fancy_polars as pl
+from fancy_polars.exceptions import ComputeError
 
 
 @pytest.mark.slow

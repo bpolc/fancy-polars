@@ -6,9 +6,9 @@ import hypothesis.strategies as st
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.testing import assert_frame_equal
-from polars.testing.parametric import column, dataframes
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal
+from fancy_polars.testing.parametric import column, dataframes
 
 
 @given(

@@ -7,13 +7,13 @@ from typing import Any, NamedTuple
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.exceptions import PolarsInefficientMapWarning
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import PolarsInefficientMapWarning
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from tests.unit.conftest import NUMERIC_DTYPES, TEMPORAL_DTYPES
 
 pytestmark = pytest.mark.filterwarnings(
-    "ignore::polars.exceptions.PolarsInefficientMapWarning"
+    "ignore::fancy_polars.exceptions.PolarsInefficientMapWarning"
 )
 
 

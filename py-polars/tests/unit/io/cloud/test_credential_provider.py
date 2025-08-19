@@ -4,9 +4,9 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-import polars.io.cloud.credential_provider
-from polars.exceptions import ComputeError
+import fancy_polars as pl
+import fancy_polars.io.cloud.credential_provider
+from fancy_polars.exceptions import ComputeError
 
 
 @pytest.mark.parametrize(
@@ -26,7 +26,9 @@ def test_credential_provider_scan(
     def raises(*_: None, **__: None) -> None:
         raise AssertionError(err_magic)
 
-    from polars.io.cloud.credential_provider._builder import CredentialProviderBuilder
+    from fancy_polars.io.cloud.credential_provider._builder import (
+        CredentialProviderBuilder,
+    )
 
     monkeypatch.setattr(CredentialProviderBuilder, "__init__", raises)
 
@@ -66,13 +68,22 @@ def test_credential_provider_scan(
 @pytest.mark.parametrize(
     ("provider_class", "path"),
     [
-        (polars.io.cloud.credential_provider.CredentialProviderAWS, "s3://.../..."),
-        (polars.io.cloud.credential_provider.CredentialProviderGCP, "gs://.../..."),
-        (polars.io.cloud.credential_provider.CredentialProviderAzure, "az://.../..."),
+        (
+            fancy_polars.io.cloud.credential_provider.CredentialProviderAWS,
+            "s3://.../...",
+        ),
+        (
+            fancy_polars.io.cloud.credential_provider.CredentialProviderGCP,
+            "gs://.../...",
+        ),
+        (
+            fancy_polars.io.cloud.credential_provider.CredentialProviderAzure,
+            "az://.../...",
+        ),
     ],
 )
 def test_credential_provider_serialization_auto_init(
-    provider_class: polars.io.cloud.credential_provider.CredentialProvider,
+    provider_class: fancy_polars.io.cloud.credential_provider.CredentialProvider,
     path: str,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

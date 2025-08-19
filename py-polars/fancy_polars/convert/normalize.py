@@ -6,13 +6,13 @@ import json
 from collections.abc import Iterable, Mapping, Sequence
 from typing import TYPE_CHECKING, Any
 
-from polars._utils.unstable import unstable
-from polars.dataframe import DataFrame
-from polars.datatypes.constants import N_INFER_DEFAULT
+from fancy_polars._utils.unstable import unstable
+from fancy_polars.dataframe import DataFrame
+from fancy_polars.datatypes.constants import N_INFER_DEFAULT
 
 if TYPE_CHECKING:
-    from polars._typing import JSONEncoder
-    from polars.schema import Schema
+    from fancy_polars._typing import JSONEncoder
+    from fancy_polars.schema import Schema
 
 
 def _simple_json_normalize(

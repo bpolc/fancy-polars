@@ -6,12 +6,12 @@ from typing import TYPE_CHECKING, Any, Callable
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import dataframes, series
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import dataframes, series
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 @given(

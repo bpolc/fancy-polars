@@ -5,10 +5,10 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.dependencies import _lazy_import
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.dependencies import _lazy_import
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 # don't import torch until an actual test is triggered (the decorator already
 # ensures the tests aren't run locally; this avoids premature local import)

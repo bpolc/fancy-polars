@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from polars.datatypes.classes import (
+from fancy_polars.datatypes.classes import (
     Array,
     DataType,
     DataTypeClass,
@@ -30,7 +30,7 @@ if TYPE_CHECKING:
     import sys
     from collections.abc import Iterable
 
-    from polars._typing import (
+    from fancy_polars._typing import (
         PolarsDataType,
         PolarsIntegerType,
         PolarsTemporalType,
@@ -62,7 +62,7 @@ class DataTypeGroup(frozenset):  # type: ignore[type-arg]
         """
         for it in items:
             if not isinstance(it, (DataType, DataTypeClass)):
-                from polars._utils.various import qualified_type_name
+                from fancy_polars._utils.various import qualified_type_name
 
                 msg = f"DataTypeGroup items must be dtypes; found {qualified_type_name(it)!r}"
                 raise TypeError(msg)

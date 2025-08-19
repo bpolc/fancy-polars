@@ -21,7 +21,7 @@ from datetime import date
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 from tests.benchmark.data import load_pdsh_table
 
 if sys.platform == "win32":

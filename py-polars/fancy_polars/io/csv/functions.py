@@ -7,40 +7,42 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from typing import IO, TYPE_CHECKING, Any, Callable, Literal
 
-import polars._reexport as pl
-import polars.functions as F
-from polars._utils.deprecation import deprecate_renamed_parameter
-from polars._utils.various import (
+import fancy_polars._reexport as pl
+import fancy_polars.functions as F
+from fancy_polars._utils.deprecation import deprecate_renamed_parameter
+from fancy_polars._utils.various import (
     _process_null_values,
     is_path_or_str_sequence,
     is_str_sequence,
     normalize_filepath,
     qualified_type_name,
 )
-from polars._utils.wrap import wrap_df, wrap_ldf
-from polars.datatypes import N_INFER_DEFAULT, String, parse_into_dtype
-from polars.io._utils import (
+from fancy_polars._utils.wrap import wrap_df, wrap_ldf
+from fancy_polars.datatypes import N_INFER_DEFAULT, String, parse_into_dtype
+from fancy_polars.io._utils import (
     is_glob_pattern,
     parse_columns_arg,
     parse_row_index_args,
     prepare_file_arg,
 )
-from polars.io.cloud.credential_provider._builder import (
+from fancy_polars.io.cloud.credential_provider._builder import (
     _init_credential_provider_builder,
 )
-from polars.io.csv._utils import _check_arg_is_1byte, _update_columns
-from polars.io.csv.batched_reader import BatchedCsvReader
+from fancy_polars.io.csv._utils import _check_arg_is_1byte, _update_columns
+from fancy_polars.io.csv.batched_reader import BatchedCsvReader
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame, PyLazyFrame
+    from fancy_polars.fancy_polars import PyDataFrame, PyLazyFrame
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from polars import DataFrame, LazyFrame
-    from polars._typing import CsvEncoding, PolarsDataType, SchemaDict
-    from polars.io.cloud import CredentialProviderFunction
-    from polars.io.cloud.credential_provider._builder import CredentialProviderBuilder
+    from fancy_polars import DataFrame, LazyFrame
+    from fancy_polars._typing import CsvEncoding, PolarsDataType, SchemaDict
+    from fancy_polars.io.cloud import CredentialProviderFunction
+    from fancy_polars.io.cloud.credential_provider._builder import (
+        CredentialProviderBuilder,
+    )
 
 
 @deprecate_renamed_parameter("dtypes", "schema_overrides", version="0.20.31")
@@ -644,7 +646,7 @@ def _read_csv_impl(
                 "\n\nUse `schema_overrides`: Mapping[str, Type[DataType]]"
             )
             raise ValueError(msg)
-        from polars import scan_csv
+        from fancy_polars import scan_csv
 
         scan = scan_csv(
             source,

@@ -1,5 +1,5 @@
-import polars as pl
-from polars.testing import assert_series_equal
+import fancy_polars as pl
+from fancy_polars.testing import assert_series_equal
 
 
 def test_implode_explode_over_22188() -> None:

@@ -6,13 +6,13 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import ComputeError, PolarsError
-from polars.testing import assert_frame_equal, assert_series_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import ComputeError, PolarsError
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_any_expr(fruits_cars: pl.DataFrame) -> None:
@@ -536,7 +536,7 @@ def test_fold_all_schema() -> None:
 def test_expected_horizontal_dtype_errors(horizontal_func: type[pl.Expr]) -> None:
     from decimal import Decimal as D
 
-    import polars as pl
+    import fancy_polars as pl
 
     df = pl.DataFrame(
         {

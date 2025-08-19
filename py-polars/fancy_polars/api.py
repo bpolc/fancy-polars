@@ -3,11 +3,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Callable, Generic, TypeVar
 from warnings import warn
 
-import polars._reexport as pl
-from polars._utils.various import find_stacklevel
+import fancy_polars._reexport as pl
+from fancy_polars._utils.various import find_stacklevel
 
 if TYPE_CHECKING:
-    from polars import DataFrame, Expr, LazyFrame, Series
+    from fancy_polars import DataFrame, Expr, LazyFrame, Series
 
 
 __all__ = [

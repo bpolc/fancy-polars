@@ -6,47 +6,50 @@ import re
 from collections.abc import Iterable, Sequence
 from typing import TYPE_CHECKING, Any, Literal, overload
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.construction.dataframe import (
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.construction.dataframe import (
     arrow_to_pydf,
     dict_to_pydf,
     numpy_to_pydf,
     pandas_to_pydf,
     sequence_to_pydf,
 )
-from polars._utils.construction.series import arrow_to_pyseries, pandas_to_pyseries
-from polars._utils.deprecation import (
+from fancy_polars._utils.construction.series import (
+    arrow_to_pyseries,
+    pandas_to_pyseries,
+)
+from fancy_polars._utils.deprecation import (
     deprecate_renamed_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.pycapsule import is_pycapsule, pycapsule_to_frame
-from polars._utils.various import (
+from fancy_polars._utils.pycapsule import is_pycapsule, pycapsule_to_frame
+from fancy_polars._utils.various import (
     _cast_repr_strings_with_schema,
     issue_warning,
     qualified_type_name,
 )
-from polars._utils.wrap import wrap_df, wrap_s
-from polars.datatypes import N_INFER_DEFAULT, Categorical, String
-from polars.dependencies import _check_for_pyarrow
-from polars.dependencies import pandas as pd
-from polars.dependencies import pyarrow as pa
-from polars.exceptions import NoDataError
+from fancy_polars._utils.wrap import wrap_df, wrap_s
+from fancy_polars.datatypes import N_INFER_DEFAULT, Categorical, String
+from fancy_polars.dependencies import _check_for_pyarrow
+from fancy_polars.dependencies import pandas as pd
+from fancy_polars.dependencies import pyarrow as pa
+from fancy_polars.exceptions import NoDataError
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from polars import DataFrame, Series
-    from polars._typing import (
+    from fancy_polars import DataFrame, Series
+    from fancy_polars._typing import (
         ArrowArrayExportable,
         ArrowStreamExportable,
         Orientation,
         SchemaDefinition,
         SchemaDict,
     )
-    from polars.dependencies import numpy as np
-    from polars.dependencies import torch
-    from polars.interchange.protocol import SupportsInterchange
+    from fancy_polars.dependencies import numpy as np
+    from fancy_polars.dependencies import torch
+    from fancy_polars.interchange.protocol import SupportsInterchange
 
 
 def from_dict(
@@ -799,7 +802,7 @@ def from_repr(data: str) -> DataFrame | Series:
 
 def _from_dataframe_repr(m: re.Match[str]) -> DataFrame:
     """Reconstruct a DataFrame from a regex-matched table repr."""
-    from polars.datatypes.convert import dtype_short_repr_to_dtype
+    from fancy_polars.datatypes.convert import dtype_short_repr_to_dtype
 
     # extract elements from table structure
     lines = m.group().split("\n")[1:-1]
@@ -864,7 +867,7 @@ def _from_dataframe_repr(m: re.Match[str]) -> DataFrame:
         else:
             # otherwise, take a trip through our CSV inference logic
             if all(tp == String for tp in df.schema.values()):
-                from polars.io import read_csv
+                from fancy_polars.io import read_csv
 
                 buf = io.BytesIO()
                 df.write_csv(file=buf)
@@ -884,7 +887,7 @@ def _from_dataframe_repr(m: re.Match[str]) -> DataFrame:
 
 def _from_series_repr(m: re.Match[str]) -> Series:
     """Reconstruct a Series from a regex-matched series repr."""
-    from polars.datatypes.convert import dtype_short_repr_to_dtype
+    from fancy_polars.datatypes.convert import dtype_short_repr_to_dtype
 
     shape = m.groups()[0]
     name = m.groups()[1][1:-1]
@@ -997,7 +1000,7 @@ def from_dataframe(
                 "Falling back to Dataframe Interchange Protocol, which is known to be less robust.",
                 UserWarning,
             )
-    from polars.interchange.from_dataframe import from_dataframe
+    from fancy_polars.interchange.from_dataframe import from_dataframe
 
     result = from_dataframe(df, allow_copy=allow_copy)  # type: ignore[arg-type]
     if rechunk:

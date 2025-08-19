@@ -1,6 +1,6 @@
 import altair as alt
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_dataframe_plot() -> None:

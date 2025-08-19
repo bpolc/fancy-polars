@@ -6,13 +6,17 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import ColumnNotFoundError, SQLInterfaceError, SQLSyntaxError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import (
+    ColumnNotFoundError,
+    SQLInterfaceError,
+    SQLSyntaxError,
+)
+from fancy_polars.testing import assert_frame_equal
 from tests.unit.utils.pycapsule_utils import PyCapsuleStreamHolder
 
 if TYPE_CHECKING:
-    from polars.datatypes import DataType
+    from fancy_polars.datatypes import DataType
 
 
 @pytest.fixture

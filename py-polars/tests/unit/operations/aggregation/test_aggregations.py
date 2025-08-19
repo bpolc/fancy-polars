@@ -6,14 +6,14 @@ from typing import TYPE_CHECKING, Any, cast
 import numpy as np
 import pytest
 
-import polars as pl
-from polars.exceptions import InvalidOperationError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.testing import assert_frame_equal
 
 if TYPE_CHECKING:
     import numpy.typing as npt
 
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 
 def test_quantile_expr_input() -> None:

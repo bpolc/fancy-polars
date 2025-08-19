@@ -2,18 +2,18 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from polars.interchange.protocol import (
+from fancy_polars.interchange.protocol import (
     Buffer,
     CopyNotAllowedError,
     DlpackDeviceType,
     DtypeKind,
 )
-from polars.interchange.utils import polars_dtype_to_dtype
+from fancy_polars.interchange.utils import polars_dtype_to_dtype
 
 if TYPE_CHECKING:
     from typing import NoReturn
 
-    from polars import Series
+    from fancy_polars import Series
 
 
 class PolarsBuffer(Buffer):

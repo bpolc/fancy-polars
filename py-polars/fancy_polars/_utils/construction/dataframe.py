@@ -12,10 +12,10 @@ from typing import (
     Callable,
 )
 
-import polars._reexport as pl
-import polars._utils.construction as plc
-from polars import functions as F
-from polars._utils.construction.utils import (
+import fancy_polars._reexport as pl
+import fancy_polars._utils.construction as plc
+from fancy_polars import functions as F
+from fancy_polars._utils.construction.utils import (
     contains_nested,
     is_namedtuple,
     is_pydantic_model,
@@ -24,13 +24,13 @@ from polars._utils.construction.utils import (
     nt_unpack,
     try_get_type_hints,
 )
-from polars._utils.various import (
+from fancy_polars._utils.various import (
     _is_generator,
     arrlen,
     issue_warning,
     parse_version,
 )
-from polars.datatypes import (
+from fancy_polars.datatypes import (
     N_INFER_DEFAULT,
     Categorical,
     Enum,
@@ -41,33 +41,33 @@ from polars.datatypes import (
     parse_into_dtype,
     try_parse_into_dtype,
 )
-from polars.dependencies import (
+from fancy_polars.dependencies import (
     _NUMPY_AVAILABLE,
     _PYARROW_AVAILABLE,
     _check_for_numpy,
     _check_for_pandas,
     dataclasses,
 )
-from polars.dependencies import numpy as np
-from polars.dependencies import pandas as pd
-from polars.dependencies import pyarrow as pa
-from polars.exceptions import DataOrientationWarning, ShapeError
-from polars.meta import thread_pool_size
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.dependencies import pandas as pd
+from fancy_polars.dependencies import pyarrow as pa
+from fancy_polars.exceptions import DataOrientationWarning, ShapeError
+from fancy_polars.meta import thread_pool_size
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame
+    from fancy_polars.fancy_polars import PyDataFrame
 
 if TYPE_CHECKING:
     from collections.abc import Iterable, MutableMapping
 
-    from polars import DataFrame, Series
-    from polars._typing import (
+    from fancy_polars import DataFrame, Series
+    from fancy_polars._typing import (
         Orientation,
         PolarsDataType,
         SchemaDefinition,
         SchemaDict,
     )
-    from polars.polars import PySeries
+    from fancy_polars.fancy_polars import PySeries
 
 _MIN_NUMPY_SIZE_FOR_MULTITHREADING = 1000
 

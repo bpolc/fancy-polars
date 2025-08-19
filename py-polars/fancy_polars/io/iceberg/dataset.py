@@ -4,16 +4,16 @@ import os
 from functools import partial
 from typing import TYPE_CHECKING, Any, Literal
 
-import polars._reexport as pl
-from polars._utils.logging import eprint, verbose
-from polars.exceptions import ComputeError
-from polars.io.iceberg._utils import _scan_pyarrow_dataset_impl
+import fancy_polars._reexport as pl
+from fancy_polars._utils.logging import eprint, verbose
+from fancy_polars.exceptions import ComputeError
+from fancy_polars.io.iceberg._utils import _scan_pyarrow_dataset_impl
 
 if TYPE_CHECKING:
     import pyarrow as pa
     from pyiceberg.table import Table
 
-    from polars.lazyframe.frame import LazyFrame
+    from fancy_polars.lazyframe.frame import LazyFrame
 
 
 class IcebergDataset:
@@ -62,9 +62,9 @@ class IcebergDataset:
         projection: list[str] | None = None,
     ) -> LazyFrame:
         """Construct a LazyFrame scan."""
-        import polars._utils.logging
+        import fancy_polars._utils.logging
 
-        verbose = polars._utils.logging.verbose()
+        verbose = fancy_polars._utils.logging.verbose()
 
         if verbose:
             eprint(
@@ -128,7 +128,7 @@ class IcebergDataset:
                 break
 
         if not fallback_reason:
-            from polars.io.parquet.functions import scan_parquet
+            from fancy_polars.io.parquet.functions import scan_parquet
 
             if verbose:
                 eprint(

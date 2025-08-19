@@ -6,12 +6,12 @@ from io import BytesIO, StringIO
 from pathlib import Path
 from typing import TYPE_CHECKING, Callable, Literal, overload
 
-from polars._utils.various import normalize_filepath
+from fancy_polars._utils.various import normalize_filepath
 
 if TYPE_CHECKING:
     from io import IOBase
 
-    from polars._typing import SerializationFormat
+    from fancy_polars._typing import SerializationFormat
 
 
 @overload

@@ -2,13 +2,13 @@ from __future__ import annotations
 
 import pytest
 
-import polars as pl
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars.exceptions import (
     SQLInterfaceError,
     SQLSyntaxError,
     StructFieldNotFoundError,
 )
-from polars.testing import assert_frame_equal
+from fancy_polars.testing import assert_frame_equal
 
 
 @pytest.fixture

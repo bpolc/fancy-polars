@@ -4,15 +4,15 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars.exceptions import (
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars.exceptions import (
     ColumnNotFoundError,
     ComputeError,
     InvalidOperationError,
     ShapeError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 def test_str_slice() -> None:

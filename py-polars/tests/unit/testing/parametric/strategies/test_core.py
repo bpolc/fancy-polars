@@ -6,8 +6,8 @@ import pytest
 from hypothesis import given, settings
 from hypothesis.errors import InvalidArgument
 
-import polars as pl
-from polars.testing.parametric import (
+import fancy_polars as pl
+from fancy_polars.testing.parametric import (
     column,
     dataframes,
     dtypes,

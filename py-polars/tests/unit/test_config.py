@@ -7,10 +7,10 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-import polars.polars as plr
-from polars._utils.unstable import issue_unstable_warning
-from polars.config import _POLARS_CFG_ENV_VARS
+import fancy_polars as pl
+import fancy_polars.fancy_polars as plr
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars.config import _POLARS_CFG_ENV_VARS
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

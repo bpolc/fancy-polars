@@ -2,12 +2,12 @@ from __future__ import annotations
 
 from typing import cast
 
-from polars._utils.deprecation import deprecate_renamed_parameter
-from polars.dataframe import DataFrame
-from polars.exceptions import InvalidOperationError
-from polars.lazyframe import LazyFrame
-from polars.testing.asserts.series import _assert_series_values_equal
-from polars.testing.asserts.utils import raise_assertion_error
+from fancy_polars._utils.deprecation import deprecate_renamed_parameter
+from fancy_polars.dataframe import DataFrame
+from fancy_polars.exceptions import InvalidOperationError
+from fancy_polars.lazyframe import LazyFrame
+from fancy_polars.testing.asserts.series import _assert_series_values_equal
+from fancy_polars.testing.asserts.utils import raise_assertion_error
 
 
 @deprecate_renamed_parameter("check_dtype", "check_dtypes", version="0.20.31")
@@ -67,7 +67,7 @@ def assert_frame_equal(
 
     Examples
     --------
-    >>> from polars.testing import assert_frame_equal
+    >>> from fancy_polars.testing import assert_frame_equal
     >>> df1 = pl.DataFrame({"a": [1, 2, 3]})
     >>> df2 = pl.DataFrame({"a": [1, 5, 3]})
     >>> assert_frame_equal(df1, df2)
@@ -241,7 +241,7 @@ def assert_frame_not_equal(
 
     Examples
     --------
-    >>> from polars.testing import assert_frame_not_equal
+    >>> from fancy_polars.testing import assert_frame_not_equal
     >>> df1 = pl.DataFrame({"a": [1, 2, 3]})
     >>> df2 = pl.DataFrame({"a": [1, 2, 3]})
     >>> assert_frame_not_equal(df1, df2)

@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
-    from polars import DataFrame
+    from fancy_polars import DataFrame
 
 
 def _execute_from_rust(

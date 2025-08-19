@@ -7,10 +7,10 @@ import pandas as pd
 import pyarrow as pa
 import pytest
 
-import polars as pl
-from polars.interchange.buffer import PolarsBuffer
-from polars.interchange.column import PolarsColumn
-from polars.interchange.from_dataframe import (
+import fancy_polars as pl
+from fancy_polars.interchange.buffer import PolarsBuffer
+from fancy_polars.interchange.column import PolarsColumn
+from fancy_polars.interchange.from_dataframe import (
     _categorical_column_to_series,
     _column_to_series,
     _construct_data_buffer,
@@ -20,13 +20,13 @@ from polars.interchange.from_dataframe import (
     _construct_validity_buffer_from_bytemask,
     _string_column_to_series,
 )
-from polars.interchange.protocol import (
+from fancy_polars.interchange.protocol import (
     ColumnNullType,
     CopyNotAllowedError,
     DtypeKind,
     Endianness,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 NE = Endianness.NATIVE
 

@@ -6,14 +6,14 @@ from typing import TYPE_CHECKING
 import pytest
 from hypothesis import given
 
-import polars as pl
-from polars.testing import assert_frame_equal, assert_series_equal
-from polars.testing.parametric import dataframes, series
-from polars.testing.parametric.strategies.dtype import dtypes
+import fancy_polars as pl
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing.parametric import dataframes, series
+from fancy_polars.testing.parametric.strategies.dtype import dtypes
 from tests.unit.conftest import FLOAT_DTYPES, INTEGER_DTYPES
 
 if TYPE_CHECKING:
-    from polars._typing import PolarsDataType
+    from fancy_polars._typing import PolarsDataType
 
 FIELD_COMBS = [
     (descending, nulls_last, False)

@@ -3,14 +3,14 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, Literal
 
-from polars._utils.unstable import issue_unstable_warning
-from polars.exceptions import DuplicateError
-from polars.schema import Schema
+from fancy_polars._utils.unstable import issue_unstable_warning
+from fancy_polars.exceptions import DuplicateError
+from fancy_polars.schema import Schema
 
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from polars.datatypes.classes import DataType
+    from fancy_polars.datatypes.classes import DataType
 
 
 @dataclass
@@ -112,7 +112,7 @@ class ColumnInfo:
             "`get_polars_dtype` functionality is considered unstable."
         )
 
-        from polars.polars import PyCatalogClient
+        from fancy_polars.fancy_polars import PyCatalogClient
 
         return PyCatalogClient.type_json_to_polars_type(self.type_json)
 

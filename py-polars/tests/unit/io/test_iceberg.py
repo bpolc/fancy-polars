@@ -8,9 +8,9 @@ from pathlib import Path
 
 import pytest
 
-import polars as pl
-from polars.io.iceberg._utils import _convert_predicate, _to_ast
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.io.iceberg._utils import _convert_predicate, _to_ast
+from fancy_polars.testing import assert_frame_equal
 
 
 @pytest.fixture

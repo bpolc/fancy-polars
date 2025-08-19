@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING, Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import DataOrientationWarning, InvalidOperationError
+import fancy_polars as pl
+from fancy_polars.exceptions import DataOrientationWarning, InvalidOperationError
 
 if TYPE_CHECKING:
     from collections.abc import Iterator

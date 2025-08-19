@@ -19,21 +19,21 @@ from typing import (
     TypeVar,
 )
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.convert import negate_duration_string, parse_as_duration_string
-from polars._utils.deprecation import (
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.convert import negate_duration_string, parse_as_duration_string
+from fancy_polars._utils.deprecation import (
     deprecate_function,
     deprecate_renamed_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.parse import (
+from fancy_polars._utils.parse import (
     parse_into_expression,
     parse_into_list_of_expressions,
     parse_predicates_constraints_into_expression,
 )
-from polars._utils.unstable import issue_unstable_warning, unstable
-from polars._utils.various import (
+from fancy_polars._utils.unstable import issue_unstable_warning, unstable
+from fancy_polars._utils.various import (
     BUILDING_SPHINX_DOCS,
     extend_bool,
     find_stacklevel,
@@ -42,33 +42,33 @@ from polars._utils.various import (
     sphinx_accessor,
     warn_null_comparison,
 )
-from polars.datatypes import Int64, is_polars_dtype, parse_into_dtype
-from polars.dependencies import _check_for_numpy
-from polars.dependencies import numpy as np
-from polars.exceptions import CustomUFuncWarning, PolarsInefficientMapWarning
-from polars.expr.array import ExprArrayNameSpace
-from polars.expr.binary import ExprBinaryNameSpace
-from polars.expr.categorical import ExprCatNameSpace
-from polars.expr.datetime import ExprDateTimeNameSpace
-from polars.expr.list import ExprListNameSpace
-from polars.expr.meta import ExprMetaNameSpace
-from polars.expr.name import ExprNameNameSpace
-from polars.expr.string import ExprStringNameSpace
-from polars.expr.struct import ExprStructNameSpace
-from polars.meta import thread_pool_size
+from fancy_polars.datatypes import Int64, is_polars_dtype, parse_into_dtype
+from fancy_polars.dependencies import _check_for_numpy
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.exceptions import CustomUFuncWarning, PolarsInefficientMapWarning
+from fancy_polars.expr.array import ExprArrayNameSpace
+from fancy_polars.expr.binary import ExprBinaryNameSpace
+from fancy_polars.expr.categorical import ExprCatNameSpace
+from fancy_polars.expr.datetime import ExprDateTimeNameSpace
+from fancy_polars.expr.list import ExprListNameSpace
+from fancy_polars.expr.meta import ExprMetaNameSpace
+from fancy_polars.expr.name import ExprNameNameSpace
+from fancy_polars.expr.string import ExprStringNameSpace
+from fancy_polars.expr.struct import ExprStructNameSpace
+from fancy_polars.meta import thread_pool_size
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import arg_where as py_arg_where
+    from fancy_polars.fancy_polars import arg_where as py_arg_where
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyExpr
+    from fancy_polars.fancy_polars import PyExpr
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
     from io import IOBase
 
-    from polars import DataFrame, LazyFrame, Series
-    from polars._typing import (
+    from fancy_polars import DataFrame, LazyFrame, Series
+    from fancy_polars._typing import (
         ClosedInterval,
         FillNullStrategy,
         InterpolationMethod,
@@ -87,7 +87,7 @@ if TYPE_CHECKING:
         TemporalLiteral,
         WindowMappingStrategy,
     )
-    from polars._utils.various import (
+    from fancy_polars._utils.various import (
         NoDefault,
     )
 
@@ -4671,7 +4671,7 @@ class Expr:
             )
 
         # input x: Series of type list containing the group values
-        from polars._utils.udfs import warn_on_inefficient_map
+        from fancy_polars._utils.udfs import warn_on_inefficient_map
 
         root_names = self.meta.root_names()
         if len(root_names) > 0:
@@ -10739,7 +10739,8 @@ class Expr:
         return self._from_pyexpr(self._pyexpr.bitwise_xor())
 
     @deprecate_function(
-        "Use `polars.plugins.register_plugin_function` instead.", version="0.20.16"
+        "Use `fancy_polars.plugins.register_plugin_function` instead.",
+        version="0.20.16",
     )
     def register_plugin(
         self,
@@ -10802,7 +10803,7 @@ class Expr:
         changes_length
             For example a `unique` or a `slice`
         """
-        from polars.plugins import register_plugin_function
+        from fancy_polars.plugins import register_plugin_function
 
         if args is None:
             args = [self]

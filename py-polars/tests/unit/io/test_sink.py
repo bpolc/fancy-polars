@@ -4,9 +4,9 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-from polars._typing import EngineType
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars._typing import EngineType
+from fancy_polars.testing import assert_frame_equal
 
 SINKS = [
     (pl.scan_ipc, pl.LazyFrame.sink_ipc),

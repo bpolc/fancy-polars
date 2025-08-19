@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Literal, overload
 
 if TYPE_CHECKING:
-    from polars.dataframe import DataFrame
-    from polars.lazyframe import LazyFrame
+    from fancy_polars.dataframe import DataFrame
+    from fancy_polars.lazyframe import LazyFrame
 
 
 __all__ = ["sql"]
@@ -131,7 +131,7 @@ def sql(query: str, *, eager: bool = False) -> DataFrame | LazyFrame:
     │ 3   ┆ 8   ┆ x   ┆ 0.0  ┆ z   │
     └─────┴─────┴─────┴──────┴─────┘
     """
-    from polars.sql import SQLContext
+    from fancy_polars.sql import SQLContext
 
     return SQLContext.execute_global(
         query=query,

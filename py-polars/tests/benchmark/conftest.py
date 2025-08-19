@@ -1,6 +1,6 @@
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 from tests.benchmark.data import generate_group_by_data
 
 

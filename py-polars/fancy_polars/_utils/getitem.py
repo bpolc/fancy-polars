@@ -3,12 +3,12 @@ from __future__ import annotations
 from collections.abc import Sequence
 from typing import TYPE_CHECKING, Any, NoReturn, overload
 
-import polars._reexport as pl
-import polars.functions as F
-from polars._utils.constants import U32_MAX
-from polars._utils.slice import PolarsSlice
-from polars._utils.various import qualified_type_name, range_to_slice
-from polars.datatypes.classes import (
+import fancy_polars._reexport as pl
+import fancy_polars.functions as F
+from fancy_polars._utils.constants import U32_MAX
+from fancy_polars._utils.slice import PolarsSlice
+from fancy_polars._utils.various import qualified_type_name, range_to_slice
+from fancy_polars.datatypes.classes import (
     Boolean,
     Int8,
     Int16,
@@ -18,15 +18,15 @@ from polars.datatypes.classes import (
     UInt32,
     UInt64,
 )
-from polars.dependencies import _check_for_numpy
-from polars.dependencies import numpy as np
-from polars.meta.index_type import get_index_type
+from fancy_polars.dependencies import _check_for_numpy
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.meta.index_type import get_index_type
 
 if TYPE_CHECKING:
     from collections.abc import Iterable
 
-    from polars import DataFrame, Series
-    from polars._typing import (
+    from fancy_polars import DataFrame, Series
+    from fancy_polars._typing import (
         MultiColSelector,
         MultiIndexSelector,
         SingleColSelector,

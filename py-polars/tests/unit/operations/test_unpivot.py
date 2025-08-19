@@ -1,9 +1,9 @@
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars import StringCache
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars import StringCache
+from fancy_polars.testing import assert_frame_equal
 
 
 def test_unpivot() -> None:

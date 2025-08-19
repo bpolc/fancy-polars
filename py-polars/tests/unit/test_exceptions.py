@@ -1,6 +1,6 @@
 import pytest
 
-from polars.exceptions import (
+from fancy_polars.exceptions import (
     CategoricalRemappingWarning,
     ComputeError,
     CustomUFuncWarning,

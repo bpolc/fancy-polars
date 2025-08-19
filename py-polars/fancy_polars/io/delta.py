@@ -6,21 +6,21 @@ from pathlib import Path
 from typing import TYPE_CHECKING, Any
 from urllib.parse import urlparse
 
-from polars.convert import from_arrow
-from polars.datatypes import Null, Time
-from polars.datatypes.convert import unpack_dtypes
-from polars.dependencies import _DELTALAKE_AVAILABLE, deltalake
-from polars.io.parquet import scan_parquet
-from polars.io.pyarrow_dataset.functions import scan_pyarrow_dataset
-from polars.schema import Schema
+from fancy_polars.convert import from_arrow
+from fancy_polars.datatypes import Null, Time
+from fancy_polars.datatypes.convert import unpack_dtypes
+from fancy_polars.dependencies import _DELTALAKE_AVAILABLE, deltalake
+from fancy_polars.io.parquet import scan_parquet
+from fancy_polars.io.pyarrow_dataset.functions import scan_pyarrow_dataset
+from fancy_polars.schema import Schema
 
 if TYPE_CHECKING:
     from typing import Literal
 
     from deltalake import DeltaTable
 
-    from polars import DataFrame, DataType, LazyFrame
-    from polars.io.cloud import CredentialProviderFunction
+    from fancy_polars import DataFrame, DataType, LazyFrame
+    from fancy_polars.io.cloud import CredentialProviderFunction
 
 
 def read_delta(
@@ -296,10 +296,10 @@ def scan_delta(
 
     from deltalake import DeltaTable
 
-    from polars.io.cloud.credential_provider._builder import (
+    from fancy_polars.io.cloud.credential_provider._builder import (
         _init_credential_provider_builder,
     )
-    from polars.io.cloud.credential_provider._providers import (
+    from fancy_polars.io.cloud.credential_provider._providers import (
         _get_credentials_from_provider_expiry_aware,
     )
 

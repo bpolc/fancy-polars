@@ -4,8 +4,8 @@ import contextlib
 from typing import TYPE_CHECKING
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    import polars.polars as plr
-    from polars.polars import PyStringCacheHolder
+    import fancy_polars.fancy_polars as plr
+    from fancy_polars.fancy_polars import PyStringCacheHolder
 
 if TYPE_CHECKING:
     import sys

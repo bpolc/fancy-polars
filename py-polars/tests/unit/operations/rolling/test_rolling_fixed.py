@@ -1,4 +1,4 @@
-import polars as pl
+import fancy_polars as pl
 
 
 def test_rolling_var_stability_12905() -> None:

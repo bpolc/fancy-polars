@@ -1,8 +1,8 @@
 import pytest
 from hypothesis.errors import NonInteractiveExampleWarning
 
-from polars.testing.parametric import columns, create_list_strategy
-from polars.testing.parametric.strategies.core import _COL_LIMIT
+from fancy_polars.testing.parametric import columns, create_list_strategy
+from fancy_polars.testing.parametric.strategies.core import _COL_LIMIT
 
 
 @pytest.mark.hypothesis

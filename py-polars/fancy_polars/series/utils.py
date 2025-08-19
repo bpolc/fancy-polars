@@ -5,15 +5,15 @@ import sys
 from functools import wraps
 from typing import TYPE_CHECKING, Any, Callable, TypeVar
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._utils.wrap import wrap_s
-from polars.datatypes import dtype_to_ffiname
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._utils.wrap import wrap_s
+from fancy_polars.datatypes import dtype_to_ffiname
 
 if TYPE_CHECKING:
-    from polars import Series
-    from polars._typing import PolarsDataType
-    from polars.polars import PySeries
+    from fancy_polars import Series
+    from fancy_polars._typing import PolarsDataType
+    from fancy_polars.fancy_polars import PySeries
 
     if sys.version_info >= (3, 10):
         from typing import ParamSpec
@@ -177,7 +177,7 @@ def get_ffi_func(
 
 
 def _with_no_check_length(func: Callable[..., Any]) -> Any:
-    from polars.polars import check_length
+    from fancy_polars.fancy_polars import check_length
 
     # Catch any error so that we can be sure that we always restore length checks
     try:

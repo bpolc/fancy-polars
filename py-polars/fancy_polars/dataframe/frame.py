@@ -27,10 +27,10 @@ from typing import (
     overload,
 )
 
-import polars._reexport as pl
-from polars import functions as F
-from polars._typing import DbWriteMode, JaxExportType, TorchExportType
-from polars._utils.construction import (
+import fancy_polars._reexport as pl
+from fancy_polars import functions as F
+from fancy_polars._typing import DbWriteMode, JaxExportType, TorchExportType
+from fancy_polars._utils.construction import (
     arrow_to_pydf,
     dataframe_to_pydf,
     dict_to_pydf,
@@ -40,18 +40,18 @@ from polars._utils.construction import (
     sequence_to_pydf,
     series_to_pydf,
 )
-from polars._utils.convert import parse_as_duration_string
-from polars._utils.deprecation import (
+from fancy_polars._utils.convert import parse_as_duration_string
+from fancy_polars._utils.deprecation import (
     deprecate_function,
     deprecate_renamed_parameter,
     issue_deprecation_warning,
 )
-from polars._utils.getitem import get_df_item_by_key
-from polars._utils.parse import parse_into_expression
-from polars._utils.pycapsule import is_pycapsule, pycapsule_to_frame
-from polars._utils.serde import serialize_polars_object
-from polars._utils.unstable import issue_unstable_warning, unstable
-from polars._utils.various import (
+from fancy_polars._utils.getitem import get_df_item_by_key
+from fancy_polars._utils.parse import parse_into_expression
+from fancy_polars._utils.pycapsule import is_pycapsule, pycapsule_to_frame
+from fancy_polars._utils.serde import serialize_polars_object
+from fancy_polars._utils.unstable import issue_unstable_warning, unstable
+from fancy_polars._utils.various import (
     is_bool_sequence,
     no_default,
     normalize_filepath,
@@ -60,11 +60,11 @@ from polars._utils.various import (
     scale_bytes,
     warn_null_comparison,
 )
-from polars._utils.wrap import wrap_expr, wrap_ldf, wrap_s
-from polars.dataframe._html import NotebookFormatter
-from polars.dataframe.group_by import DynamicGroupBy, GroupBy, RollingGroupBy
-from polars.dataframe.plotting import DataFramePlot
-from polars.datatypes import (
+from fancy_polars._utils.wrap import wrap_expr, wrap_ldf, wrap_s
+from fancy_polars.dataframe._html import NotebookFormatter
+from fancy_polars.dataframe.group_by import DynamicGroupBy, GroupBy, RollingGroupBy
+from fancy_polars.dataframe.plotting import DataFramePlot
+from fancy_polars.datatypes import (
     N_INFER_DEFAULT,
     Boolean,
     Float32,
@@ -79,8 +79,8 @@ from polars.datatypes import (
     UInt32,
     UInt64,
 )
-from polars.datatypes.group import INTEGER_DTYPES
-from polars.dependencies import (
+from fancy_polars.datatypes.group import INTEGER_DTYPES
+from fancy_polars.dependencies import (
     _ALTAIR_AVAILABLE,
     _GREAT_TABLES_AVAILABLE,
     _PANDAS_AVAILABLE,
@@ -94,25 +94,27 @@ from polars.dependencies import (
     import_optional,
     torch,
 )
-from polars.dependencies import numpy as np
-from polars.dependencies import pandas as pd
-from polars.dependencies import pyarrow as pa
-from polars.exceptions import (
+from fancy_polars.dependencies import numpy as np
+from fancy_polars.dependencies import pandas as pd
+from fancy_polars.dependencies import pyarrow as pa
+from fancy_polars.exceptions import (
     ColumnNotFoundError,
     InvalidOperationError,
     ModuleUpgradeRequiredError,
     NoRowsReturnedError,
     TooManyRowsReturnedError,
 )
-from polars.functions import col, lit
-from polars.interchange.protocol import CompatLevel
-from polars.schema import Schema
-from polars.selectors import _expand_selector_dicts, _expand_selectors
+from fancy_polars.functions import col, lit
+from fancy_polars.interchange.protocol import CompatLevel
+from fancy_polars.schema import Schema
+from fancy_polars.selectors import _expand_selector_dicts, _expand_selectors
 
 with contextlib.suppress(ImportError):  # Module not available when building docs
-    from polars.polars import PyDataFrame
-    from polars.polars import dtype_str_repr as _dtype_str_repr
-    from polars.polars import write_clipboard_string as _write_clipboard_string
+    from fancy_polars.fancy_polars import PyDataFrame
+    from fancy_polars.fancy_polars import dtype_str_repr as _dtype_str_repr
+    from fancy_polars.fancy_polars import (
+        write_clipboard_string as _write_clipboard_string,
+    )
 
 if TYPE_CHECKING:
     import sys
@@ -129,8 +131,8 @@ if TYPE_CHECKING:
     from xlsxwriter import Workbook
     from xlsxwriter.worksheet import Worksheet
 
-    from polars import DataType, Expr, LazyFrame, Series
-    from polars._typing import (
+    from fancy_polars import DataType, Expr, LazyFrame, Series
+    from fancy_polars._typing import (
         AsofJoinStrategy,
         AvroCompression,
         ClosedInterval,
@@ -174,10 +176,10 @@ if TYPE_CHECKING:
         UniqueKeepStrategy,
         UnstackDirection,
     )
-    from polars._utils.various import NoDefault
-    from polars.interchange.dataframe import PolarsDataFrame
-    from polars.io.cloud import CredentialProviderFunction
-    from polars.ml.torch import PolarsDataset
+    from fancy_polars._utils.various import NoDefault
+    from fancy_polars.interchange.dataframe import PolarsDataFrame
+    from fancy_polars.io.cloud import CredentialProviderFunction
+    from fancy_polars.ml.torch import PolarsDataset
 
     if sys.version_info >= (3, 10):
         from typing import Concatenate, ParamSpec
@@ -733,7 +735,7 @@ class DataFrame:
         --------
         Import some styling helpers, and create example data:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> from great_tables import loc, style
         >>> df = pl.DataFrame(
         ...     {
@@ -1026,7 +1028,7 @@ class DataFrame:
             )
             raise NotImplementedError(msg)
 
-        from polars.interchange.dataframe import PolarsDataFrame
+        from fancy_polars.interchange.dataframe import PolarsDataFrame
 
         return PolarsDataFrame(self, allow_copy=allow_copy)
 
@@ -2046,7 +2048,7 @@ class DataFrame:
         a col or selector expression (which can also be used to cast the data
         if the label and features are better-represented with different dtypes):
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.to_jax(
         ...     return_type="dict",
         ...     features=cs.float(),
@@ -2090,7 +2092,7 @@ class DataFrame:
         with contextlib.nullcontext() if device is None else jx.default_device(device):
             if return_type == "array":
                 # note: jax arrays are immutable, so can avoid a copy (vs torch)
-                from polars.ml.utilities import frame_to_numpy
+                from fancy_polars.ml.utilities import frame_to_numpy
 
                 arr = frame_to_numpy(
                     df=frame,
@@ -2314,7 +2316,7 @@ class DataFrame:
 
         if return_type == "tensor":
             # note: torch tensors are not immutable, so we must consider them writable
-            from polars.ml.utilities import frame_to_numpy
+            from fancy_polars.ml.utilities import frame_to_numpy
 
             arr = frame_to_numpy(frame, writable=True, target="Tensor")
             return torch.from_numpy(arr)
@@ -2338,7 +2340,7 @@ class DataFrame:
 
         elif return_type == "dataset":
             # return a torch Dataset object
-            from polars.ml.torch import PolarsDataset
+            from fancy_polars.ml.torch import PolarsDataset
 
             return PolarsDataset(frame, label=label, features=features)
         else:
@@ -2937,7 +2939,7 @@ class DataFrame:
         >>> path: pathlib.Path = dirpath / "new_file.csv"
         >>> df.write_csv(path, separator=",")
         """
-        from polars.io.csv._utils import _check_arg_is_1byte
+        from fancy_polars.io.csv._utils import _check_arg_is_1byte
 
         _check_arg_is_1byte("separator", separator, can_be_empty=False)
         _check_arg_is_1byte("quote_char", quote_char, can_be_empty=True)
@@ -2976,7 +2978,7 @@ class DataFrame:
         elif isinstance(file, (str, os.PathLike)):
             file = normalize_filepath(file)
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -3468,7 +3470,7 @@ class DataFrame:
         ...     # add chart to the worksheet
         ...     ws.insert_chart("D1", chart)
         """  # noqa: W505
-        from polars.io.spreadsheet._write_utils import (
+        from fancy_polars.io.spreadsheet._write_utils import (
             _unpack_multi_column_dict,
             _xl_apply_conditional_formats,
             _xl_inject_sparklines,
@@ -3747,7 +3749,7 @@ class DataFrame:
         if compression is None:
             compression = "uncompressed"
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -4035,7 +4037,7 @@ class DataFrame:
 
             return
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
 
@@ -4196,7 +4198,7 @@ class DataFrame:
             adbc_version = parse_version(
                 getattr(adbc_driver_manager, "__version__", "0.0")
             )
-            from polars.io.database._utils import _open_adbc_connection
+            from fancy_polars.io.database._utils import _open_adbc_connection
 
             if if_table_exists == "fail":
                 # if the table exists, 'create' will raise an error,
@@ -4560,7 +4562,7 @@ class DataFrame:
                 version="0.20.14",
             )
 
-        from polars.io.delta import (
+        from fancy_polars.io.delta import (
             _check_for_unsupported_types,
             _check_if_delta_available,
             _resolve_delta_lake_uri,
@@ -4581,10 +4583,10 @@ class DataFrame:
         else:
             data = self.to_arrow()
 
-        from polars.io.cloud.credential_provider._builder import (
+        from fancy_polars.io.cloud.credential_provider._builder import (
             _init_credential_provider_builder,
         )
-        from polars.io.cloud.credential_provider._providers import (
+        from fancy_polars.io.cloud.credential_provider._providers import (
             _get_credentials_from_provider_expiry_aware,
         )
 
@@ -5728,7 +5730,7 @@ class DataFrame:
         │ 3   ┆ false     ┆ xx:xx ┆ 2077 ┆ 0.0  │
         └─────┴───────────┴───────┴──────┴──────┘
         """
-        from polars.sql import SQLContext
+        from fancy_polars.sql import SQLContext
 
         issue_unstable_warning(
             "`sql` is considered **unstable** (although it is close to being considered stable)."
@@ -6240,7 +6242,7 @@ class DataFrame:
         defined by name or with a selector. For example, dropping rows if there is
         a null in any of the integer columns:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.drop_nulls(subset=cs.integer())
         shape: (2, 3)
         ┌─────┬─────┬──────┐
@@ -7964,7 +7966,7 @@ class DataFrame:
         >>> df.select(pl.col("foo") * 2 + pl.col("bar"))  # doctest: +IGNORE_RESULT
         """
         # TODO: Enable warning for inefficient map
-        # from polars._utils.udfs import warn_on_inefficient_map
+        # from fancy_polars._utils.udfs import warn_on_inefficient_map
         # warn_on_inefficient_map(function, columns=self.columns, map_target="frame)
 
         out, is_df = self._df.map_rows(function, return_dtype, inference_size)
@@ -8192,7 +8194,7 @@ class DataFrame:
 
         Drop multiple columns by passing a selector.
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.drop(cs.numeric())
         shape: (3, 1)
         ┌─────┐
@@ -8319,7 +8321,7 @@ class DataFrame:
 
         Use selectors to define the columns being cast:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.cast({cs.numeric(): pl.UInt32, cs.temporal(): pl.String})
         shape: (3, 3)
         ┌─────┬─────┬────────────┐
@@ -8853,7 +8855,7 @@ class DataFrame:
 
         You can use selectors too - here we include all test scores in the pivoted table:
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.pivot("subject", values=cs.starts_with("test"))
         shape: (2, 5)
         ┌───────┬──────────────┬────────────────┬──────────────┬────────────────┐
@@ -9031,7 +9033,7 @@ class DataFrame:
         ...         "c": [2, 4, 6],
         ...     }
         ... )
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.unpivot(cs.numeric(), index="a")
         shape: (6, 3)
         ┌─────┬──────────┬───────┐
@@ -9128,7 +9130,7 @@ class DataFrame:
         │ E   ┆ F   ┆ 5   ┆ 6   ┆ [5, 6]   ┆ [6, 7]   │
         │ G   ┆ H   ┆ 7   ┆ 8   ┆ [7, 8]   ┆ [8, 9]   │
         └─────┴─────┴─────┴─────┴──────────┴──────────┘
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.unstack(step=5, columns=cs.numeric(), fill_values=0)
         shape: (5, 2)
         ┌─────┬─────┐
@@ -9321,7 +9323,7 @@ class DataFrame:
 
         Return the partitions as a dictionary by specifying `as_dict=True`.
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.partition_by(cs.string(), as_dict=True)  # doctest: +IGNORE_RESULT
         {('a',): shape: (2, 3)
         ┌─────┬─────┬─────┐
@@ -10359,7 +10361,7 @@ class DataFrame:
         │ 1     ┆ 1     ┆ 1     │
         └───────┴───────┴───────┘
 
-        >>> import polars.selectors as cs
+        >>> import fancy_polars.selectors as cs
         >>> df.to_dummies(cs.integer(), separator=":")
         shape: (2, 5)
         ┌───────┬───────┬───────┬───────┬─────┐

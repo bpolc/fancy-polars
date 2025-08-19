@@ -14,11 +14,11 @@ import numpy as np
 import pyarrow as pa
 import pytest
 
-import polars as pl
-import polars.selectors as cs
-from polars._utils.construction import iterable_to_pydf
-from polars.datatypes import DTYPE_TEMPORAL_UNITS
-from polars.exceptions import (
+import fancy_polars as pl
+import fancy_polars.selectors as cs
+from fancy_polars._utils.construction import iterable_to_pydf
+from fancy_polars.datatypes import DTYPE_TEMPORAL_UNITS
+from fancy_polars.exceptions import (
     ColumnNotFoundError,
     ComputeError,
     DuplicateError,
@@ -26,7 +26,7 @@ from polars.exceptions import (
     OutOfBoundsError,
     ShapeError,
 )
-from polars.testing import (
+from fancy_polars.testing import (
     assert_frame_equal,
     assert_frame_not_equal,
     assert_series_equal,
@@ -36,8 +36,8 @@ from tests.unit.conftest import INTEGER_DTYPES
 if TYPE_CHECKING:
     from collections.abc import Iterator, Sequence
 
-    from polars import Expr
-    from polars._typing import JoinStrategy, UniqueKeepStrategy
+    from fancy_polars import Expr
+    from fancy_polars._typing import JoinStrategy, UniqueKeepStrategy
 
 
 def test_version() -> None:

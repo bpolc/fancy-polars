@@ -6,9 +6,9 @@ from typing import Any
 
 import pytest
 
-import polars as pl
-from polars.exceptions import SQLInterfaceError, SQLSyntaxError
-from polars.testing import assert_frame_equal
+import fancy_polars as pl
+from fancy_polars.exceptions import SQLInterfaceError, SQLSyntaxError
+from fancy_polars.testing import assert_frame_equal
 
 
 @pytest.fixture
@@ -264,7 +264,7 @@ def test_join_left_multi_nested() -> None:
 
 
 def test_join_misc_13618() -> None:
-    import polars as pl
+    import fancy_polars as pl
 
     df = pl.DataFrame(
         {

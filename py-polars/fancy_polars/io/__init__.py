@@ -1,16 +1,16 @@
 """Functions for reading data."""
 
-from polars.io.avro import read_avro
-from polars.io.clipboard import read_clipboard
-from polars.io.csv import read_csv, read_csv_batched, scan_csv
-from polars.io.database import read_database, read_database_uri
-from polars.io.delta import read_delta, scan_delta
-from polars.io.iceberg import scan_iceberg
-from polars.io.ipc import read_ipc, read_ipc_schema, read_ipc_stream, scan_ipc
-from polars.io.json import read_json
-from polars.io.ndjson import read_ndjson, scan_ndjson
-from polars.io.parquet import read_parquet, read_parquet_schema, scan_parquet
-from polars.io.partition import (
+from fancy_polars.io.avro import read_avro
+from fancy_polars.io.clipboard import read_clipboard
+from fancy_polars.io.csv import read_csv, read_csv_batched, scan_csv
+from fancy_polars.io.database import read_database, read_database_uri
+from fancy_polars.io.delta import read_delta, scan_delta
+from fancy_polars.io.iceberg import scan_iceberg
+from fancy_polars.io.ipc import read_ipc, read_ipc_schema, read_ipc_stream, scan_ipc
+from fancy_polars.io.json import read_json
+from fancy_polars.io.ndjson import read_ndjson, scan_ndjson
+from fancy_polars.io.parquet import read_parquet, read_parquet_schema, scan_parquet
+from fancy_polars.io.partition import (
     BasePartitionContext,
     KeyedPartition,
     KeyedPartitionContext,
@@ -18,9 +18,9 @@ from polars.io.partition import (
     PartitionMaxSize,
     PartitionParted,
 )
-from polars.io.plugins import _defer as defer
-from polars.io.pyarrow_dataset import scan_pyarrow_dataset
-from polars.io.spreadsheet import read_excel, read_ods
+from fancy_polars.io.plugins import _defer as defer
+from fancy_polars.io.pyarrow_dataset import scan_pyarrow_dataset
+from fancy_polars.io.spreadsheet import read_excel, read_ods
 
 __all__ = [
     "defer",

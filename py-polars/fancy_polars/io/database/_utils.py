@@ -3,24 +3,24 @@ from __future__ import annotations
 import re
 from typing import TYPE_CHECKING, Any
 
-from polars._utils.various import parse_version
-from polars.convert import from_arrow
-from polars.dependencies import import_optional
+from fancy_polars._utils.various import parse_version
+from fancy_polars.convert import from_arrow
+from fancy_polars.dependencies import import_optional
 
 if TYPE_CHECKING:
     from collections.abc import Coroutine
 
-    from polars import DataFrame
-    from polars._typing import SchemaDict
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import SchemaDict
 
 
 def _run_async(co: Coroutine[Any, Any, Any]) -> Any:
     """Run asynchronous code as if it was synchronous."""
     import asyncio
 
-    import polars._utils.nest_asyncio
+    import fancy_polars._utils.nest_asyncio
 
-    polars._utils.nest_asyncio.apply()  # type: ignore[attr-defined]
+    fancy_polars._utils.nest_asyncio.apply()  # type: ignore[attr-defined]
     return asyncio.run(co)
 
 

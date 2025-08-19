@@ -4,13 +4,13 @@ from datetime import date, datetime
 
 import pytest
 
-import polars as pl
-from polars.exceptions import (
+import fancy_polars as pl
+from fancy_polars.exceptions import (
     InvalidOperationError,
     SchemaError,
     StringCacheMismatchError,
 )
-from polars.testing import assert_frame_equal, assert_series_equal
+from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 @pytest.mark.may_fail_auto_streaming

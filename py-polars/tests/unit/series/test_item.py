@@ -4,7 +4,7 @@ import datetime
 
 import pytest
 
-import polars as pl
+import fancy_polars as pl
 
 
 def test_series_item() -> None:

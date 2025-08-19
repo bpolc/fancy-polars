@@ -2,17 +2,17 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Callable
 
-from polars import functions as F
-from polars._utils.convert import parse_as_duration_string
-from polars._utils.deprecation import deprecate_renamed_function
+from fancy_polars import functions as F
+from fancy_polars._utils.convert import parse_as_duration_string
+from fancy_polars._utils.deprecation import deprecate_renamed_function
 
 if TYPE_CHECKING:
     import sys
     from collections.abc import Iterable
     from datetime import timedelta
 
-    from polars import DataFrame
-    from polars._typing import (
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import (
         ClosedInterval,
         IntoExpr,
         Label,

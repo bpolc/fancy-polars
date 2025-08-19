@@ -6,19 +6,22 @@ from contextlib import suppress
 from inspect import Parameter, signature
 from typing import TYPE_CHECKING, Any
 
-from polars import functions as F
-from polars._utils.various import parse_version
-from polars.convert import from_arrow
-from polars.datatypes import N_INFER_DEFAULT
-from polars.exceptions import (
+from fancy_polars import functions as F
+from fancy_polars._utils.various import parse_version
+from fancy_polars.convert import from_arrow
+from fancy_polars.datatypes import N_INFER_DEFAULT
+from fancy_polars.exceptions import (
     DuplicateError,
     ModuleUpgradeRequiredError,
     UnsuitableSQLError,
 )
-from polars.io.database._arrow_registry import ARROW_DRIVER_REGISTRY
-from polars.io.database._cursor_proxies import ODBCCursorProxy, SurrealDBCursorProxy
-from polars.io.database._inference import _infer_dtype_from_cursor_description
-from polars.io.database._utils import _run_async
+from fancy_polars.io.database._arrow_registry import ARROW_DRIVER_REGISTRY
+from fancy_polars.io.database._cursor_proxies import (
+    ODBCCursorProxy,
+    SurrealDBCursorProxy,
+)
+from fancy_polars.io.database._inference import _infer_dtype_from_cursor_description
+from fancy_polars.io.database._utils import _run_async
 
 if TYPE_CHECKING:
     import sys
@@ -27,7 +30,7 @@ if TYPE_CHECKING:
 
     import pyarrow as pa
 
-    from polars.io.database._arrow_registry import ArrowDriverProperties
+    from fancy_polars.io.database._arrow_registry import ArrowDriverProperties
 
     if sys.version_info >= (3, 11):
         from typing import Self
@@ -37,8 +40,8 @@ if TYPE_CHECKING:
     from sqlalchemy.sql.elements import TextClause
     from sqlalchemy.sql.expression import Selectable
 
-    from polars import DataFrame
-    from polars._typing import ConnectionOrCursor, Cursor, SchemaDict
+    from fancy_polars import DataFrame
+    from fancy_polars._typing import ConnectionOrCursor, Cursor, SchemaDict
 
 _INVALID_QUERY_TYPES = {
     "ALTER",
@@ -200,7 +203,7 @@ class ConnectionExecutor:
         infer_schema_length: int | None,
     ) -> DataFrame | Iterator[DataFrame] | None:
         """Return resultset data in Arrow format for frame init."""
-        from polars import DataFrame
+        from fancy_polars import DataFrame
 
         try:
             for driver, driver_properties in ARROW_DRIVER_REGISTRY.items():
@@ -246,7 +249,7 @@ class ConnectionExecutor:
         infer_schema_length: int | None,
     ) -> DataFrame | Iterator[DataFrame] | None:
         """Return resultset data row-wise for frame init."""
-        from polars import DataFrame
+        from fancy_polars import DataFrame
 
         if iter_batches and not batch_size:
             msg = (
