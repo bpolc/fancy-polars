@@ -60,7 +60,7 @@ jobs:
         run: tomlq -i -t ".project.name = \"${{ matrix.package }}\"" py-polars/pyproject.toml
       - name: Add bigidx feature
         if: matrix.package == 'fancy-polars-u64-idx'
-        run: tomlq -i -t '.dependencies.polars.features += ["bigidx"]' py-polars/Cargo.toml
+        run: tomlq -i -t '.dependencies.fancy_polars.features += ["bigidx"]' py-polars/Cargo.toml
       - name: Update optional dependencies
         if: matrix.package != 'fancy-polars'
         run: sed -i 's/fancy-polars\[/${{ matrix.package }}\[/' py-polars/pyproject.toml
@@ -107,7 +107,7 @@ jobs:
 
     env:
       SED_INPLACE: ${{ startsWith(matrix.os, 'macos') && '-i ''''' || '-i' }}
-      CPU_CHECK_MODULE: py-polars/polars/_cpu_check.py
+      CPU_CHECK_MODULE: py-polars/fancy_polars/_cpu_check.py
 
     steps:
       - name: Setup build environment (ARM64 Windows)
@@ -205,7 +205,7 @@ jobs:
 
       - name: Add bigidx feature
         if: matrix.package == 'fancy-polars-u64-idx'
-        run: tomlq -i -t '.dependencies.polars.features += ["bigidx"]' py-polars/Cargo.toml
+        run: tomlq -i -t '.dependencies.fancy_polars.features += ["bigidx"]' py-polars/Cargo.toml
 
       - name: Update optional dependencies
         if: matrix.package != 'fancy-polars'
@@ -216,7 +216,7 @@ jobs:
         if: matrix.architecture == 'x86-64'
         env:
           IS_LTS_CPU: ${{ matrix.package == 'fancy-polars-lts-cpu' }}
-        # IMPORTANT: All features enabled here should also be included in py-polars/polars/_cpu_check.py
+        # IMPORTANT: All features enabled here should also be included in py-polars/fancy_polars/_cpu_check.py
         run: |
           if [[ "$IS_LTS_CPU" = true ]]; then
             FEATURES=+sse3,+ssse3,+sse4.1,+sse4.2,+popcnt,+cmpxchg16b
@@ -299,7 +299,7 @@ jobs:
         if: matrix.architecture == 'x86-64' || startsWith(matrix.os, 'macos') || startsWith(matrix.os, 'windows')
         run: |
           pip install --force-reinstall --verbose dist/*.whl
-          python -c 'import polars; polars.show_versions()'
+          python -c 'import fancy_polars; fancy_polars.show_versions()'
 
       - name: Upload wheel
         uses: actions/upload-artifact@v4

@@ -73,19 +73,19 @@ jobs:
 
       - name: Install Polars release build
         run: |
-          pip install --force-reinstall target/wheels/polars*.whl
+          pip install --force-reinstall target/wheels/fancy_polars*.whl
 
-          # This workflow builds and installs a wheel, meaning there is no polars.abi3.so under
-          # py-polars/. This causes a binary not found error if a test tries to import polars in
+          # This workflow builds and installs a wheel, meaning there is no fancy_polars.abi3.so under
+          # py-polars/. This causes a binary not found error if a test tries to import fancy_polars in
           # a Python executed using `subprocess.check_output([sys.executable])`. Fix this by
           # symlinking the binary.
           ln -sv \
-            $(python -c "import importlib; print(importlib.util.find_spec('polars').submodule_search_locations[0] + '/polars.abi3.so')") \
-            py-polars/polars/polars.abi3.so
+            $(python -c "import importlib; print(importlib.util.find_spec('fancy_polars').submodule_search_locations[0] + '/fancy_polars.abi3.so')") \
+            py-polars/fancy_polars/fancy_polars.abi3.so
 
       - name: Set wheel size
         run: |
-          LIB_SIZE=$(ls -l target/wheels/polars*.whl | awk '{ print $5 }')
+          LIB_SIZE=$(ls -l target/wheels/fancy_polars*.whl | awk '{ print $5 }')
           echo "LIB_SIZE=$LIB_SIZE" >> $GITHUB_ENV
 
       - name: Comment wheel size

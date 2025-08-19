@@ -126,5 +126,5 @@ jobs:
           do
             echo "uninstall $i and check imports..."
             pip uninstall "$d" -y
-            python -c 'import polars'
+            python -c 'import fancy_polars'
           done
