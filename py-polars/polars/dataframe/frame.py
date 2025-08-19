@@ -6387,7 +6387,7 @@ class DataFrame:
         Notes
         -----
         The resulting column does not have any special properties. It is a regular
-        column of type `UInt32` (or `UInt64` in `polars-u64-idx`).
+        column of type `UInt32` (or `UInt64` in `fancy-polars-u64-idx`).
 
         Examples
         --------

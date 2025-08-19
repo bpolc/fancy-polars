@@ -9,7 +9,7 @@ or batch jobs. By working in a 'Bring your own Cloud' model the data never leave
 Install the Polars Cloud python library in your environment
 
 ```bash
-$ pip install polars polars-cloud
+$ pip install fancy-polars polars-cloud
 ```
 
 Create an account and login by running the command below.

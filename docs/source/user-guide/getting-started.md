@@ -11,7 +11,7 @@ user or familiar with dataframes, feel free to skip ahead to the
 === ":fontawesome-brands-python: Python"
 
     ``` bash
-    pip install polars
+    pip install fancy-polars
     ```
 
 === ":fontawesome-brands-rust: Rust"

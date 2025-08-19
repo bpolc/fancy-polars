@@ -186,7 +186,7 @@ still very fast!)
 Install the latest Polars version with:
 
 ```sh
-pip install polars
+pip install fancy-polars
 ```
 
 We also have a conda package (`conda install -c conda-forge polars`), however pip is the preferred
@@ -195,13 +195,13 @@ way to install Polars.
 Install Polars with all optional dependencies.
 
 ```sh
-pip install 'polars[all]'
+pip install 'fancy-polars[all]'
 ```
 
 You can also install a subset of all optional dependencies.
 
 ```sh
-pip install 'polars[numpy,pandas,pyarrow]'
+pip install 'fancy-polars[numpy,pandas,pyarrow]'
 ```
 
 See the [User Guide](https://docs.pola.rs/user-guide/installation/#feature-flags) for more details
@@ -254,7 +254,7 @@ with the command if your CPU is older and does not support e.g. AVX2.
 
 Note that the Rust crate implementing the Python bindings is called `py-polars` to distinguish from
 the wrapped Rust crate `polars` itself. However, both the Python package and the Python module are
-named `polars`, so you can `pip install polars` and `import polars`.
+named `polars`, so you can `pip install fancy-polars` and `import polars`.
 
 ## Using custom Rust functions in Python
 
@@ -264,7 +264,7 @@ Extending Polars with UDFs compiled in Rust is easy. We expose PyO3 extensions f
 ## Going big...
 
 Do you expect more than 2^32 (~4.2 billion) rows? Compile Polars with the `bigidx` feature flag or,
-for Python users, install `pip install polars-u64-idx`.
+for Python users, install `pip install fancy-polars-u64-idx`.
 
 Don't use this unless you hit the row boundary as the default build of Polars is faster and consumes
 less memory.
@@ -272,8 +272,9 @@ less memory.
 ## Legacy
 
 Do you want Polars to run on an old CPU (e.g. dating from before 2011), or on an `x86-64` build of
-Python on Apple Silicon under Rosetta? Install `pip install polars-lts-cpu`. This version of Polars
-is compiled without [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) target features.
+Python on Apple Silicon under Rosetta? Install `pip install fancy-polars-lts-cpu`. This version of
+Polars is compiled without [AVX](https://en.wikipedia.org/wiki/Advanced_Vector_Extensions) target
+features.
 
 ## Sponsors
 

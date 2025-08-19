@@ -32,7 +32,7 @@ available with Polars Cloud allows to scale your Polars queries beyond a single 
 Simply extend the capabilities of Polars with:
 
 ```bash
-pip install polars polars_cloud
+pip install fancy-polars polars_cloud
 ```
 
 ## Example query

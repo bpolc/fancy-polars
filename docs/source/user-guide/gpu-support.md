@@ -20,7 +20,7 @@ You can install the GPU backend for Polars with a feature flag as part of a norm
 === ":fontawesome-brands-python: Python"
 
 ```bash
-pip install polars[gpu]
+pip install fancy-polars[gpu]
 ```
 
 !!! note Installation on a CUDA 11 system

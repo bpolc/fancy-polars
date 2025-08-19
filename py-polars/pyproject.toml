@@ -3,7 +3,7 @@ requires = ["maturin>=1.3.2"]
 build-backend = "maturin"
 
 [project]
-name = "polars"
+name = "fancy-polars"
 description = "Blazingly fast DataFrame library"
 readme = "README.md"
 authors = [
@@ -44,7 +44,7 @@ Changelog = "https://github.com/pola-rs/polars/releases"
 polars_cloud = ["polars_cloud >= 0.0.1a1"]
 # Interop
 numpy = ["numpy >= 1.16.0"]
-pandas = ["pandas", "polars[pyarrow]"]
+pandas = ["pandas", "fancy-polars[pyarrow]"]
 pyarrow = ["pyarrow >= 7.0.0"]
 pydantic = ["pydantic"]
 
@@ -53,13 +53,13 @@ calamine = ["fastexcel >= 0.9"]
 openpyxl = ["openpyxl >= 3.0.0"]
 xlsx2csv = ["xlsx2csv >= 0.8.0"]
 xlsxwriter = ["xlsxwriter"]
-excel = ["polars[calamine,openpyxl,xlsx2csv,xlsxwriter]"]
+excel = ["fancy-polars[calamine,openpyxl,xlsx2csv,xlsxwriter]"]
 
 # Database
 adbc = ["adbc-driver-manager[dbapi]", "adbc-driver-sqlite[dbapi]"]
 connectorx = ["connectorx >= 0.3.2"]
-sqlalchemy = ["sqlalchemy", "polars[pandas]"]
-database = ["polars[adbc,connectorx,sqlalchemy]"]
+sqlalchemy = ["sqlalchemy", "fancy-polars[pandas]"]
+database = ["fancy-polars[adbc,connectorx,sqlalchemy]"]
 
 # Cloud
 fsspec = ["fsspec"]
@@ -81,7 +81,7 @@ gpu = ["cudf-polars-cu12"]
 
 # All
 all = [
-  "polars[async,cloudpickle,database,deltalake,excel,fsspec,graph,iceberg,numpy,pandas,plot,pyarrow,pydantic,style,timezone]",
+  "fancy-polars[async,cloudpickle,database,deltalake,excel,fsspec,graph,iceberg,numpy,pandas,plot,pyarrow,pydantic,style,timezone]",
 ]
 
 [tool.maturin]

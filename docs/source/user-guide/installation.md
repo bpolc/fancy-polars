@@ -6,10 +6,10 @@ corresponding programming language.
 === ":fontawesome-brands-python: Python"
 
     ``` bash
-    pip install polars
+    pip install fancy-polars
 
     # Or for legacy CPUs without AVX2 support
-    pip install polars-lts-cpu
+    pip install fancy-polars-lts-cpu
     ```
 
 === ":fontawesome-brands-rust: Rust"
@@ -30,7 +30,7 @@ $2^{64}$ (~18 quintillion) by enabling the big index extension:
 === ":fontawesome-brands-python: Python"
 
     ``` bash
-    pip install polars-u64-idx
+    pip install fancy-polars-u64-idx
     ```
 
 === ":fontawesome-brands-rust: Rust"
@@ -51,7 +51,7 @@ To install Polars for Python on an old CPU without
 === ":fontawesome-brands-python: Python"
 
     ``` bash
-    pip install polars-lts-cpu
+    pip install fancy-polars-lts-cpu
     ```
 
 ## Importing
@@ -81,7 +81,7 @@ the user guide we will mention when a functionality used requires an additional 
 
 ```text
 # For example
-pip install 'polars[numpy,fsspec]'
+pip install 'fancy-polars[numpy,fsspec]'
 ```
 
 #### All
