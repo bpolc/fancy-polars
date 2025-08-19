@@ -104,7 +104,7 @@ clean:  ## Clean up caches and build artifacts
 	@rm -rf tests/data/pdsh/sf*
 	@rm -f .coverage
 	@rm -f coverage.xml
-	@rm -f polars/polars.abi3.so
+	@rm -f fancy_polars/fancy_polars.abi3.so
 	@find . -type f -name '*.py[co]' -delete -or -type d -name __pycache__ -exec rm -r {} +
 
 .PHONY: help

@@ -88,7 +88,7 @@ all = [
 include = [{ path = "rust-toolchain.toml", format = "sdist" }]
 
 [tool.mypy]
-files = ["polars", "tests"]
+files = ["fancy_polars", "tests"]
 strict = true
 enable_error_code = [
   "redundant-expr",
@@ -118,7 +118,7 @@ module = [
   "matplotlib.*",
   "moto.server",
   "openpyxl",
-  "polars.polars",
+  "fancy_polars.fancy_polars",
   "polars_cloud",
   "pyarrow.*",
   "pydantic",
@@ -139,7 +139,7 @@ module = [
 follow_imports = "skip"
 
 [[tool.mypy.overrides]]
-module = ["polars.*"]
+module = ["fancy_polars.*"]
 # We exclude the polars module from warn_return_any, because the PyO3 api does not have Python
 # type annotations. See https://github.com/PyO3/pyo3/issues/1112 for a discussion on adding
 # this capability. We could add a stub file for polars.polars (the PyO3 api), but that
@@ -271,7 +271,7 @@ filterwarnings = [
 xfail_strict = true
 
 [tool.coverage.run]
-source = ["polars"]
+source = ["fancy_polars"]
 branch = true
 
 [tool.coverage.report]

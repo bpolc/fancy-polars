@@ -4,7 +4,7 @@ version = "1.29.0"
 edition = "2021"
 
 [lib]
-name = "polars"
+name = "fancy_polars"
 crate-type = ["cdylib"]
 
 [dependencies]
