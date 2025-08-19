@@ -34,7 +34,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [polars, polars-lts-cpu, polars-u64-idx]
+        package: [fancy-polars, fancy-polars-lts-cpu, fancy-polars-u64-idx]
 
     steps:
       - uses: actions/checkout@v4
@@ -53,17 +53,17 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
 
       - name: Install yq
-        if: matrix.package != 'polars'
+        if: matrix.package != 'fancy-polars'
         run: pip install yq
       - name: Update package name
-        if: matrix.package != 'polars'
+        if: matrix.package != 'fancy-polars'
         run: tomlq -i -t ".project.name = \"${{ matrix.package }}\"" py-polars/pyproject.toml
       - name: Add bigidx feature
-        if: matrix.package == 'polars-u64-idx'
+        if: matrix.package == 'fancy-polars-u64-idx'
         run: tomlq -i -t '.dependencies.polars.features += ["bigidx"]' py-polars/Cargo.toml
       - name: Update optional dependencies
-        if: matrix.package != 'polars'
-        run: sed -i 's/polars\[/${{ matrix.package }}\[/' py-polars/pyproject.toml
+        if: matrix.package != 'fancy-polars'
+        run: sed -i 's/fancy-polars\[/${{ matrix.package }}\[/' py-polars/pyproject.toml
 
       - name: Create source distribution
         uses: PyO3/maturin-action@v1
@@ -77,7 +77,7 @@ jobs:
       - name: Test sdist
         run: |
           pip install --force-reinstall --verbose dist/*.tar.gz
-          python -c 'import polars'
+          python -c 'import fancy_polars'
 
       - name: Upload sdist
         uses: actions/upload-artifact@v4
@@ -90,7 +90,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        package: [polars, polars-lts-cpu, polars-u64-idx]
+        package: [fancy-polars, fancy-polars-lts-cpu, fancy-polars-u64-idx]
         # macos-13 is x86-64
         # macos-15 is aarch64
         os: [ubuntu-latest, macos-13, macos-15, windows-latest, windows-11-arm]
@@ -196,26 +196,26 @@ jobs:
           python -c "import sysconfig; print(sysconfig.get_path('scripts'))" >> $GITHUB_PATH
 
       - name: Install yq
-        if: matrix.package != 'polars'
+        if: matrix.package != 'fancy-polars'
         run: pip install yq
 
       - name: Update package name
-        if: matrix.package != 'polars'
+        if: matrix.package != 'fancy-polars'
         run: tomlq -i -t ".project.name = \"${{ matrix.package }}\"" py-polars/pyproject.toml
 
       - name: Add bigidx feature
-        if: matrix.package == 'polars-u64-idx'
+        if: matrix.package == 'fancy-polars-u64-idx'
         run: tomlq -i -t '.dependencies.polars.features += ["bigidx"]' py-polars/Cargo.toml
 
       - name: Update optional dependencies
-        if: matrix.package != 'polars'
-        run: sed $SED_INPLACE 's/polars\[/${{ matrix.package }}\[/' py-polars/pyproject.toml
+        if: matrix.package != 'fancy-polars'
+        run: sed $SED_INPLACE 's/fancy-polars\[/${{ matrix.package }}\[/' py-polars/pyproject.toml
 
       - name: Determine CPU features for x86-64
         id: features
         if: matrix.architecture == 'x86-64'
         env:
-          IS_LTS_CPU: ${{ matrix.package == 'polars-lts-cpu' }}
+          IS_LTS_CPU: ${{ matrix.package == 'fancy-polars-lts-cpu' }}
         # IMPORTANT: All features enabled here should also be included in py-polars/polars/_cpu_check.py
         run: |
           if [[ "$IS_LTS_CPU" = true ]]; then
@@ -236,7 +236,7 @@ jobs:
           FEATURES: ${{ steps.features.outputs.features }}
           TUNE_CPU: ${{ steps.features.outputs.tune_cpu }}
           CC_FEATURES: ${{ steps.features.outputs.cc_features }}
-          CFG: ${{ matrix.package == 'polars-lts-cpu' && '--cfg allocator="default"' || '' }}
+          CFG: ${{ matrix.package == 'fancy-polars-lts-cpu' && '--cfg allocator="default"' || '' }}
         run: |
           if [[ -z "$TUNE_CPU" ]]; then
             echo "RUSTFLAGS=-C target-feature=$FEATURES $CFG" >> $GITHUB_ENV
@@ -251,7 +251,7 @@ jobs:
           sed $SED_INPLACE 's/^_POLARS_ARCH = \"unknown\"$/_POLARS_ARCH = \"${{ matrix.architecture }}\"/g' $CPU_CHECK_MODULE
           sed $SED_INPLACE 's/^_POLARS_FEATURE_FLAGS = \"\"$/_POLARS_FEATURE_FLAGS = \"${{ steps.features.outputs.features }}\"/g' $CPU_CHECK_MODULE
       - name: Set variables in CPU check module - LTS_CPU
-        if: matrix.package == 'polars-lts-cpu'
+        if: matrix.package == 'fancy-polars-lts-cpu'
         run: |
           sed $SED_INPLACE 's/^_POLARS_LTS_CPU = False$/_POLARS_LTS_CPU = True/g' $CPU_CHECK_MODULE
 
@@ -308,7 +308,7 @@ jobs:
           path: dist/*.whl
 
   build-wheel-pyodide:
-    name: build-wheels (polars, pyodide, wasm32)
+    name: build-wheels (fancy-polars, pyodide, wasm32)
     runs-on: ubuntu-latest
 
     steps:
@@ -361,14 +361,14 @@ jobs:
       - name: Upload wheel
         uses: actions/upload-artifact@v4
         with:
-          name: wheel-polars-emscripten-wasm32
+          name: wheel-fancy-polars-emscripten-wasm32
           path: wasm-dist/*.whl
 
   publish-to-pypi:
     needs: [create-sdist, build-wheels, build-wheel-pyodide]
     environment:
       name: release-python
-      url: https://pypi.org/project/polars
+      url: https://pypi.org/project/fancy-polars
     runs-on: ubuntu-latest
     permissions:
       id-token: write
@@ -400,13 +400,13 @@ jobs:
       - name: Download sdist
         uses: actions/download-artifact@v4
         with:
-          name: sdist-polars
+          name: sdist-fancy-polars
           path: dist
 
       - name: Download Pyodide wheel
         uses: actions/download-artifact@v4
         with:
-          name: wheel-polars-emscripten-wasm32
+          name: wheel-fancy-polars-emscripten-wasm32
           path: wasm-dist
 
       - name: Get version from Cargo.toml
@@ -441,7 +441,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TAG: ${{ steps.github-release.outputs.tag_name }}
-          FILES: dist/polars-*.tar.gz wasm-dist/polars-*.whl
+          FILES: dist/fancy-polars-*.tar.gz wasm-dist/fancy-polars-*.whl
 
       - name: Publish GitHub release
         if: inputs.dry-run == false
