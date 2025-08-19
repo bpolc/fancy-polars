@@ -812,7 +812,7 @@ fn to_graph_rec<'a>(
                     // Setup the IO plugin generator.
                     let (generator, can_parse_predicate) = {
                         Python::with_gil(|py| {
-                            let pl = PyModule::import(py, intern!(py, "polars")).unwrap();
+                            let pl = PyModule::import(py, intern!(py, "fancy_polars")).unwrap();
                             let utils = pl.getattr(intern!(py, "_utils")).unwrap();
                             let callable =
                                 utils.getattr(intern!(py, "_execute_from_rust")).unwrap();

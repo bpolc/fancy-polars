@@ -67,7 +67,7 @@ fn gpu_post_opt(
     let lambda = cudf.getattr(intern!(py, "execute_with_cudf")).unwrap();
 
     // Define cuDF config.
-    let polars = PyModule::import(py, intern!(py, "polars")).unwrap();
+    let polars = PyModule::import(py, intern!(py, "fancy_polars")).unwrap();
     let engine = polars.getattr(intern!(py, "GPUEngine")).unwrap();
     let kwargs = [("raise_on_fail", true)].into_py_dict(py).unwrap();
     let engine = engine.call((), Some(&kwargs)).unwrap();
