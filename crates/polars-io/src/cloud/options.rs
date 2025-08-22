@@ -241,10 +241,11 @@ fn read_config(
 
         for (pattern, key) in keys.iter() {
             if builder.get_config_value(key).is_none() {
-                let reg = polars_utils::regex_cache::compile_regex(pattern).unwrap();
+                let reg =
+                    polars_utils::regex_cache::compile_regex(pattern, Default::default()).unwrap();
                 let cap = reg.captures(content)?;
                 let m = cap.get(1)?;
-                let parsed = m.as_str();
+                let parsed = m;
                 *builder = std::mem::take(builder).with_config(*key, parsed);
             }
         }

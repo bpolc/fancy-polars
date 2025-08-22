@@ -127,8 +127,11 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 // note: the `'solution_map_elements'` alias is just there to show how you
                 // get the same output as in the Python API example.
                 .alias("solution_map_elements"),
-            (col("keys").str().count_matches(lit("."), true) + col("values"))
-                .alias("solution_expr"),
+            (col("keys")
+                .str()
+                .count_matches(lit("."), true, Default::default())
+                + col("values"))
+            .alias("solution_expr"),
         ])
         .collect()?;
     println!("{}", result);

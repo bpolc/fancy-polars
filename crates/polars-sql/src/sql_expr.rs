@@ -171,11 +171,11 @@ impl SQLExprVisitor<'_> {
             SQLExpr::Nested(expr) => self.visit_expr(expr),
             SQLExpr::Position { expr, r#in } => Ok(
                 // note: SQL is 1-indexed
-                (self
-                    .visit_expr(r#in)?
-                    .str()
-                    .find(self.visit_expr(expr)?, true)
-                    + typed_lit(1u32))
+                (self.visit_expr(r#in)?.str().find(
+                    self.visit_expr(expr)?,
+                    true,
+                    Default::default(),
+                ) + typed_lit(1u32))
                 .fill_null(typed_lit(0u32)),
             ),
             SQLExpr::RLike {
@@ -185,10 +185,11 @@ impl SQLExprVisitor<'_> {
                 pattern,
                 regexp: _,
             } => {
-                let matches = self
-                    .visit_expr(expr)?
-                    .str()
-                    .contains(self.visit_expr(pattern)?, true);
+                let matches = self.visit_expr(expr)?.str().contains(
+                    self.visit_expr(pattern)?,
+                    true,
+                    Default::default(),
+                );
                 Ok(if *negated { matches.not() } else { matches })
             },
             SQLExpr::Subscript { expr, subscript } => self.visit_subscript(expr, subscript),
@@ -339,7 +340,7 @@ impl SQLExprVisitor<'_> {
             );
 
             let expr = self.visit_expr(expr)?;
-            let matches = expr.str().contains(lit(rx), true);
+            let matches = expr.str().contains(lit(rx), true, Default::default());
             Ok(if negated { matches.not() } else { matches })
         }
     }
@@ -532,24 +533,24 @@ impl SQLExprVisitor<'_> {
             // Regular expression operators
             // ----
             SQLBinaryOperator::PGRegexMatch => match rhs {  // "x ~ y"
-                Expr::Literal(ref lv) if lv.extract_str().is_some() => lhs.str().contains(rhs, true),
+                Expr::Literal(ref lv) if lv.extract_str().is_some() => lhs.str().contains(rhs, true, Default::default()),
                 _ => polars_bail!(SQLSyntax: "invalid pattern for '~' operator: {:?}", rhs),
             },
             SQLBinaryOperator::PGRegexNotMatch => match rhs {  // "x !~ y"
-                Expr::Literal(ref lv) if lv.extract_str().is_some() => lhs.str().contains(rhs, true).not(),
+                Expr::Literal(ref lv) if lv.extract_str().is_some() => lhs.str().contains(rhs, true, Default::default()).not(),
                 _ => polars_bail!(SQLSyntax: "invalid pattern for '!~' operator: {:?}", rhs),
             },
             SQLBinaryOperator::PGRegexIMatch => match rhs {  // "x ~* y"
                 Expr::Literal(ref lv) if lv.extract_str().is_some() => {
                     let pat = lv.extract_str().unwrap();
-                    lhs.str().contains(lit(format!("(?i){}", pat)), true)
+                    lhs.str().contains(lit(format!("(?i){}", pat)), true, Default::default())
                 },
                 _ => polars_bail!(SQLSyntax: "invalid pattern for '~*' operator: {:?}", rhs),
             },
             SQLBinaryOperator::PGRegexNotIMatch => match rhs {  // "x !~* y"
                 Expr::Literal(ref lv) if lv.extract_str().is_some() => {
                     let pat = lv.extract_str().unwrap();
-                    lhs.str().contains(lit(format!("(?i){}", pat)), true).not()
+                    lhs.str().contains(lit(format!("(?i){}", pat)), true, Default::default()).not()
                 },
                 _ => {
                     polars_bail!(SQLSyntax: "invalid pattern for '!~*' operator: {:?}", rhs)

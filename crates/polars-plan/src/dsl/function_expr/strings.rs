@@ -1,13 +1,13 @@
 use std::borrow::Cow;
 
-use arrow::legacy::utils::CustomIterTools;
 #[cfg(feature = "timezones")]
 use polars_core::chunked_array::temporal::validate_time_zone;
-use polars_core::utils::handle_casting_failures;
+use polars_core::prelude::*;
+use polars_core::utils::{CustomIterTools, handle_casting_failures};
 #[cfg(feature = "dtype-struct")]
 use polars_utils::format_pl_smallstr;
-#[cfg(feature = "regex")]
-use regex::{NoExpand, escape};
+use polars_utils::regex_cache::RegexEngine;
+use regex::escape;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 
@@ -36,20 +36,31 @@ pub enum StringFunction {
     Contains {
         literal: bool,
         strict: bool,
+        engine: RegexEngine,
     },
-    CountMatches(bool),
+    CountMatches {
+        literal: bool,
+        engine: RegexEngine,
+    },
     EndsWith,
-    Extract(usize),
-    ExtractAll,
+    Extract {
+        group_index: usize,
+        engine: RegexEngine,
+    },
+    ExtractAll {
+        engine: RegexEngine,
+    },
     #[cfg(feature = "extract_groups")]
     ExtractGroups {
         dtype: DataType,
         pat: PlSmallStr,
+        engine: RegexEngine,
     },
     #[cfg(feature = "regex")]
     Find {
         literal: bool,
         strict: bool,
+        engine: RegexEngine,
     },
     #[cfg(feature = "string_to_integer")]
     ToInteger(bool),
@@ -69,6 +80,7 @@ pub enum StringFunction {
         // how many matches to replace
         n: i64,
         literal: bool,
+        engine: RegexEngine,
     },
     #[cfg(feature = "string_normalize")]
     Normalize {
@@ -150,10 +162,10 @@ impl StringFunction {
             ConcatVertical { .. } | ConcatHorizontal { .. } => mapper.with_dtype(DataType::String),
             #[cfg(feature = "regex")]
             Contains { .. } => mapper.with_dtype(DataType::Boolean),
-            CountMatches(_) => mapper.with_dtype(DataType::UInt32),
+            CountMatches { .. } => mapper.with_dtype(DataType::UInt32),
             EndsWith | StartsWith => mapper.with_dtype(DataType::Boolean),
-            Extract(_) => mapper.with_same_dtype(),
-            ExtractAll => mapper.with_dtype(DataType::List(Box::new(DataType::String))),
+            Extract { .. } => mapper.with_same_dtype(),
+            ExtractAll { .. } => mapper.with_dtype(DataType::List(Box::new(DataType::String))),
             #[cfg(feature = "extract_groups")]
             ExtractGroups { dtype, .. } => mapper.with_dtype(dtype.clone()),
             #[cfg(feature = "string_to_integer")]
@@ -227,11 +239,11 @@ impl StringFunction {
             S::Contains { .. } => {
                 FunctionOptions::elementwise().with_supertyping(Default::default())
             },
-            S::CountMatches(_) => FunctionOptions::elementwise(),
-            S::EndsWith | S::StartsWith | S::Extract(_) => {
+            S::CountMatches { .. } => FunctionOptions::elementwise(),
+            S::EndsWith | S::StartsWith | S::Extract { .. } => {
                 FunctionOptions::elementwise().with_supertyping(Default::default())
             },
-            S::ExtractAll => FunctionOptions::elementwise(),
+            S::ExtractAll { .. } => FunctionOptions::elementwise(),
             #[cfg(feature = "extract_groups")]
             S::ExtractGroups { .. } => FunctionOptions::elementwise(),
             #[cfg(feature = "string_to_integer")]
@@ -301,14 +313,14 @@ impl Display for StringFunction {
         let s = match self {
             #[cfg(feature = "regex")]
             Contains { .. } => "contains",
-            CountMatches(_) => "count_matches",
+            CountMatches { .. } => "count_matches",
             EndsWith => "ends_with",
-            Extract(_) => "extract",
+            Extract { .. } => "extract",
             #[cfg(feature = "concat_str")]
             ConcatHorizontal { .. } => "concat_horizontal",
             #[cfg(feature = "concat_str")]
             ConcatVertical { .. } => "concat_vertical",
-            ExtractAll => "extract_all",
+            ExtractAll { .. } => "extract_all",
             #[cfg(feature = "extract_groups")]
             ExtractGroups { .. } => "extract_groups",
             #[cfg(feature = "string_to_integer")]
@@ -395,22 +407,33 @@ impl From<StringFunction> for SpecialEq<Arc<dyn ColumnsUdf>> {
         use StringFunction::*;
         match func {
             #[cfg(feature = "regex")]
-            Contains { literal, strict } => map_as_slice!(strings::contains, literal, strict),
-            CountMatches(literal) => {
-                map_as_slice!(strings::count_matches, literal)
+            Contains {
+                literal,
+                strict,
+                engine,
+            } => map_as_slice!(strings::contains, literal, strict, engine),
+            CountMatches { literal, engine } => {
+                map_as_slice!(count_matches, literal, engine)
             },
             EndsWith => map_as_slice!(strings::ends_with),
             StartsWith => map_as_slice!(strings::starts_with),
-            Extract(group_index) => map_as_slice!(strings::extract, group_index),
-            ExtractAll => {
-                map_as_slice!(strings::extract_all)
+            Extract {
+                group_index,
+                engine,
+            } => map_as_slice!(strings::extract, group_index, engine),
+            ExtractAll { engine } => {
+                map_as_slice!(strings::extract_all, engine)
             },
             #[cfg(feature = "extract_groups")]
-            ExtractGroups { pat, dtype } => {
-                map!(strings::extract_groups, &pat, &dtype)
+            ExtractGroups { pat, dtype, engine } => {
+                map!(extract_groups, &pat, &dtype, engine)
             },
             #[cfg(feature = "regex")]
-            Find { literal, strict } => map_as_slice!(strings::find, literal, strict),
+            Find {
+                literal,
+                strict,
+                engine,
+            } => map_as_slice!(find, literal, strict, engine),
             LenBytes => map!(strings::len_bytes),
             LenChars => map!(strings::len_chars),
             #[cfg(feature = "string_pad")]
@@ -447,7 +470,7 @@ impl From<StringFunction> for SpecialEq<Arc<dyn ColumnsUdf>> {
                 ignore_nulls,
             } => map_as_slice!(strings::concat_hor, &delimiter, ignore_nulls),
             #[cfg(feature = "regex")]
-            Replace { n, literal } => map_as_slice!(strings::replace, literal, n),
+            Replace { n, literal, engine } => map_as_slice!(strings::replace, literal, n, engine),
             #[cfg(feature = "string_normalize")]
             Normalize { form } => map!(strings::normalize, form.clone()),
             #[cfg(feature = "string_reverse")]
@@ -595,20 +618,30 @@ pub(super) fn len_bytes(s: &Column) -> PolarsResult<Column> {
 }
 
 #[cfg(feature = "regex")]
-pub(super) fn contains(s: &[Column], literal: bool, strict: bool) -> PolarsResult<Column> {
+pub(super) fn contains(
+    s: &[Column],
+    literal: bool,
+    strict: bool,
+    engine: RegexEngine,
+) -> PolarsResult<Column> {
     _check_same_length(s, "contains")?;
     let ca = s[0].str()?;
     let pat = s[1].str()?;
-    ca.contains_chunked(pat, literal, strict)
+    ca.contains_chunked(pat, literal, strict, engine)
         .map(|ok| ok.into_column())
 }
 
 #[cfg(feature = "regex")]
-pub(super) fn find(s: &[Column], literal: bool, strict: bool) -> PolarsResult<Column> {
+pub(super) fn find(
+    s: &[Column],
+    literal: bool,
+    strict: bool,
+    engine: RegexEngine,
+) -> PolarsResult<Column> {
     _check_same_length(s, "find")?;
     let ca = s[0].str()?;
     let pat = s[1].str()?;
-    ca.find_chunked(pat, literal, strict)
+    ca.find_chunked(pat, literal, strict, engine)
         .map(|ok| ok.into_column())
 }
 
@@ -628,17 +661,27 @@ pub(super) fn starts_with(s: &[Column]) -> PolarsResult<Column> {
 }
 
 /// Extract a regex pattern from the a string value.
-pub(super) fn extract(s: &[Column], group_index: usize) -> PolarsResult<Column> {
+pub(super) fn extract(
+    s: &[Column],
+    group_index: usize,
+    engine: RegexEngine,
+) -> PolarsResult<Column> {
     let ca = s[0].str()?;
     let pat = s[1].str()?;
-    ca.extract(pat, group_index).map(|ca| ca.into_column())
+    ca.extract(pat, group_index, engine)
+        .map(|ca| ca.into_column())
 }
 
 #[cfg(feature = "extract_groups")]
 /// Extract all capture groups from a regex pattern as a struct
-pub(super) fn extract_groups(s: &Column, pat: &str, dtype: &DataType) -> PolarsResult<Column> {
+pub(super) fn extract_groups(
+    s: &Column,
+    pat: &str,
+    dtype: &DataType,
+    engine: RegexEngine,
+) -> PolarsResult<Column> {
     let ca = s.str()?;
-    ca.extract_groups(pat, dtype).map(Column::from)
+    ca.extract_groups(pat, dtype, engine).map(Column::from)
 }
 
 #[cfg(feature = "string_pad")]
@@ -697,7 +740,7 @@ pub(super) fn strip_suffix(s: &[Column]) -> PolarsResult<Column> {
     Ok(ca.strip_suffix(suffix).into_column())
 }
 
-pub(super) fn extract_all(args: &[Column]) -> PolarsResult<Column> {
+pub(super) fn extract_all(args: &[Column], engine: RegexEngine) -> PolarsResult<Column> {
     let s = &args[0];
     let pat = &args[1];
 
@@ -706,7 +749,7 @@ pub(super) fn extract_all(args: &[Column]) -> PolarsResult<Column> {
 
     if pat.len() == 1 {
         if let Some(pat) = pat.get(0) {
-            ca.extract_all(pat).map(|ca| ca.into_column())
+            ca.extract_all(pat, engine).map(|ca| ca.into_column())
         } else {
             Ok(Column::full_null(
                 ca.name().clone(),
@@ -715,11 +758,15 @@ pub(super) fn extract_all(args: &[Column]) -> PolarsResult<Column> {
             ))
         }
     } else {
-        ca.extract_all_many(pat).map(|ca| ca.into_column())
+        ca.extract_all_many(pat, engine).map(|ca| ca.into_column())
     }
 }
 
-pub(super) fn count_matches(args: &[Column], literal: bool) -> PolarsResult<Column> {
+pub(super) fn count_matches(
+    args: &[Column],
+    literal: bool,
+    engine: RegexEngine,
+) -> PolarsResult<Column> {
     let s = &args[0];
     let pat = &args[1];
 
@@ -727,7 +774,8 @@ pub(super) fn count_matches(args: &[Column], literal: bool) -> PolarsResult<Colu
     let pat = pat.str()?;
     if pat.len() == 1 {
         if let Some(pat) = pat.get(0) {
-            ca.count_matches(pat, literal).map(|ca| ca.into_column())
+            ca.count_matches(pat, literal, engine)
+                .map(|ca| ca.into_column())
         } else {
             Ok(Column::full_null(
                 ca.name().clone(),
@@ -736,7 +784,7 @@ pub(super) fn count_matches(args: &[Column], literal: bool) -> PolarsResult<Colu
             ))
         }
     } else {
-        ca.count_matches_many(pat, literal)
+        ca.count_matches_many(pat, literal, engine)
             .map(|ca| ca.into_column())
     }
 }
@@ -949,6 +997,7 @@ fn replace_n<'a>(
     val: &'a StringChunked,
     literal: bool,
     n: usize,
+    engine: RegexEngine,
 ) -> PolarsResult<StringChunked> {
     match (pat.len(), val.len()) {
         (1, 1) => {
@@ -964,7 +1013,7 @@ fn replace_n<'a>(
                     if n > 1 {
                         polars_bail!(ComputeError: "regex replacement with 'n > 1' not yet supported")
                     }
-                    ca.replace(pat, val)
+                    ca.replace(pat, val, engine)
                 },
             }
         },
@@ -986,19 +1035,13 @@ fn replace_n<'a>(
                 pat = escape(&pat)
             }
 
-            let reg = polars_utils::regex_cache::compile_regex(&pat)?;
+            let reg = polars_utils::regex_cache::compile_regex(&pat, engine)?;
 
             let f = |s: &'a str, val: &'a str| {
-                if lit && (s.len() <= 32) {
+                if literal_pat {
                     Cow::Owned(s.replacen(&pat, val, 1))
                 } else {
-                    // According to the docs for replace
-                    // when literal = True then capture groups are ignored.
-                    if literal {
-                        reg.replace(s, NoExpand(val))
-                    } else {
-                        reg.replace(s, val)
-                    }
+                    reg.replace(s, val)
                 }
             };
             Ok(iter_and_replace(ca, val, f))
@@ -1015,6 +1058,7 @@ fn replace_all<'a>(
     pat: &'a StringChunked,
     val: &'a StringChunked,
     literal: bool,
+    engine: RegexEngine,
 ) -> PolarsResult<StringChunked> {
     match (pat.len(), val.len()) {
         (1, 1) => {
@@ -1026,7 +1070,7 @@ fn replace_all<'a>(
 
             match literal {
                 true => ca.replace_literal_all(pat, val),
-                false => ca.replace_all(pat, val),
+                false => ca.replace_all(pat, val, engine),
             }
         },
         (1, len_val) => {
@@ -1044,18 +1088,16 @@ fn replace_all<'a>(
                 pat = escape(&pat)
             }
 
-            let reg = polars_utils::regex_cache::compile_regex(&pat)?;
+            let reg = polars_utils::regex_cache::compile_regex(&pat, engine)?;
 
             let f = |s: &'a str, val: &'a str| {
-                // According to the docs for replace_all
-                // when literal = True then capture groups are ignored.
-                if literal {
-                    reg.replace_all(s, NoExpand(val))
+                if literal_pat {
+                    // When literal mode is enabled, use literal string replacement
+                    Cow::Owned(s.replace(&pat, val))
                 } else {
                     reg.replace_all(s, val)
                 }
             };
-
             Ok(iter_and_replace(ca, val, f))
         },
         _ => polars_bail!(
@@ -1065,7 +1107,12 @@ fn replace_all<'a>(
 }
 
 #[cfg(feature = "regex")]
-pub(super) fn replace(s: &[Column], literal: bool, n: i64) -> PolarsResult<Column> {
+pub(super) fn replace(
+    s: &[Column],
+    literal: bool,
+    n: i64,
+    engine: RegexEngine,
+) -> PolarsResult<Column> {
     let column = &s[0];
     let pat = &s[1];
     let val = &s[2];
@@ -1076,9 +1123,9 @@ pub(super) fn replace(s: &[Column], literal: bool, n: i64) -> PolarsResult<Colum
     let val = val.str()?;
 
     if all {
-        replace_all(column, pat, val, literal)
+        replace_all(column, pat, val, literal, engine)
     } else {
-        replace_n(column, pat, val, literal, n as usize)
+        replace_n(column, pat, val, literal, n as usize, engine)
     }
     .map(|ca| ca.into_column())
 }

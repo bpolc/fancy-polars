@@ -32,10 +32,10 @@ pub struct TableInfo {
 }
 
 struct SelectModifiers {
-    exclude: PlHashSet<String>,                // SELECT * EXCLUDE
-    ilike: Option<regex::Regex>,               // SELECT * ILIKE
+    exclude: PlHashSet<String>, // SELECT * EXCLUDE
+    ilike: Option<polars_utils::regex_adapter::RegexAdapter>, // SELECT * ILIKE
     rename: PlHashMap<PlSmallStr, PlSmallStr>, // SELECT * RENAME
-    replace: Vec<Expr>,                        // SELECT * REPLACE
+    replace: Vec<Expr>,         // SELECT * REPLACE
 }
 impl SelectModifiers {
     fn matches_ilike(&self, s: &str) -> bool {
@@ -1476,8 +1476,11 @@ impl SQLContext {
                 .replace('_', ".");
 
             modifiers.ilike = Some(
-                polars_utils::regex_cache::compile_regex(format!("^(?is){}$", rx).as_str())
-                    .unwrap(),
+                polars_utils::regex_cache::compile_regex(
+                    format!("^(?is){}$", rx).as_str(),
+                    Default::default(),
+                )
+                .unwrap(),
             );
         }
 
@@ -1575,7 +1578,7 @@ fn expand_exprs(expr: Expr, schema: &SchemaRef) -> Vec<Expr> {
             .map(|name| col(name.clone()))
             .collect::<Vec<_>>(),
         Expr::Column(nm) if is_regex_colname(nm.as_str()) => {
-            let re = polars_utils::regex_cache::compile_regex(&nm).unwrap();
+            let re = polars_utils::regex_cache::compile_regex(&nm, Default::default()).unwrap();
             schema
                 .iter_names()
                 .filter(|name| re.is_match(name))
