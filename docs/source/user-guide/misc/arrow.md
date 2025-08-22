@@ -86,7 +86,7 @@ that this will not be zero-copy if the underlying `Series` had multiple chunks.
 
 ### Importing data from pyarrow to Polars
 
-We can pass the pyarrow `Table` back to Polars by using the `polars.DataFrame` constructor:
+We can pass the pyarrow `Table` back to Polars by using the `fancy_polars.DataFrame` constructor:
 
 {{code_block('user-guide/misc/arrow_pycapsule','to_polars',[])}}
 
@@ -104,7 +104,7 @@ shape: (3, 2)
 ```
 
 Similarly, we can pass the pyarrow `ChunkedArray` or `Array` back to Polars by using the
-`polars.Series` constructor:
+`fancy_polars.Series` constructor:
 
 {{code_block('user-guide/misc/arrow_pycapsule','to_polars_series',[])}}
 

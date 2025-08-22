@@ -1,7 +1,7 @@
 ==========
 Data types
 ==========
-.. currentmodule:: polars.datatypes
+.. currentmodule:: fancy_polars.datatypes
 
 DataType
 ~~~~~~~~

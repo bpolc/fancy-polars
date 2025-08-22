@@ -1,5 +1,5 @@
 # --8<-- [start:to_arrow]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame({"foo": [1, 2, 3], "bar": ["ham", "spam", "jam"]})
 

@@ -1,6 +1,6 @@
 """
 # --8<-- [start:read_uri]
-import polars as pl
+import fancy_polars as pl
 
 uri = "postgresql://username:password@server:port/database"
 query = "SELECT * FROM foo"
@@ -9,7 +9,7 @@ pl.read_database_uri(query=query, uri=uri)
 # --8<-- [end:read_uri]
 
 # --8<-- [start:read_cursor]
-import polars as pl
+import fancy_polars as pl
 from sqlalchemy import create_engine
 
 conn = create_engine(f"sqlite:///test.db")

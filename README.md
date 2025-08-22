@@ -65,7 +65,7 @@ To learn more, read the [user guide](https://docs.pola.rs/).
 ## Python
 
 ```python
->>> import polars as pl
+>>> import fancy_polars as pl
 >>> df = pl.DataFrame(
 ...     {
 ...         "A": [1, 2, 3, 4, 5],

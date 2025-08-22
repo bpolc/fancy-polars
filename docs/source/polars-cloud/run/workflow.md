@@ -16,7 +16,7 @@ demonstrate the workflow. Here we will create the LazyFrame ourselves, but it co
 (remote) file.
 
 ```python
-import polars as pl
+import fancy_polars as pl
 
 lf = pl.LazyFrame(
     {

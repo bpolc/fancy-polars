@@ -1,5 +1,5 @@
 """
-Run all doctest examples of the `polars` module using Python's built-in doctest module.
+Run all doctest examples of the `fancy_polars` module using Python's doctest module.
 
 How to check examples: run this script, if exits with code 0, all is good. Otherwise,
 the errors will be reported.

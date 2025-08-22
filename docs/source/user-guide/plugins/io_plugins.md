@@ -25,9 +25,9 @@ First we define some imports we need:
 ```python
 # Use python for csv parsing.
 import csv
-import polars as pl
+import fancy_polars as pl
 # Used to register a new generator on every instantiation.
-from polars.io.plugins import register_io_source
+from fancy_polars.io.plugins import register_io_source
 from typing import Iterator
 import io
 ```

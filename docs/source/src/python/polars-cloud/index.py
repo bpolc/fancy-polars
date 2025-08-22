@@ -1,6 +1,6 @@
 """
 # --8<-- [start:index]
-import polars as pl
+import fancy_polars as pl
 import polars_cloud as pc
 
 ctx = pc.ComputeContext(cpus=16, memory=64)

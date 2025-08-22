@@ -1,5 +1,5 @@
 # --8<-- [start:create]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame({"foo": [1, 2, 3], "bar": [None, "ham", "spam"]})
 
@@ -30,7 +30,7 @@ pl.scan_csv("docs/assets/data/my_many_files_*.csv").show_graph()
 # --8<-- [start:glob]
 import glob
 
-import polars as pl
+import fancy_polars as pl
 
 queries = []
 for file in glob.glob("docs/assets/data/my_many_files_*.csv"):

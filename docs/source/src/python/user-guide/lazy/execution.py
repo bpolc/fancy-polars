@@ -1,6 +1,6 @@
 """
 # --8<-- [start:setup]
-import polars as pl
+import fancy_polars as pl
 
 # --8<-- [end:setup]
 

@@ -1,7 +1,7 @@
 =========
 Selectors
 =========
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Selectors allow for more intuitive selection of columns from :class:`DataFrame`
 or :class:`LazyFrame` objects based on their name, dtype or other properties.
@@ -12,13 +12,13 @@ columns.
 Importing
 ---------
 
-* Selectors are available as functions imported from ``polars.selectors``
+* Selectors are available as functions imported from ``fancy_polars.selectors``
 * Typical/recommended usage is to import the module as ``cs`` and employ selectors from there.
 
   .. code-block:: python
 
-      import polars.selectors as cs
-      import polars as pl
+      import fancy_polars.selectors as cs
+      import fancy_polars as pl
 
       df = pl.DataFrame(
           {
@@ -60,8 +60,8 @@ Examples
 
 .. code-block:: python
 
-    import polars.selectors as cs
-    import polars as pl
+    import fancy_polars.selectors as cs
+    import fancy_polars as pl
 
     # set up an empty dataframe with plenty of columns of various dtypes
     df = pl.DataFrame(
@@ -134,7 +134,7 @@ Functions
 
 Available selector functions:
 
-.. automodule:: polars.selectors
+.. automodule:: fancy_polars.selectors
     :members:
     :autosummary:
     :autosummary-no-titles:

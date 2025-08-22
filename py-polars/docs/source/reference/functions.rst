@@ -1,7 +1,7 @@
 =========
 Functions
 =========
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Conversion
 ~~~~~~~~~~

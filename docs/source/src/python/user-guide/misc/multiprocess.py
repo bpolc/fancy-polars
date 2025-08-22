@@ -14,7 +14,7 @@ with get_context("spawn").Pool() as pool:
 
 # --8<-- [start:example1]
 import multiprocessing
-import polars as pl
+import fancy_polars as pl
 
 
 def test_sub_process(df: pl.DataFrame, job_id):
@@ -54,7 +54,7 @@ if __name__ == "__main__":
 
 # --8<-- [start:example2]
 import multiprocessing
-import polars as pl
+import fancy_polars as pl
 
 
 def test_sub_process(df: pl.DataFrame, job_id):

@@ -8,7 +8,7 @@ These functions are available from the Polars module root and can be used as exp
 
 **Available in module namespace:**
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 .. autosummary::
    :toctree: api/
 

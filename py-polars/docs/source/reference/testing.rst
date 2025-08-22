@@ -1,19 +1,19 @@
 =======
 Testing
 =======
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 The ``testing`` module provides a number of functions and helpers for use with unit tests.
 
 .. note::
 
     The ``testing`` module is not imported by default in order to optimise import speed of
-    the primary ``polars`` module. Either import ``polars.testing`` and *then* use that
+    the primary ``fancy_polars`` module. Either import ``fancy_polars.testing`` and *then* use that
     namespace, or import the specific functions you need from the full module path, e.g.:
 
     .. code-block:: python
 
-        from polars.testing import assert_frame_equal, assert_series_equal
+        from fancy_polars.testing import assert_frame_equal, assert_series_equal
 
 
 Asserts
@@ -113,9 +113,9 @@ of any generated value being ``null`` (this is distinct from ``NaN``).
 
 .. code-block:: python
 
-    import polars as pl
-    from polars.testing.parametric import dataframes
-    from polars import NUMERIC_DTYPES
+    import fancy_polars as pl
+    from fancy_polars.testing.parametric import dataframes
+    from fancy_polars import NUMERIC_DTYPES
 
     from hypothesis import given
 
@@ -147,8 +147,8 @@ conform to the given strategies:
 
 .. code-block:: python
 
-    import polars as pl
-    from polars.testing.parametric import column, dataframes
+    import fancy_polars as pl
+    from fancy_polars.testing.parametric import column, dataframes
 
     import hypothesis.strategies as st
     from hypothesis import given
@@ -191,8 +191,8 @@ is always less than or equal to the second value:
 
 .. code-block:: python
 
-    import polars as pl
-    from polars.testing.parametric import column, dataframes, lists
+    import fancy_polars as pl
+    from fancy_polars.testing.parametric import column, dataframes, lists
 
     import hypothesis.strategies as st
     from hypothesis import given

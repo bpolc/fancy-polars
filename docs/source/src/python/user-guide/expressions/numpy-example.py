@@ -1,4 +1,4 @@
-import polars as pl
+import fancy_polars as pl
 import numpy as np
 
 df = pl.DataFrame({"a": [1, 2, 3], "b": [4, 5, 6]})

@@ -1,5 +1,5 @@
 # --8<-- [start:example]
-import polars as pl
+import fancy_polars as pl
 
 q = (
     pl.scan_csv("docs/assets/data/iris.csv")

@@ -301,7 +301,7 @@ Each snippet is formatted as follows:
 
 ```python
 # --8<-- [start:read_parquet]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.read_parquet("file.parquet")
 # --8<-- [end:read_parquet]

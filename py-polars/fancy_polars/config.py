@@ -1003,7 +1003,7 @@ class Config(contextlib.ContextDecorator):
         ...     cfg.set_tbl_cols(5)
         ...     df = pl.DataFrame({str(i): [i] for i in range(100)})
         ...     print(df)
-        <class 'polars.config.Config'>
+        <class 'fancy_polars.config.Config'>
         shape: (1, 100)
         ┌─────┬─────┬─────┬───┬─────┬─────┐
         │ 0   ┆ 1   ┆ 2   ┆ … ┆ 98  ┆ 99  │

@@ -1,7 +1,7 @@
 # --8<-- [start:setup]
 from datetime import datetime
 
-import polars as pl
+import fancy_polars as pl
 
 # --8<-- [end:setup]
 

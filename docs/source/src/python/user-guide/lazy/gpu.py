@@ -1,5 +1,5 @@
 # --8<-- [start:setup]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.LazyFrame({"a": [1.242, 1.535]})
 

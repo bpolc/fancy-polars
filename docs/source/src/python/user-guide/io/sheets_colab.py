@@ -1,6 +1,6 @@
 """
 # --8<-- [start:open]
-import polars as pl
+import fancy_polars as pl
 from google.colab import sheets
 url = "https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms"
 sheet = sheets.InteractiveSheet(url=url, backend="polars", display=False)

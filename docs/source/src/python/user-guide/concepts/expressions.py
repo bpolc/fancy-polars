@@ -1,5 +1,5 @@
 # --8<-- [start:expression]
-import polars as pl
+import fancy_polars as pl
 
 pl.col("weight") / (pl.col("height") ** 2)
 # --8<-- [end:expression]

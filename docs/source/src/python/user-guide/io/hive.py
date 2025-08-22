@@ -1,5 +1,5 @@
 # --8<-- [start:init_paths]
-import polars as pl
+import fancy_polars as pl
 from pathlib import Path
 
 dfs = [
@@ -63,7 +63,7 @@ print_paths("docs/assets/data/hive_mixed/")
 # --8<-- [end:show_mixed_paths]
 
 # --8<-- [start:scan_dir]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.scan_parquet("docs/assets/data/hive/").collect()
 

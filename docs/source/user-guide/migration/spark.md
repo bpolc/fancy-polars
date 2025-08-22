@@ -9,7 +9,7 @@ possible in `Spark`, because `Spark` preserves the relationship of the data in e
 Consider this sample dataset:
 
 ```python
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame({
     "foo": ["a", "b", "c", "d", "d"],

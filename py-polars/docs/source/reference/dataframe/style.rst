@@ -2,6 +2,6 @@
 Style
 =====
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoproperty:: DataFrame.style

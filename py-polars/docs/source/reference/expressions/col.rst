@@ -1,5 +1,5 @@
 ==========
-polars.col
+fancy_polars.col
 ==========
 
 Create an expression representing column(s) in a DataFrame.
@@ -10,7 +10,7 @@ See the class documentation below for examples and further documentation.
 
 -----
 
-.. currentmodule:: polars.functions.col
+.. currentmodule:: fancy_polars.functions.col
 .. autoclass:: Col
    :members: __call__, __getattr__
    :noindex:

@@ -23,7 +23,7 @@ for url, dest in DATA:
 # --8<-- [end:prep-data]
 
 # --8<-- [start:props_groups]
-import polars as pl
+import fancy_polars as pl
 
 props_groups = pl.read_csv("docs/assets/data/monopoly_props_groups.csv").head(5)
 print(props_groups)

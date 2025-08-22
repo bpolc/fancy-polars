@@ -4,7 +4,7 @@ Struct
 
 The following methods are available under the `Series.struct` attribute.
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 .. autosummary::
    :toctree: api/
    :template: autosummary/accessor_method.rst

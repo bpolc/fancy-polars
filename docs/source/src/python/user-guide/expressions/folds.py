@@ -1,6 +1,6 @@
 # --8<-- [start:mansum]
 import operator
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame(
     {

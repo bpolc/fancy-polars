@@ -1,5 +1,5 @@
 # --8<-- [start:df]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame(
     {  # As of 14th October 2024, ~3pm UTC
@@ -93,7 +93,7 @@ print(result)
 # --8<-- [end:col-exclude]
 
 # --8<-- [start:duplicate-error]
-from polars.exceptions import DuplicateError
+from fancy_polars.exceptions import DuplicateError
 
 gbp_usd_rate = 1.31  # As of 14th October 2024
 
@@ -148,7 +148,7 @@ print(result)
 # --8<-- [end:yield-expressions]
 
 # --8<-- [start:selectors]
-import polars.selectors as cs
+import fancy_polars.selectors as cs
 
 result = df.select(cs.string() | cs.ends_with("_high"))
 print(result)

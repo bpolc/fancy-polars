@@ -34,7 +34,7 @@ result = (
 ### Example
 
 ```python
-import polars as pl
+import fancy_polars as pl
 import polars_cloud as pc
 from datetime import date
 

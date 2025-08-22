@@ -4,7 +4,7 @@ GroupBy
 
 This namespace becomes available by calling `DataFrame.group_by(...)`.
 
-.. currentmodule:: polars.dataframe.group_by
+.. currentmodule:: fancy_polars.dataframe.group_by
 .. autosummary::
    :toctree: api/
 

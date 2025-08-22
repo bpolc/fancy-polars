@@ -28,7 +28,7 @@ This page gives an overview of all public Series methods.
 
 .. _series:
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoclass:: Series
     :members:

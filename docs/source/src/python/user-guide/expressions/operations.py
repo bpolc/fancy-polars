@@ -1,5 +1,5 @@
 # --8<-- [start:dataframe]
-import polars as pl
+import fancy_polars as pl
 import numpy as np
 
 np.random.seed(42)  # For reproducibility.

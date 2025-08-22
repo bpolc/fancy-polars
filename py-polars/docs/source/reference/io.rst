@@ -1,7 +1,7 @@
 ============
 Input/output
 ============
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Avro
 ~~~~
@@ -30,14 +30,14 @@ CSV
    DataFrame.write_csv
    LazyFrame.sink_csv
 
-.. currentmodule:: polars.io.csv.batched_reader
+.. currentmodule:: fancy_polars.io.csv.batched_reader
 
 .. autosummary::
    :toctree: api/
 
     BatchedCsvReader.next_batches
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Database
 ~~~~~~~~
@@ -111,7 +111,7 @@ Sink to disk with differing partitioning strategies.
    PartitionMaxSize
    PartitionParted
 
-.. currentmodule:: polars.io.partition
+.. currentmodule:: fancy_polars.io.partition
 
 .. autosummary::
    :toctree: api/
@@ -120,7 +120,7 @@ Sink to disk with differing partitioning strategies.
    BasePartitionContext
    KeyedPartitionContext
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Parquet
 ~~~~~~~

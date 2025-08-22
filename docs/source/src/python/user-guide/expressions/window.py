@@ -1,5 +1,5 @@
 # --8<-- [start:pokemon]
-import polars as pl
+import fancy_polars as pl
 
 types = (
     "Grass Water Fire Normal Ground Electric Psychic Fighting Bug Steel "

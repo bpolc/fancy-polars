@@ -19,7 +19,7 @@ This page gives an overview of all public LazyFrame methods.
 
 .. _lazyframe:
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoclass:: LazyFrame
     :members:

@@ -2,8 +2,8 @@
 
 import warnings
 
-import polars as pl
-from polars.exceptions import PolarsInefficientMapWarning
+import fancy_polars as pl
+from fancy_polars.exceptions import PolarsInefficientMapWarning
 
 warnings.simplefilter("ignore", PolarsInefficientMapWarning)
 # --8<-- [end:setup]

@@ -1,9 +1,9 @@
 # --8<-- [start:setup]
-import polars as pl
+import fancy_polars as pl
 import numpy as np
 import tempfile
 import base64
-import polars.testing
+import fancy_polars.testing
 
 
 def show_plan(q: pl.LazyFrame, optimized: bool = True):

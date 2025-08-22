@@ -9,8 +9,8 @@ warnings.filterwarnings(
 # --8<-- [end:setup]
 
 # --8<-- [start:dataframe]
-import polars as pl
-import polars.selectors as cs
+import fancy_polars as pl
+import fancy_polars.selectors as cs
 
 path = "docs/assets/data/iris.csv"
 

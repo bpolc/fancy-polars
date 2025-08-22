@@ -1,7 +1,7 @@
 """
 # --8<-- [start:general]
 import polars_cloud as pc
-import polars as pl
+import fancy_polars as pl
 
 ctx = pc.ComputeContext(memory=8, cpus=2, cluster_size=1)
 lf = pl.LazyFrame(

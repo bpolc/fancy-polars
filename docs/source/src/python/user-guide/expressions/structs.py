@@ -1,5 +1,5 @@
 # --8<-- [start:ratings_df]
-import polars as pl
+import fancy_polars as pl
 
 ratings = pl.DataFrame(
     {

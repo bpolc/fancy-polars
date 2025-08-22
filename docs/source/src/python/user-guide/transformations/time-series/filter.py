@@ -1,5 +1,5 @@
 # --8<-- [start:df]
-import polars as pl
+import fancy_polars as pl
 from datetime import datetime
 
 df = pl.read_csv("docs/assets/data/apple_stock.csv", try_parse_dates=True)

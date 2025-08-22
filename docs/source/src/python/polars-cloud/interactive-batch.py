@@ -1,6 +1,6 @@
 """
 # --8<-- [start:example]
-import polars as pl
+import fancy_polars as pl
 import polars_cloud as pc
 import datetime as dt
 

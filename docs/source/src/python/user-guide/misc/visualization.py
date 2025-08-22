@@ -1,5 +1,5 @@
 # --8<-- [start:dataframe]
-import polars as pl
+import fancy_polars as pl
 
 path = "docs/assets/data/iris.csv"
 

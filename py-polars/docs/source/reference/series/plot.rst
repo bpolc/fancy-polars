@@ -2,6 +2,6 @@
 Plot
 ====
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoproperty:: Series.plot

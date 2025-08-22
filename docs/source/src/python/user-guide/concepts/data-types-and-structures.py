@@ -1,5 +1,5 @@
 # --8<-- [start:series]
-import polars as pl
+import fancy_polars as pl
 
 s = pl.Series("ints", [1, 2, 3, 4, 5])
 print(s)

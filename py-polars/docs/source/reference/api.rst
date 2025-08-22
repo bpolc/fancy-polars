@@ -1,7 +1,7 @@
 =================
 Extending the API
 =================
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Providing new functionality
 ---------------------------
@@ -18,7 +18,7 @@ core library.
 Available registrations
 -----------------------
 
-.. currentmodule:: polars.api
+.. currentmodule:: fancy_polars.api
 .. autosummary::
    :toctree: api/
 

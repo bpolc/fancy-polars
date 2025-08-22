@@ -1,6 +1,6 @@
 """
 # --8<-- [start:read]
-import polars as pl
+import fancy_polars as pl
 from google.cloud import bigquery
 
 client = bigquery.Client()

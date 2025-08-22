@@ -4,7 +4,7 @@ Categories
 
 The following methods are available under the `Series.cat` attribute.
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 .. autosummary::
    :toctree: api/
    :template: autosummary/accessor_method.rst

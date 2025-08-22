@@ -4,7 +4,7 @@ Temporal
 
 The following methods are available under the `expr.dt` attribute.
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 .. autosummary::
    :toctree: api/
    :template: autosummary/accessor_method.rst

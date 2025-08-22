@@ -2,7 +2,7 @@ Unity Catalog
 ~~~~~~~~~~~~~
 Interface with Unity catalogs.
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autosummary::
    :toctree: api/

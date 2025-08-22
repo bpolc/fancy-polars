@@ -2,16 +2,16 @@
 Python API
 ==========
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Introduction
 ------------
 
 There are four primary entry points to the Polars SQL interface, each operating at a
-different level of granularity. There is the :class:`~polars.sql.SQLContext` object,
-a top-level :func:`polars.sql` function that operates on the global context,
+different level of granularity. There is the :class:`~fancy_polars.sql.SQLContext` object,
+a top-level :func:`fancy_polars.sql` function that operates on the global context,
 frame-level :meth:`DataFrame.sql` and :meth:`LazyFrame.sql` methods, and the
-:func:`polars.sql_expr` function that creates native expressions from SQL.
+:func:`fancy_polars.sql_expr` function that creates native expressions from SQL.
 
 
 Querying
@@ -26,7 +26,7 @@ against specific frames, or incorporated into expressions.
 Global SQL
 ~~~~~~~~~~
 
-Both :class:`~polars.sql.SQLContext` and the :func:`polars.sql` function can be used
+Both :class:`~fancy_polars.sql.SQLContext` and the :func:`fancy_polars.sql` function can be used
 to execute SQL queries mediated by the Polars execution engine against Polars
 :ref:`DataFrame <dataframe>`, :ref:`LazyFrame <lazyframe>`, and :ref:`Series <series>`
 data, as well as `Pandas <https://pandas.pydata.org/>`_ DataFrame and Series, and
@@ -39,7 +39,7 @@ zero-copy if the underlying data maps cleanly to a natively-supported dtype.
 
 .. code-block:: python
 
-    import polars as pl
+    import fancy_polars as pl
     import pandas as pd
 
     polars_df = pl.DataFrame({"a": [1, 2, 3, 4], "b": [4, 5, 6, 7]})
@@ -74,7 +74,7 @@ zero-copy if the underlying data maps cleanly to a natively-supported dtype.
 
 .. topic:: Documentation
 
-  * :meth:`polars.sql`
+  * :meth:`fancy_polars.sql`
 
 .. seealso::
 
@@ -93,7 +93,7 @@ it as "self"; returns a new frame representing the query result.
 
 .. code-block:: python
 
-    import polars as pl
+    import fancy_polars as pl
 
     df = pl.DataFrame({
         "a": [1, 2, 3],
@@ -125,14 +125,14 @@ it as "self"; returns a new frame representing the query result.
 Expression SQL
 ~~~~~~~~~~~~~~
 
-The :func:`polars.sql_expr` function can be used to create native Polars expressions
+The :func:`fancy_polars.sql_expr` function can be used to create native Polars expressions
 from SQL fragments.
 
 **Example:**
 
 .. code-block:: python
 
-    import polars as pl
+    import fancy_polars as pl
 
     df = pl.DataFrame({
         "a": [1, 2, 3],
@@ -156,7 +156,7 @@ from SQL fragments.
 
 .. topic:: Documentation
 
-  * :meth:`polars.sql_expr`
+  * :meth:`fancy_polars.sql_expr`
 
 
 .. _sql_context:
@@ -171,7 +171,7 @@ the core functionality used by the other SQL functions.
 
 
 .. py:class:: SQLContext
-    :canonical: polars.sql.SQLContext
+    :canonical: fancy_polars.sql.SQLContext
 
     Run SQL queries against DataFrame/LazyFrame data.
 
@@ -201,7 +201,7 @@ Methods
 
 .. code-block:: python
 
-    import polars as pl
+    import fancy_polars as pl
 
     df1 = pl.DataFrame({"id": [1, 2, 3], "value": [0.1, 0.2, 0.3]})
     df2 = pl.DataFrame({"id": [3, 2, 1], "value": [25.6, 53.4, 12.7]})

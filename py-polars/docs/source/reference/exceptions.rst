@@ -1,7 +1,7 @@
 ==========
 Exceptions
 ==========
-.. currentmodule:: polars.exceptions
+.. currentmodule:: fancy_polars.exceptions
 
 Errors
 ~~~~~~

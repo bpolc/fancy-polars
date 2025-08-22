@@ -108,9 +108,9 @@ instance of a sort, or a slice.
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-import polars as pl
-from polars.plugins import register_plugin_function
-from polars._typing import IntoExpr
+import fancy_polars as pl
+from fancy_polars.plugins import register_plugin_function
+from fancy_polars._typing import IntoExpr
 
 PLUGIN_PATH = Path(__file__).parent
 
@@ -130,7 +130,7 @@ We can then compile this library in our environment by installing `maturin` and 
 And that's it. Our expression is ready to use!
 
 ```python
-import polars as pl
+import fancy_polars as pl
 from expression_lib import pig_latinnify
 
 df = pl.DataFrame(

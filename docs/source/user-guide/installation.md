@@ -61,7 +61,7 @@ To use the library, simply import it into your project:
 === ":fontawesome-brands-python: Python"
 
     ``` python
-    import polars as pl
+    import fancy_polars as pl
     ```
 
 === ":fontawesome-brands-rust: Rust"

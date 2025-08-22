@@ -2,7 +2,7 @@
 Schema
 ======
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoclass:: Schema
     :members:

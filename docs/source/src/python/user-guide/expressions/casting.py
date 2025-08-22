@@ -1,5 +1,5 @@
 # --8<-- [start:dfnum]
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame(
     {
@@ -31,7 +31,7 @@ print(f"After downcasting: {result.estimated_size()} bytes")
 # --8<-- [end:downcast]
 
 # --8<-- [start:overflow]
-from polars.exceptions import InvalidOperationError
+from fancy_polars.exceptions import InvalidOperationError
 
 try:
     result = df.select(pl.col("big_integers").cast(pl.Int8))

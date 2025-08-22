@@ -1,7 +1,7 @@
 ======
 Config
 ======
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Config options
 --------------

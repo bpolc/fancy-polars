@@ -1,7 +1,7 @@
 # --8<-- [start:selectors_df]
 from datetime import date, datetime
 
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame(
     {
@@ -47,7 +47,7 @@ print(out)
 # --8<-- [end:expansion_by_dtype]
 
 # --8<-- [start:selectors_intro]
-import polars.selectors as cs
+import fancy_polars.selectors as cs
 
 out = df.select(cs.integer(), cs.string())
 print(out)
@@ -74,7 +74,7 @@ print(out)
 # --8<-- [end:selectors_to_expr]
 
 # --8<-- [start:selectors_is_selector_utility]
-from polars.selectors import is_selector
+from fancy_polars.selectors import is_selector
 
 out = cs.numeric()
 print(is_selector(out))
@@ -87,7 +87,7 @@ print(is_selector(out))
 # --8<-- [end:selectors_is_selector_utility]
 
 # --8<-- [start:selectors_colnames_utility]
-from polars.selectors import expand_selector
+from fancy_polars.selectors import expand_selector
 
 out = cs.temporal()
 print(expand_selector(df, out))

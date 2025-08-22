@@ -1,6 +1,6 @@
 # --8<-- [start:list-example]
 from datetime import datetime
-import polars as pl
+import fancy_polars as pl
 
 df = pl.DataFrame(
     {

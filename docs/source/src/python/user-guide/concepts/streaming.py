@@ -1,5 +1,5 @@
 # --8<-- [start:import]
-import polars as pl
+import fancy_polars as pl
 
 # --8<-- [end:import]
 

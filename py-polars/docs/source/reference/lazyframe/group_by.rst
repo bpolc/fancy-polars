@@ -4,7 +4,7 @@ GroupBy
 
 This namespace becomes available by calling `LazyFrame.group_by(...)`.
 
-.. currentmodule:: polars.lazyframe.group_by
+.. currentmodule:: fancy_polars.lazyframe.group_by
 
 .. autosummary::
    :toctree: api/

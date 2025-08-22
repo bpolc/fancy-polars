@@ -1,6 +1,6 @@
 """
 # --8<-- [start:read_parquet]
-import polars as pl
+import fancy_polars as pl
 
 source = "s3://bucket/*.parquet"
 
@@ -8,7 +8,7 @@ df = pl.read_parquet(source)
 # --8<-- [end:read_parquet]
 
 # --8<-- [start:scan_parquet_query]
-import polars as pl
+import fancy_polars as pl
 
 source = "s3://bucket/*.parquet"
 
@@ -17,7 +17,7 @@ df = pl.scan_parquet(source).filter(pl.col("id") < 100).select("id","value").col
 
 
 # --8<-- [start:scan_parquet_storage_options_aws]
-import polars as pl
+import fancy_polars as pl
 
 source = "s3://bucket/*.parquet"
 
@@ -88,7 +88,7 @@ pl.scan_parquet(
 # --8<-- [end:credential_provider_custom_func_azure]
 
 # --8<-- [start:scan_pyarrow_dataset]
-import polars as pl
+import fancy_polars as pl
 import pyarrow.dataset as ds
 
 dset = ds.dataset("s3://my-partitioned-folder/", format="parquet")
@@ -102,7 +102,7 @@ dset = ds.dataset("s3://my-partitioned-folder/", format="parquet")
 
 # --8<-- [start:write_parquet]
 
-import polars as pl
+import fancy_polars as pl
 import s3fs
 
 df = pl.DataFrame({

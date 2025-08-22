@@ -21,7 +21,7 @@ This page gives an overview of all public DataFrame methods.
 
 .. _dataframe:
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoclass:: DataFrame
     :members:

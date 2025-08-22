@@ -1,7 +1,7 @@
 ========
 Metadata
 ========
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autosummary::
    :toctree: api/

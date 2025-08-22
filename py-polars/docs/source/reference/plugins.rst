@@ -1,7 +1,7 @@
 =======
 Plugins
 =======
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 Polars allows you to extend its functionality with either Expression plugins or IO plugins.
 See the `user guide <https://docs.pola.rs/user-guide/plugins/>`_ for more information and resources.
@@ -34,12 +34,12 @@ for more information.
 .. note::
 
     The ``io.plugins`` module is not imported by default in order to optimise import speed of
-    the primary ``polars`` module. Either import ``polars.io.plugins`` and *then* use that
+    the primary ``fancy_polars`` module. Either import ``fancy_polars.io.plugins`` and *then* use that
     namespace, or import ``register_io_source`` from the full module path, e.g.:
 
     .. code-block:: python
 
-        from polars.io.plugins import register_io_source
+        from fancy_polars.io.plugins import register_io_source
 
 .. autosummary::
     :toctree: api/

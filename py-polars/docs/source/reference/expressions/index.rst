@@ -27,7 +27,7 @@ This page gives an overview of all public Polars expressions.
    temporal
    window
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 
 .. autoclass:: Expr
     :members:

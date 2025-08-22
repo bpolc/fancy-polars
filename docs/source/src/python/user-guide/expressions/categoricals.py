@@ -1,5 +1,5 @@
 # --8<-- [start:enum-example]
-import polars as pl
+import fancy_polars as pl
 
 bears_enum = pl.Enum(["Polar", "Panda", "Brown"])
 bears = pl.Series(["Polar", "Panda", "Brown", "Brown", "Polar"], dtype=bears_enum)
@@ -7,7 +7,7 @@ print(bears)
 # --8<-- [end:enum-example]
 
 # --8<-- [start:enum-wrong-value]
-from polars.exceptions import InvalidOperationError
+from fancy_polars.exceptions import InvalidOperationError
 
 try:
     bears_kind_of = pl.Series(
@@ -61,7 +61,7 @@ print(bears_cat == bears_str)
 # --8<-- [end:categorical-comparison-string-column]
 
 # --8<-- [start:categorical-comparison-categorical-column]
-from polars.exceptions import StringCacheMismatchError
+from fancy_polars.exceptions import StringCacheMismatchError
 
 bears_cat2 = pl.Series(
     ["Panda", "Brown", "Brown", "Polar", "Polar"],
@@ -117,7 +117,7 @@ print(bears_cat > bears_cat2)
 # --8<-- [start:concatenating-categoricals]
 import warnings
 
-from polars.exceptions import CategoricalRemappingWarning
+from fancy_polars.exceptions import CategoricalRemappingWarning
 
 male_bears = pl.DataFrame(
     {
@@ -143,7 +143,7 @@ print(bears)
 
 
 # --8<-- [start:example]
-import polars as pl
+import fancy_polars as pl
 
 bears_enum = pl.Enum(["Polar", "Panda", "Brown"])
 bears = pl.Series(["Polar", "Panda", "Brown", "Brown", "Polar"], dtype=bears_enum)

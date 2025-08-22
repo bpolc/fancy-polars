@@ -4,7 +4,7 @@ Export
 
 Export Series data to other formats:
 
-.. currentmodule:: polars
+.. currentmodule:: fancy_polars
 .. autosummary::
    :toctree: api/
 
