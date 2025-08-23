@@ -29,8 +29,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 .str()
                 .starts_with(lit("p"))
                 .alias("starts_with_p"),
-            col("fruit").str().contains(lit("p..r"), true).alias("p..r"),
-            col("fruit").str().contains(lit("e+"), true).alias("e+"),
+            col("fruit")
+                .str()
+                .contains(lit("p..r"), true, Default::default())
+                .alias("p..r"),
+            col("fruit")
+                .str()
+                .contains(lit("e+"), true, Default::default())
+                .alias("e+"),
             col("fruit").str().ends_with(lit("r")).alias("ends_with_r"),
         ])
         .collect()?;
@@ -50,7 +56,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let result = df
         .clone()
         .lazy()
-        .select([col("urls").str().extract(lit(r"candidate=(\w+)"), 1)])
+        .select([col("urls")
+            .str()
+            .extract(lit(r"candidate=(\w+)"), 1, Default::default())])
         .collect()?;
 
     println!("{}", result);
@@ -66,7 +74,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .lazy()
         .select([col("text")
             .str()
-            .extract_all(lit(r"(\d+)"))
+            .extract_all(lit(r"(\d+)"), Default::default())
             .alias("extracted_nrs")])
         .collect()?;
 
@@ -82,10 +90,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         .clone()
         .lazy()
         .with_columns([
-            col("text").str().replace(lit(r"\d"), lit("-"), false),
             col("text")
                 .str()
-                .replace_all(lit(r"\d"), lit("-"), false)
+                .replace(lit(r"\d"), lit("-"), false, Default::default()),
+            col("text")
+                .str()
+                .replace_all(lit(r"\d"), lit("-"), false, Default::default())
                 .alias("text_replace_all"),
         ])
         .collect()?;

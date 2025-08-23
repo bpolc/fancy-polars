@@ -7,7 +7,7 @@ use base64::engine::general_purpose;
 #[cfg(feature = "string_to_integer")]
 use num_traits::Num;
 use polars_core::prelude::arity::*;
-use polars_utils::regex_cache::{compile_regex, with_regex_cache};
+use polars_utils::regex_cache::{RegexEngine, compile_regex, with_regex_cache};
 
 use super::*;
 #[cfg(feature = "binary_encoding")]
@@ -142,6 +142,7 @@ pub trait StringNameSpaceImpl: AsString {
         pat: &StringChunked,
         literal: bool,
         strict: bool,
+        engine: RegexEngine,
     ) -> PolarsResult<BooleanChunked> {
         let ca = self.as_string();
         match (ca.len(), pat.len()) {
@@ -150,7 +151,7 @@ pub trait StringNameSpaceImpl: AsString {
                     if literal {
                         ca.contains_literal(pat)
                     } else {
-                        ca.contains(pat, strict)
+                        ca.contains(pat, strict, engine)
                     }
                 },
                 None => Ok(BooleanChunked::full_null(ca.name().clone(), ca.len())),
@@ -169,7 +170,7 @@ pub trait StringNameSpaceImpl: AsString {
                         broadcast_try_binary_elementwise(ca, pat, |opt_src, opt_pat| {
                             match (opt_src, opt_pat) {
                                 (Some(src), Some(pat)) => {
-                                    let reg = reg_cache.compile(pat)?;
+                                    let reg = reg_cache.compile_adapter(pat, engine)?;
                                     Ok(Some(reg.is_match(src)))
                                 },
                                 _ => Ok(None),
@@ -182,7 +183,7 @@ pub trait StringNameSpaceImpl: AsString {
                             ca,
                             pat,
                             infer_re_match(|src, pat| {
-                                let reg = reg_cache.compile(pat?).ok()?;
+                                let reg = reg_cache.compile_adapter(pat?, engine).ok()?;
                                 Some(reg.is_match(src?))
                             }),
                         ))
@@ -197,6 +198,7 @@ pub trait StringNameSpaceImpl: AsString {
         pat: &StringChunked,
         literal: bool,
         strict: bool,
+        engine: RegexEngine,
     ) -> PolarsResult<UInt32Chunked> {
         let ca = self.as_string();
         if pat.len() == 1 {
@@ -204,7 +206,7 @@ pub trait StringNameSpaceImpl: AsString {
                 if literal {
                     ca.find_literal(pat)
                 } else {
-                    ca.find(pat, strict)
+                    ca.find(pat, strict, engine)
                 }
             } else {
                 Ok(UInt32Chunked::full_null(ca.name().clone(), ca.len()))
@@ -225,7 +227,7 @@ pub trait StringNameSpaceImpl: AsString {
             with_regex_cache(|reg_cache| {
                 let matcher = |src: Option<&str>, pat: Option<&str>| -> PolarsResult<Option<u32>> {
                     if let (Some(src), Some(pat)) = (src, pat) {
-                        let re = reg_cache.compile(pat)?;
+                        let re = reg_cache.compile_adapter(pat, engine)?;
                         return Ok(re.find(src).map(|m| m.start() as u32));
                     }
                     Ok(None)
@@ -282,9 +284,14 @@ pub trait StringNameSpaceImpl: AsString {
     }
 
     /// Check if strings contain a regex pattern.
-    fn contains(&self, pat: &str, strict: bool) -> PolarsResult<BooleanChunked> {
+    fn contains(
+        &self,
+        pat: &str,
+        strict: bool,
+        engine: RegexEngine,
+    ) -> PolarsResult<BooleanChunked> {
         let ca = self.as_string();
-        let res_reg = polars_utils::regex_cache::compile_regex(pat);
+        let res_reg = compile_regex(pat, engine);
         let opt_reg = if strict { Some(res_reg?) } else { res_reg.ok() };
         let out: BooleanChunked = if let Some(reg) = opt_reg {
             unary_elementwise_values(ca, |s| reg.is_match(s))
@@ -299,18 +306,18 @@ pub trait StringNameSpaceImpl: AsString {
         // note: benchmarking shows that the regex engine is actually
         // faster at finding literal matches than str::contains.
         // ref: https://github.com/pola-rs/polars/pull/6811
-        self.contains(regex::escape(lit).as_str(), true)
+        self.contains(regex::escape(lit).as_str(), true, Default::default())
     }
 
     /// Return the index position of a literal substring in the target string.
     fn find_literal(&self, lit: &str) -> PolarsResult<UInt32Chunked> {
-        self.find(regex::escape(lit).as_str(), true)
+        self.find(regex::escape(lit).as_str(), true, Default::default())
     }
 
     /// Return the index position of a regular expression substring in the target string.
-    fn find(&self, pat: &str, strict: bool) -> PolarsResult<UInt32Chunked> {
+    fn find(&self, pat: &str, strict: bool, engine: RegexEngine) -> PolarsResult<UInt32Chunked> {
         let ca = self.as_string();
-        match polars_utils::regex_cache::compile_regex(pat) {
+        match compile_regex(pat, engine) {
             Ok(rx) => Ok(unary_elementwise(ca, |opt_s| {
                 opt_s.and_then(|s| rx.find(s)).map(|m| m.start() as u32)
             })),
@@ -322,8 +329,13 @@ pub trait StringNameSpaceImpl: AsString {
     }
 
     /// Replace the leftmost regex-matched (sub)string with another string
-    fn replace<'a>(&'a self, pat: &str, val: &str) -> PolarsResult<StringChunked> {
-        let reg = polars_utils::regex_cache::compile_regex(pat)?;
+    fn replace<'a>(
+        &'a self,
+        pat: &str,
+        val: &str,
+        engine: RegexEngine,
+    ) -> PolarsResult<StringChunked> {
+        let reg = compile_regex(pat, engine)?;
         let f = |s: &'a str| reg.replace(s, val);
         let ca = self.as_string();
         Ok(ca.apply_values(f))
@@ -371,9 +383,14 @@ pub trait StringNameSpaceImpl: AsString {
     }
 
     /// Replace all regex-matched (sub)strings with another string
-    fn replace_all(&self, pat: &str, val: &str) -> PolarsResult<StringChunked> {
+    fn replace_all(
+        &self,
+        pat: &str,
+        val: &str,
+        engine: RegexEngine,
+    ) -> PolarsResult<StringChunked> {
         let ca = self.as_string();
-        let reg = polars_utils::regex_cache::compile_regex(pat)?;
+        let reg = compile_regex(pat, engine)?;
         Ok(ca.apply_values(|s| reg.replace_all(s, val)))
     }
 
@@ -414,15 +431,20 @@ pub trait StringNameSpaceImpl: AsString {
     }
 
     /// Extract the nth capture group from pattern.
-    fn extract(&self, pat: &StringChunked, group_index: usize) -> PolarsResult<StringChunked> {
+    fn extract(
+        &self,
+        pat: &StringChunked,
+        group_index: usize,
+        engine: RegexEngine,
+    ) -> PolarsResult<StringChunked> {
         let ca = self.as_string();
-        super::extract::extract_group(ca, pat, group_index)
+        super::extract::extract_group(ca, pat, group_index, engine)
     }
 
     /// Extract each successive non-overlapping regex match in an individual string as an array.
-    fn extract_all(&self, pat: &str) -> PolarsResult<ListChunked> {
+    fn extract_all(&self, pat: &str, engine: RegexEngine) -> PolarsResult<ListChunked> {
         let ca = self.as_string();
-        let reg = polars_utils::regex_cache::compile_regex(pat)?;
+        let reg = compile_regex(pat, engine)?;
 
         let mut builder =
             ListStringChunkedBuilder::new(ca.name().clone(), ca.len(), ca.get_values_size());
@@ -506,7 +528,11 @@ pub trait StringNameSpaceImpl: AsString {
     }
 
     /// Extract each successive non-overlapping regex match in an individual string as an array.
-    fn extract_all_many(&self, pat: &StringChunked) -> PolarsResult<ListChunked> {
+    fn extract_all_many(
+        &self,
+        pat: &StringChunked,
+        engine: RegexEngine,
+    ) -> PolarsResult<ListChunked> {
         let ca = self.as_string();
         polars_ensure!(
             ca.len() == pat.len(),
@@ -519,9 +545,9 @@ pub trait StringNameSpaceImpl: AsString {
         with_regex_cache(|re_cache| {
             binary_elementwise_for_each(ca, pat, |opt_s, opt_pat| match (opt_s, opt_pat) {
                 (_, None) | (None, _) => builder.append_null(),
-                (Some(s), Some(pat)) => {
-                    let re = re_cache.compile(pat).unwrap();
-                    builder.append_values_iter(re.find_iter(s).map(|m| m.as_str()));
+                (Some(s), Some(pat)) => match re_cache.compile_adapter(pat, engine) {
+                    Ok(re) => builder.append_values_iter(re.find_iter(s).map(|m| m.as_str())),
+                    Err(_) => builder.append_null(),
                 },
             });
         });
@@ -530,22 +556,32 @@ pub trait StringNameSpaceImpl: AsString {
 
     #[cfg(feature = "extract_groups")]
     /// Extract all capture groups from pattern and return as a struct.
-    fn extract_groups(&self, pat: &str, dtype: &DataType) -> PolarsResult<Series> {
+    fn extract_groups(
+        &self,
+        pat: &str,
+        dtype: &DataType,
+        engine: RegexEngine,
+    ) -> PolarsResult<Series> {
         let ca = self.as_string();
-        super::extract::extract_groups(ca, pat, dtype)
+        super::extract::extract_groups(ca, pat, dtype, engine)
     }
 
     /// Count all successive non-overlapping regex matches.
-    fn count_matches(&self, pat: &str, literal: bool) -> PolarsResult<UInt32Chunked> {
+    fn count_matches(
+        &self,
+        pat: &str,
+        literal: bool,
+        engine: RegexEngine,
+    ) -> PolarsResult<UInt32Chunked> {
         let ca = self.as_string();
         if literal {
             Ok(unary_elementwise(ca, |opt_s| {
                 opt_s.map(|s| s.matches(pat).count() as u32)
             }))
         } else {
-            let re = compile_regex(pat)?;
+            let re = compile_regex(pat, engine)?;
             Ok(unary_elementwise(ca, |opt_s| {
-                opt_s.map(|s| re.find_iter(s).count() as u32)
+                opt_s.map(|s| re.count_matches(s) as u32)
             }))
         }
     }
@@ -555,6 +591,7 @@ pub trait StringNameSpaceImpl: AsString {
         &self,
         pat: &StringChunked,
         literal: bool,
+        engine: RegexEngine,
     ) -> PolarsResult<UInt32Chunked> {
         let ca = self.as_string();
         polars_ensure!(
@@ -574,8 +611,8 @@ pub trait StringNameSpaceImpl: AsString {
                       -> PolarsResult<Option<u32>> {
                     match (opt_s, opt_pat) {
                         (Some(s), Some(pat)) => {
-                            let reg = re_cache.compile(pat)?;
-                            Ok(Some(reg.find_iter(s).count() as u32))
+                            let reg = re_cache.compile_adapter(pat, engine)?;
+                            Ok(Some(reg.count_matches(s) as u32))
                         },
                         _ => Ok(None),
                     }

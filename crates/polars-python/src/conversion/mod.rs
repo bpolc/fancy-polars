@@ -25,6 +25,7 @@ use polars_parquet::write::StatisticsOptions;
 use polars_plan::dsl::ScanSources;
 use polars_utils::mmap::MemSlice;
 use polars_utils::pl_str::PlSmallStr;
+use polars_utils::regex_adapter::RegexEngine;
 use polars_utils::total_ord::{TotalEq, TotalHash};
 use pyo3::basic::CompareOp;
 use pyo3::exceptions::{PyTypeError, PyValueError};
@@ -484,6 +485,20 @@ impl<'py> IntoPyObject<'py> for Wrap<TimeUnit> {
 
     fn into_pyobject(self, py: Python<'py>) -> Result<Self::Output, Self::Error> {
         self.0.to_ascii().into_pyobject(py)
+    }
+}
+
+impl<'py> FromPyObject<'py> for Wrap<RegexEngine> {
+    fn extract_bound(ob: &Bound<'py, PyAny>) -> PyResult<Self> {
+        let s = ob.extract::<PyBackedStr>()?;
+        let s_ref: &str = s.as_ref();
+        match s_ref.parse::<RegexEngine>() {
+            Ok(engine) => Ok(Wrap(engine)),
+            Err(_) => Err(PyValueError::new_err(format!(
+                "`engine` must be one of {{'regex'}}, got {}",
+                s_ref
+            ))),
+        }
     }
 }
 

@@ -143,7 +143,7 @@ impl PyExpr {
         self.inner
             .clone()
             .str()
-            .replace_n(pat.inner, val.inner, literal, n)
+            .replace_n(pat.inner, val.inner, literal, n, Default::default())
             .into()
     }
 
@@ -152,7 +152,7 @@ impl PyExpr {
         self.inner
             .clone()
             .str()
-            .replace_all(pat.inner, val.inner, literal)
+            .replace_all(pat.inner, val.inner, literal, Default::default())
             .into()
     }
 
@@ -181,7 +181,12 @@ impl PyExpr {
     fn str_contains(&self, pat: Self, literal: Option<bool>, strict: bool) -> Self {
         match literal {
             Some(true) => self.inner.clone().str().contains_literal(pat.inner).into(),
-            _ => self.inner.clone().str().contains(pat.inner, strict).into(),
+            _ => self
+                .inner
+                .clone()
+                .str()
+                .contains(pat.inner, strict, Default::default())
+                .into(),
         }
     }
 
@@ -190,7 +195,12 @@ impl PyExpr {
     fn str_find(&self, pat: Self, literal: Option<bool>, strict: bool) -> Self {
         match literal {
             Some(true) => self.inner.clone().str().find_literal(pat.inner).into(),
-            _ => self.inner.clone().str().find(pat.inner, strict).into(),
+            _ => self
+                .inner
+                .clone()
+                .str()
+                .find(pat.inner, strict, Default::default())
+                .into(),
         }
     }
 
@@ -253,12 +263,16 @@ impl PyExpr {
         self.inner
             .clone()
             .str()
-            .extract(pat.inner, group_index)
+            .extract(pat.inner, group_index, Default::default())
             .into()
     }
 
     fn str_extract_all(&self, pat: Self) -> Self {
-        self.inner.clone().str().extract_all(pat.inner).into()
+        self.inner
+            .clone()
+            .str()
+            .extract_all(pat.inner, Default::default())
+            .into()
     }
 
     #[cfg(feature = "extract_groups")]
@@ -267,7 +281,7 @@ impl PyExpr {
             .inner
             .clone()
             .str()
-            .extract_groups(pat)
+            .extract_groups(pat, Default::default())
             .map_err(PyPolarsErr::from)?
             .into())
     }
@@ -276,7 +290,7 @@ impl PyExpr {
         self.inner
             .clone()
             .str()
-            .count_matches(pat.inner, literal)
+            .count_matches(pat.inner, literal, Default::default())
             .into()
     }
 

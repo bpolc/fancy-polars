@@ -1,15 +1,17 @@
+use polars_utils::regex_cache::{RegexEngine, compile_regex};
+
 use super::*;
 /// Specialized expressions for [`Series`] of [`DataType::String`].
 pub struct StringNameSpace(pub(crate) Expr);
 
 impl StringNameSpace {
     /// Check if a string value contains a literal substring.
-    #[cfg(feature = "regex")]
     pub fn contains_literal(self, pat: Expr) -> Expr {
         self.0.map_binary(
             StringFunction::Contains {
                 literal: true,
                 strict: false,
+                engine: RegexEngine::default(),
             },
             pat,
         )
@@ -17,12 +19,14 @@ impl StringNameSpace {
 
     /// Check if this column of strings contains a Regex. If `strict` is `true`, then it is an error if any `pat` is
     /// an invalid regex, whereas if `strict` is `false`, an invalid regex will simply evaluate to `false`.
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
     #[cfg(feature = "regex")]
-    pub fn contains(self, pat: Expr, strict: bool) -> Expr {
+    pub fn contains(self, pat: Expr, strict: bool, engine: RegexEngine) -> Expr {
         self.0.map_binary(
             StringFunction::Contains {
                 literal: false,
                 strict,
+                engine,
             },
             pat,
         )
@@ -145,18 +149,26 @@ impl StringNameSpace {
     }
 
     /// Extract a regex pattern from the a string value. If `group_index` is out of bounds, null is returned.
-    pub fn extract(self, pat: Expr, group_index: usize) -> Expr {
-        self.0.map_binary(StringFunction::Extract(group_index), pat)
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn extract(self, pat: Expr, group_index: usize, engine: RegexEngine) -> Expr {
+        self.0.map_binary(
+            StringFunction::Extract {
+                group_index,
+                engine,
+            },
+            pat,
+        )
     }
 
     #[cfg(feature = "extract_groups")]
     // Extract all captures groups from a regex pattern as a struct
-    pub fn extract_groups(self, pat: &str) -> PolarsResult<Expr> {
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn extract_groups(self, pat: &str, engine: RegexEngine) -> PolarsResult<Expr> {
         // regex will be compiled twice, because it doesn't support serde
         // and we need to compile it here to determine the output datatype
 
         use polars_utils::format_pl_smallstr;
-        let reg = polars_utils::regex_cache::compile_regex(pat)?;
+        let reg = compile_regex(pat, engine)?;
         let names = reg
             .capture_names()
             .enumerate()
@@ -178,6 +190,7 @@ impl StringNameSpace {
         Ok(self.0.map_unary(StringFunction::ExtractGroups {
             dtype,
             pat: pat.into(),
+            engine,
         }))
     }
 
@@ -221,32 +234,40 @@ impl StringNameSpace {
             StringFunction::Find {
                 literal: true,
                 strict: false,
+                engine: RegexEngine::default(),
             },
             pat,
         )
     }
 
     /// Find the index of a substring defined by a regular expressions within another string value.
+    /// If `strict` is `true`, then it is an error if the underlying pattern is not a valid regex,
+    /// whereas if `strict` is `false`, an invalid regex will simply evaluate to `null`.
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
     #[cfg(feature = "regex")]
-    pub fn find(self, pat: Expr, strict: bool) -> Expr {
+    pub fn find(self, pat: Expr, strict: bool, engine: RegexEngine) -> Expr {
         self.0.map_binary(
             StringFunction::Find {
                 literal: false,
                 strict,
+                engine,
             },
             pat,
         )
     }
 
     /// Extract each successive non-overlapping match in an individual string as an array
-    pub fn extract_all(self, pat: Expr) -> Expr {
-        self.0.map_binary(StringFunction::ExtractAll, pat)
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn extract_all(self, pat: Expr, engine: RegexEngine) -> Expr {
+        self.0
+            .map_binary(StringFunction::ExtractAll { engine }, pat)
     }
 
     /// Count all successive non-overlapping regex matches.
-    pub fn count_matches(self, pat: Expr, literal: bool) -> Expr {
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn count_matches(self, pat: Expr, literal: bool, engine: RegexEngine) -> Expr {
         self.0
-            .map_binary(StringFunction::CountMatches(literal), pat)
+            .map_binary(StringFunction::CountMatches { literal, engine }, pat)
     }
 
     /// Convert a String column into a Date/Datetime/Time column.
@@ -362,23 +383,47 @@ impl StringNameSpace {
 
     #[cfg(feature = "regex")]
     /// Replace values that match a regex `pat` with a `value`.
-    pub fn replace(self, pat: Expr, value: Expr, literal: bool) -> Expr {
-        self.0
-            .map_ternary(StringFunction::Replace { n: 1, literal }, pat, value)
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn replace(self, pat: Expr, value: Expr, literal: bool, engine: RegexEngine) -> Expr {
+        self.0.map_ternary(
+            StringFunction::Replace {
+                n: 1,
+                literal,
+                engine,
+            },
+            pat,
+            value,
+        )
     }
 
     #[cfg(feature = "regex")]
     /// Replace values that match a regex `pat` with a `value`.
-    pub fn replace_n(self, pat: Expr, value: Expr, literal: bool, n: i64) -> Expr {
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn replace_n(
+        self,
+        pat: Expr,
+        value: Expr,
+        literal: bool,
+        n: i64,
+        engine: RegexEngine,
+    ) -> Expr {
         self.0
-            .map_ternary(StringFunction::Replace { n, literal }, pat, value)
+            .map_ternary(StringFunction::Replace { n, literal, engine }, pat, value)
     }
 
     #[cfg(feature = "regex")]
     /// Replace all values that match a regex `pat` with a `value`.
-    pub fn replace_all(self, pat: Expr, value: Expr, literal: bool) -> Expr {
-        self.0
-            .map_ternary(StringFunction::Replace { n: -1, literal }, pat, value)
+    /// If `engine` is not the default, it enables different regex engines with various feature sets.
+    pub fn replace_all(self, pat: Expr, value: Expr, literal: bool, engine: RegexEngine) -> Expr {
+        self.0.map_ternary(
+            StringFunction::Replace {
+                n: -1,
+                literal,
+                engine,
+            },
+            pat,
+            value,
+        )
     }
 
     #[cfg(feature = "string_normalize")]

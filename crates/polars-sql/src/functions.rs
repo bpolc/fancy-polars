@@ -1212,13 +1212,14 @@ impl SQLFunctionVisitor<'_> {
             StrPos => {
                 // note: SQL is 1-indexed; returns zero if no match found
                 self.visit_binary(|expr, substring| {
-                    (expr.str().find(substring, true) + typed_lit(1u32)).fill_null(typed_lit(0u32))
+                    (expr.str().find(substring, true, Default::default()) + typed_lit(1u32))
+                        .fill_null(typed_lit(0u32))
                 })
             },
             RegexpLike => {
                 let args = extract_args(function)?;
                 match args.len() {
-                    2 => self.visit_binary(|e, s| e.str().contains(s, true)),
+                    2 => self.visit_binary(|e, s| e.str().contains(s, true, Default::default())),
                     3 => self.try_visit_ternary(|e, pat, flags| {
                         Ok(e.str().contains(
                             match (pat, flags) {
@@ -1234,7 +1235,8 @@ impl SQLFunctionVisitor<'_> {
                                     polars_bail!(SQLSyntax: "invalid arguments for REGEXP_LIKE ({}, {})", args[1], args[2]);
                                 },
                             },
-                            true))
+                            true,
+                            Default::default()))
                     }),
                     _ => polars_bail!(SQLSyntax: "REGEXP_LIKE expects 2-3 arguments (found {})",args.len()),
                 }
@@ -1242,8 +1244,9 @@ impl SQLFunctionVisitor<'_> {
             Replace => {
                 let args = extract_args(function)?;
                 match args.len() {
-                    3 => self
-                        .try_visit_ternary(|e, old, new| Ok(e.str().replace_all(old, new, true))),
+                    3 => self.try_visit_ternary(|e, old, new| {
+                        Ok(e.str().replace_all(old, new, true, Default::default()))
+                    }),
                     _ => {
                         polars_bail!(SQLSyntax: "REPLACE expects 3 arguments (found {})", args.len())
                     },
@@ -1512,7 +1515,9 @@ impl SQLFunctionVisitor<'_> {
                             _ => format!("^.*{}.*$", pat),
                         };
                         if let Some(active_schema) = &active_schema {
-                            let rx = polars_utils::regex_cache::compile_regex(&pat).unwrap();
+                            let rx =
+                                polars_utils::regex_cache::compile_regex(&pat, Default::default())
+                                    .unwrap();
                             let col_names = active_schema
                                 .iter_names()
                                 .filter(|name| rx.is_match(name))

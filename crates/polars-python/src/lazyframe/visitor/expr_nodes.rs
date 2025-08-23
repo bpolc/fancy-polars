@@ -765,28 +765,37 @@ pub(crate) fn into_py(py: Python<'_>, expr: &AExpr) -> PyResult<PyObject> {
                     )
                         .into_py_any(py),
                     #[cfg(feature = "regex")]
-                    StringFunction::Contains { literal, strict } => {
-                        (PyStringFunction::Contains, literal, strict).into_py_any(py)
-                    },
-                    StringFunction::CountMatches(literal) => {
-                        (PyStringFunction::CountMatches, literal).into_py_any(py)
+                    StringFunction::Contains {
+                        literal,
+                        strict,
+                        engine,
+                    } => (PyStringFunction::Contains, literal, strict, engine.as_ref())
+                        .into_py_any(py),
+                    StringFunction::CountMatches { literal, engine } => {
+                        (PyStringFunction::CountMatches, literal, engine.as_ref()).into_py_any(py)
                     },
                     StringFunction::EndsWith => (PyStringFunction::EndsWith,).into_py_any(py),
-                    StringFunction::Extract(group_index) => {
-                        (PyStringFunction::Extract, group_index).into_py_any(py)
+                    StringFunction::Extract {
+                        group_index,
+                        engine,
+                    } => (PyStringFunction::Extract, group_index, engine.as_ref()).into_py_any(py),
+                    StringFunction::ExtractAll { engine } => {
+                        (PyStringFunction::ExtractAll, engine.as_ref()).into_py_any(py)
                     },
-                    StringFunction::ExtractAll => (PyStringFunction::ExtractAll,).into_py_any(py),
                     #[cfg(feature = "extract_groups")]
-                    StringFunction::ExtractGroups { dtype, pat } => (
+                    StringFunction::ExtractGroups { dtype, pat, engine } => (
                         PyStringFunction::ExtractGroups,
                         &Wrap(dtype.clone()),
                         pat.as_str(),
+                        engine.as_ref(),
                     )
                         .into_py_any(py),
                     #[cfg(feature = "regex")]
-                    StringFunction::Find { literal, strict } => {
-                        (PyStringFunction::Find, literal, strict).into_py_any(py)
-                    },
+                    StringFunction::Find {
+                        literal,
+                        strict,
+                        engine,
+                    } => (PyStringFunction::Find, literal, strict, engine.as_ref()).into_py_any(py),
                     StringFunction::ToInteger(strict) => {
                         (PyStringFunction::ToInteger, strict).into_py_any(py)
                     },
@@ -803,8 +812,8 @@ pub(crate) fn into_py(py: Python<'_>, expr: &AExpr) -> PyResult<PyObject> {
                         (PyStringFunction::JsonPathMatch,).into_py_any(py)
                     },
                     #[cfg(feature = "regex")]
-                    StringFunction::Replace { n, literal } => {
-                        (PyStringFunction::Replace, n, literal).into_py_any(py)
+                    StringFunction::Replace { n, literal, engine } => {
+                        (PyStringFunction::Replace, n, literal, engine.as_ref()).into_py_any(py)
                     },
                     StringFunction::Normalize { form } => (
                         PyStringFunction::Normalize,

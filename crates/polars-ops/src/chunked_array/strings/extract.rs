@@ -4,14 +4,13 @@ use std::iter::zip;
 use arrow::array::{Array, StructArray};
 use arrow::array::{MutablePlString, Utf8ViewArray};
 use polars_core::prelude::arity::{try_binary_mut_with_options, try_unary_mut_with_options};
-use regex::Regex;
-
-use super::*;
+use polars_core::prelude::*;
+use polars_utils::regex_adapter::{RegexAdapter, RegexEngine};
 
 #[cfg(feature = "extract_groups")]
 fn extract_groups_array(
     arr: &Utf8ViewArray,
-    reg: &Regex,
+    reg: &RegexAdapter,
     names: &[&str],
     dtype: ArrowDataType,
 ) -> PolarsResult<ArrayRef> {
@@ -19,12 +18,12 @@ fn extract_groups_array(
         .map(|_| MutablePlString::with_capacity(arr.len()))
         .collect::<Vec<_>>();
 
-    let mut locs = reg.capture_locations();
+    let mut buffer = reg.create_locations_buffer();
     for opt_v in arr {
         if let Some(s) = opt_v {
-            if reg.captures_read(&mut locs, s).is_some() {
+            if let Some(caps) = reg.captures_with_buffer(s, &mut buffer) {
                 for (i, builder) in builders.iter_mut().enumerate() {
-                    builder.push(locs.get(i + 1).map(|(start, stop)| &s[start..stop]));
+                    builder.push(caps.get(i + 1));
                 }
                 continue;
             }
@@ -44,8 +43,9 @@ pub(super) fn extract_groups(
     ca: &StringChunked,
     pat: &str,
     dtype: &DataType,
+    engine: RegexEngine,
 ) -> PolarsResult<Series> {
-    let reg = polars_utils::regex_cache::compile_regex(pat)?;
+    let reg = polars_utils::regex_cache::compile_regex(pat, engine)?;
     let n_fields = reg.captures_len();
     if n_fields == 1 {
         return StructChunked::from_series(
@@ -75,45 +75,42 @@ pub(super) fn extract_groups(
 
 fn extract_group_reg_lit(
     arr: &Utf8ViewArray,
-    reg: &Regex,
+    reg: &RegexAdapter,
     group_index: usize,
 ) -> PolarsResult<Utf8ViewArray> {
     let mut builder = MutablePlString::with_capacity(arr.len());
 
-    let mut locs = reg.capture_locations();
+    let mut buffer = reg.create_locations_buffer();
     for opt_v in arr {
         if let Some(s) = opt_v {
-            if reg.captures_read(&mut locs, s).is_some() {
-                builder.push(locs.get(group_index).map(|(start, stop)| &s[start..stop]));
-                continue;
-            }
+            builder.push(reg.get_group_with_buffer(s, group_index, &mut buffer));
+            continue;
         }
 
-        // Push null if either the string is null or there was no match.
+        // Push null if the string is null
         builder.push_null();
     }
 
-    Ok(builder.into())
+    Ok(builder.freeze())
 }
 
 fn extract_group_array_lit(
     s: &str,
     pat: &Utf8ViewArray,
     group_index: usize,
+    engine: RegexEngine,
 ) -> PolarsResult<Utf8ViewArray> {
     let mut builder = MutablePlString::with_capacity(pat.len());
 
     for opt_pat in pat {
         if let Some(pat) = opt_pat {
-            let reg = polars_utils::regex_cache::compile_regex(pat)?;
-            let mut locs = reg.capture_locations();
-            if reg.captures_read(&mut locs, s).is_some() {
-                builder.push(locs.get(group_index).map(|(start, stop)| &s[start..stop]));
-                continue;
-            }
+            let reg = polars_utils::regex_cache::compile_regex(pat, engine)?;
+            let mut buffer = reg.create_locations_buffer();
+            builder.push(reg.get_group_with_buffer(s, group_index, &mut buffer));
+            continue;
         }
 
-        // Push null if either the pat is null or there was no match.
+        // Push null if the pat is null
         builder.push_null();
     }
 
@@ -124,20 +121,16 @@ fn extract_group_binary(
     arr: &Utf8ViewArray,
     pat: &Utf8ViewArray,
     group_index: usize,
+    engine: RegexEngine,
 ) -> PolarsResult<Utf8ViewArray> {
     let mut builder = MutablePlString::with_capacity(arr.len());
 
     for (opt_s, opt_pat) in zip(arr, pat) {
         match (opt_s, opt_pat) {
             (Some(s), Some(pat)) => {
-                let reg = polars_utils::regex_cache::compile_regex(pat)?;
-                let mut locs = reg.capture_locations();
-                if reg.captures_read(&mut locs, s).is_some() {
-                    builder.push(locs.get(group_index).map(|(start, stop)| &s[start..stop]));
-                    continue;
-                }
-                // Push null if there was no match.
-                builder.push_null()
+                let reg = polars_utils::regex_cache::compile_regex(pat, engine)?;
+                let mut buffer = reg.create_locations_buffer();
+                builder.push(reg.get_group_with_buffer(s, group_index, &mut buffer));
             },
             _ => builder.push_null(),
         }
@@ -150,11 +143,12 @@ pub(super) fn extract_group(
     ca: &StringChunked,
     pat: &StringChunked,
     group_index: usize,
+    engine: RegexEngine,
 ) -> PolarsResult<StringChunked> {
     match (ca.len(), pat.len()) {
         (_, 1) => {
             if let Some(pat) = pat.get(0) {
-                let reg = polars_utils::regex_cache::compile_regex(pat)?;
+                let reg = polars_utils::regex_cache::compile_regex(pat, engine)?;
                 try_unary_mut_with_options(ca, |arr| extract_group_reg_lit(arr, &reg, group_index))
             } else {
                 Ok(StringChunked::full_null(ca.name().clone(), ca.len()))
@@ -162,7 +156,9 @@ pub(super) fn extract_group(
         },
         (1, _) => {
             if let Some(s) = ca.get(0) {
-                try_unary_mut_with_options(pat, |pat| extract_group_array_lit(s, pat, group_index))
+                try_unary_mut_with_options(pat, |pat| {
+                    extract_group_array_lit(s, pat, group_index, engine)
+                })
             } else {
                 Ok(StringChunked::full_null(ca.name().clone(), pat.len()))
             }
@@ -170,7 +166,7 @@ pub(super) fn extract_group(
         (len_ca, len_pat) if len_ca == len_pat => try_binary_mut_with_options(
             ca,
             pat,
-            |ca, pat| extract_group_binary(ca, pat, group_index),
+            |ca, pat| extract_group_binary(ca, pat, group_index, engine),
             ca.name().clone(),
         ),
         _ => {

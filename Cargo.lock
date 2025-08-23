@@ -3644,6 +3644,8 @@ dependencies = [
  "serde_json",
  "slotmap",
  "stacker",
+ "strum",
+ "strum_macros",
  "sysinfo",
  "version_check",
 ]

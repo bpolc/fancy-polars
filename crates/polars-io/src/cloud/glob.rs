@@ -6,7 +6,7 @@ use polars_core::error::to_compute_err;
 use polars_error::{PolarsResult, polars_bail};
 use polars_utils::format_pl_smallstr;
 use polars_utils::pl_str::PlSmallStr;
-use regex::Regex;
+use polars_utils::regex_adapter::RegexAdapter;
 use url::Url;
 
 use super::{CloudOptions, parse_url};
@@ -173,7 +173,7 @@ fn full_url(scheme: &str, bucket: &str, key: Path) -> String {
 /// The Cloud list api returns a list of all the file names under a prefix, there is no additional cost of `readdir`.
 pub(crate) struct Matcher {
     prefix: String,
-    re: Option<Regex>,
+    re: Option<RegexAdapter>,
 }
 
 impl Matcher {
@@ -181,7 +181,7 @@ impl Matcher {
     pub(crate) fn new(prefix: String, expansion: Option<&str>) -> PolarsResult<Matcher> {
         // Cloud APIs accept a prefix without any expansion, extract it.
         let re = expansion
-            .map(polars_utils::regex_cache::compile_regex)
+            .map(|exp| polars_utils::regex_cache::compile_regex(exp, Default::default()))
             .transpose()?;
         Ok(Matcher { prefix, re })
     }
