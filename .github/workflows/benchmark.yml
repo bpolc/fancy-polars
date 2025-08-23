@@ -108,7 +108,8 @@ jobs:
 
               // Look for an existing comment
               const existingComment = comments.find(comment =>
-                comment.body.includes('The previous uncompressed lib size was')
+                comment.body.includes('The uncompressed lib size after this PR is') &&
+                comment.user.login === 'github-actions[bot]'
               );
 
               if (existingComment) {
