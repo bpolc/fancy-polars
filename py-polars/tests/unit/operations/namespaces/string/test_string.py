@@ -2117,3 +2117,251 @@ def test_str_split_self_broadcast() -> None:
         pl.Series(["a-/c"]).str.split(pl.Series(["-", "/", "+"])),
         pl.Series([["a", "/c"], ["a-", "c"], ["a-/c"]]),
     )
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES[1:])
+def test_regex_positive_lookahead(engine: RegexEngine) -> None:
+    s = pl.Series(["foo 10px", "5em", "bar12px", "20", "15px 30px", "10 pxb", None])
+    pattern = r"(\d+)(?=px)"
+
+    expected_contains = pl.Series([True, False, True, False, True, False, None])
+    assert_series_equal(s.str.contains(pattern, engine=engine), expected_contains)
+
+    expected_count = pl.Series([1, 0, 1, 0, 2, 0, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.count_matches(pattern, engine=engine), expected_count)
+
+    expected_extract_all = pl.Series(
+        [["10"], [], ["12"], [], ["15", "30"], [], None], dtype=pl.List(pl.String)
+    )
+    assert_series_equal(s.str.extract_all(pattern, engine=engine), expected_extract_all)
+
+    expected_extract_groups = pl.Series(
+        [
+            {"1": "10"},
+            {"1": None},
+            {"1": "12"},
+            {"1": None},
+            {"1": "15"},
+            {"1": None},
+            None,
+        ]
+    )
+    assert_series_equal(
+        s.str.extract_groups(pattern, engine=engine), expected_extract_groups
+    )
+
+    expected_extract = pl.Series(["10", None, "12", None, "15", None, None])
+    assert_series_equal(s.str.extract(pattern, engine=engine), expected_extract)
+
+    expected_find = pl.Series([4, None, 3, None, 0, None, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.find(pattern, engine=engine), expected_find)
+
+    expected_replace_all = pl.Series(
+        ["foo Xpx", "5em", "barXpx", "20", "Xpx Xpx", "10 pxb", None]
+    )
+    assert_series_equal(
+        s.str.replace_all(pattern, "X", engine=engine), expected_replace_all
+    )
+
+    expected_replace = pl.Series(
+        ["foo Xpx", "5em", "barXpx", "20", "Xpx 30px", "10 pxb", None]
+    )
+    assert_series_equal(s.str.replace(pattern, "X", engine=engine), expected_replace)
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES[1:])
+def test_regex_positive_lookbehind(engine: RegexEngine) -> None:
+    s = pl.Series(["USD100", "EUR50", "another USD200", "300", "USD50 and USD75", None])
+    pattern = r"(?<=USD)(\d+)"
+
+    expected_contains = pl.Series([True, False, True, False, True, None])
+    assert_series_equal(s.str.contains(pattern, engine=engine), expected_contains)
+
+    expected_count = pl.Series([1, 0, 1, 0, 2, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.count_matches(pattern, engine=engine), expected_count)
+
+    expected_extract_all = pl.Series(
+        [["100"], [], ["200"], [], ["50", "75"], None], dtype=pl.List(pl.String)
+    )
+    assert_series_equal(s.str.extract_all(pattern, engine=engine), expected_extract_all)
+
+    expected_extract_groups = pl.Series(
+        [{"1": "100"}, {"1": None}, {"1": "200"}, {"1": None}, {"1": "50"}, None]
+    )
+    assert_series_equal(
+        s.str.extract_groups(pattern, engine=engine), expected_extract_groups
+    )
+
+    expected_extract = pl.Series(["100", None, "200", None, "50", None])
+    assert_series_equal(s.str.extract(pattern, engine=engine), expected_extract)
+
+    expected_find = pl.Series([3, None, 11, None, 3, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.find(pattern, engine=engine), expected_find)
+
+    expected_replace_all = pl.Series(
+        ["USDX", "EUR50", "another USDX", "300", "USDX and USDX", None]
+    )
+    assert_series_equal(
+        s.str.replace_all(pattern, "X", engine=engine), expected_replace_all
+    )
+
+    expected_replace = pl.Series(
+        ["USDX", "EUR50", "another USDX", "300", "USDX and USD75", None]
+    )
+    assert_series_equal(s.str.replace(pattern, "X", engine=engine), expected_replace)
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES[1:])
+def test_regex_negative_lookahead(engine: RegexEngine) -> None:
+    s = pl.Series(["apple,orange", "apple,banana,", "test", "another test", None])
+    pattern = r"(\b\w+\b)(?!,)"
+
+    expected_contains = pl.Series([True, False, True, True, None])
+    assert_series_equal(s.str.contains(pattern, engine=engine), expected_contains)
+
+    expected_count = pl.Series([1, 0, 1, 2, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.count_matches(pattern, engine=engine), expected_count)
+
+    expected_extract_all = pl.Series(
+        [["orange"], [], ["test"], ["another", "test"], None],
+        dtype=pl.List(pl.String),
+    )
+    assert_series_equal(s.str.extract_all(pattern, engine=engine), expected_extract_all)
+
+    expected_extract_groups = pl.Series(
+        [{"1": "orange"}, {"1": None}, {"1": "test"}, {"1": "another"}, None]
+    )
+    assert_series_equal(
+        s.str.extract_groups(pattern, engine=engine), expected_extract_groups
+    )
+
+    expected_extract = pl.Series(["orange", None, "test", "another", None])
+    assert_series_equal(s.str.extract(pattern, engine=engine), expected_extract)
+
+    expected_find = pl.Series([6, None, 0, 0, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.find(pattern, engine=engine), expected_find)
+
+    expected_replace_all = pl.Series(["apple,X", "apple,banana,", "X", "X X", None])
+    assert_series_equal(
+        s.str.replace_all(pattern, "X", engine=engine), expected_replace_all
+    )
+
+    expected_replace = pl.Series(["apple,X", "apple,banana,", "X", "X test", None])
+    assert_series_equal(s.str.replace(pattern, "X", engine=engine), expected_replace)
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES[1:])
+def test_regex_negative_lookbehind(engine: RegexEngine) -> None:
+    s = pl.Series(["EUR100", "USD50", "100", "200 300", "EUR 400", None])
+    pattern = r"(?<!EUR|USD)(\d{3})"
+
+    expected_contains = pl.Series([False, False, True, True, True, None])
+    assert_series_equal(s.str.contains(pattern, engine=engine), expected_contains)
+
+    expected_count = pl.Series([0, 0, 1, 2, 1, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.count_matches(pattern, engine=engine), expected_count)
+
+    expected_extract_all = pl.Series(
+        [[], [], ["100"], ["200", "300"], ["400"], None],
+        dtype=pl.List(pl.String),
+    )
+    assert_series_equal(s.str.extract_all(pattern, engine=engine), expected_extract_all)
+
+    expected_extract_groups = pl.Series(
+        [{"1": None}, {"1": None}, {"1": "100"}, {"1": "200"}, {"1": "400"}, None]
+    )
+    assert_series_equal(
+        s.str.extract_groups(pattern, engine=engine), expected_extract_groups
+    )
+
+    expected_extract = pl.Series([None, None, "100", "200", "400", None])
+    assert_series_equal(s.str.extract(pattern, engine=engine), expected_extract)
+
+    expected_find = pl.Series([None, None, 0, 0, 4, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.find(pattern, engine=engine), expected_find)
+
+    expected_replace_all = pl.Series(["EUR100", "USD50", "X", "X X", "EUR X", None])
+    assert_series_equal(
+        s.str.replace_all(pattern, "X", engine=engine), expected_replace_all
+    )
+
+    expected_replace = pl.Series(["EUR100", "USD50", "X", "X 300", "EUR X", None])
+    assert_series_equal(s.str.replace(pattern, "X", engine=engine), expected_replace)
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES[1:])
+def test_regex_backreference(engine: RegexEngine) -> None:
+    s = pl.Series(["_ab_ab", "ab_cd", "a cd_cd", "ab_ab cd_cd", None])
+    pattern = r"(\w\w)_\1"
+
+    expected_contains = pl.Series([True, False, True, True, None])
+    assert_series_equal(s.str.contains(pattern, engine=engine), expected_contains)
+
+    expected_count = pl.Series([1, 0, 1, 2, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.count_matches(pattern, engine=engine), expected_count)
+
+    expected_extract_all = pl.Series(
+        [["ab_ab"], [], ["cd_cd"], ["ab_ab", "cd_cd"], None],
+        dtype=pl.List(pl.String),
+    )
+    assert_series_equal(s.str.extract_all(pattern, engine=engine), expected_extract_all)
+
+    expected_extract_groups = pl.Series(
+        [{"1": "ab"}, {"1": None}, {"1": "cd"}, {"1": "ab"}, None]
+    )
+    assert_series_equal(
+        s.str.extract_groups(pattern, engine=engine), expected_extract_groups
+    )
+
+    expected_extract = pl.Series(["ab", None, "cd", "ab", None])
+    assert_series_equal(s.str.extract(pattern, engine=engine), expected_extract)
+
+    expected_find = pl.Series([1, None, 2, 0, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.find(pattern, engine=engine), expected_find)
+
+    expected_replace_all = pl.Series(["_X", "ab_cd", "a X", "X X", None])
+    assert_series_equal(
+        s.str.replace_all(pattern, "X", engine=engine), expected_replace_all
+    )
+
+    expected_replace = pl.Series(["_X", "ab_cd", "a X", "X cd_cd", None])
+    assert_series_equal(s.str.replace(pattern, "X", engine=engine), expected_replace)
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES[1:])
+def test_regex_atomic_group(engine: RegexEngine) -> None:
+    s = pl.Series(["ab", "abc", "f adc", "ac", " abcc adc", None])
+    pattern = r"a((?>bc|d))c"
+
+    expected_contains = pl.Series([False, False, True, False, True, None])
+    assert_series_equal(s.str.contains(pattern, engine=engine), expected_contains)
+
+    expected_count = pl.Series([0, 0, 1, 0, 2, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.count_matches(pattern, engine=engine), expected_count)
+
+    expected_extract_all = pl.Series(
+        [[], [], ["adc"], [], ["abcc", "adc"], None],
+        dtype=pl.List(pl.String),
+    )
+    assert_series_equal(s.str.extract_all(pattern, engine=engine), expected_extract_all)
+
+    expected_extract_groups = pl.Series(
+        [{"1": None}, {"1": None}, {"1": "d"}, {"1": None}, {"1": "bc"}, None]
+    )
+    assert_series_equal(
+        s.str.extract_groups(pattern, engine=engine), expected_extract_groups
+    )
+
+    expected_extract = pl.Series([None, None, "d", None, "bc", None])
+    assert_series_equal(s.str.extract(pattern, engine=engine), expected_extract)
+
+    expected_find = pl.Series([None, None, 2, None, 1, None], dtype=pl.UInt32)
+    assert_series_equal(s.str.find(pattern, engine=engine), expected_find)
+
+    expected_replace_all = pl.Series(["ab", "abc", "f X", "ac", " X X", None])
+    assert_series_equal(
+        s.str.replace_all(pattern, "X", engine=engine), expected_replace_all
+    )
+
+    expected_replace = pl.Series(["ab", "abc", "f X", "ac", " X adc", None])
+    assert_series_equal(s.str.replace(pattern, "X", engine=engine), expected_replace)
