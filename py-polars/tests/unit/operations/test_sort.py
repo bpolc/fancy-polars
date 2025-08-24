@@ -1,17 +1,20 @@
 from __future__ import annotations
 
 from datetime import date, datetime
-from typing import TYPE_CHECKING, Any, Callable
+from typing import TYPE_CHECKING, Any, Callable, get_args
 
 import pytest
 from hypothesis import given
 
 import fancy_polars as pl
+from fancy_polars._typing import RegexEngine
 from fancy_polars.testing import assert_frame_equal, assert_series_equal
 from fancy_polars.testing.parametric import dataframes, series
 
 if TYPE_CHECKING:
     from fancy_polars._typing import PolarsDataType
+
+REGEX_ENGINES = get_args(RegexEngine)
 
 
 @given(
@@ -1084,10 +1087,11 @@ def test_sort_literals() -> None:
         df.sort(pl.Series(values=[1, 2]))
 
 
-def test_sorted_slice_after_function_20712() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_sorted_slice_after_function_20712(engine: RegexEngine) -> None:
     assert_frame_equal(
         pl.LazyFrame({"a": 10 * ["A"]})
-        .with_columns(b=pl.col("a").str.extract("(.*)"))
+        .with_columns(b=pl.col("a").str.extract("(.*)", engine=engine))
         .sort("b")
         .head(2)
         .collect(),

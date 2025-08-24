@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from datetime import date, datetime, time, timedelta
-from typing import TYPE_CHECKING, Any, cast
+from typing import TYPE_CHECKING, Any, cast, get_args
 from zoneinfo import ZoneInfo
 
 import numpy as np
@@ -11,6 +11,7 @@ import pyarrow as pa
 import pytest
 
 import fancy_polars as pl
+from fancy_polars._typing import RegexEngine
 from fancy_polars._utils.construction import iterable_to_pyseries
 from fancy_polars.datatypes import (
     Datetime,
@@ -37,6 +38,8 @@ if TYPE_CHECKING:
     from collections.abc import Iterator
 
     from fancy_polars._typing import EpochTimeUnit, PolarsDataType, TimeUnit
+
+REGEX_ENGINES = get_args(RegexEngine)
 
 
 def test_cum_agg() -> None:
@@ -545,8 +548,11 @@ def test_series_to_list() -> None:
     assert a.to_list() == [1, None, 2]
 
 
-def test_to_struct() -> None:
-    s = pl.Series("nums", ["12 34", "56 78", "90 00"]).str.extract_all(r"\d+")
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_to_struct(engine: RegexEngine) -> None:
+    s = pl.Series("nums", ["12 34", "56 78", "90 00"]).str.extract_all(
+        r"\d+", engine=engine
+    )
 
     assert s.list.to_struct().struct.fields == ["field_0", "field_1"]
     assert s.list.to_struct(fields=lambda idx: f"n{idx:02}").struct.fields == [

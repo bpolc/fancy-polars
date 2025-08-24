@@ -1,11 +1,12 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, get_args
 
 import pytest
 
 import fancy_polars as pl
 import fancy_polars.selectors as cs
+from fancy_polars._typing import RegexEngine
 from fancy_polars.exceptions import (
     ColumnNotFoundError,
     ComputeError,
@@ -13,6 +14,8 @@ from fancy_polars.exceptions import (
     ShapeError,
 )
 from fancy_polars.testing import assert_frame_equal, assert_series_equal
+
+REGEX_ENGINES = get_args(RegexEngine)
 
 
 def test_str_slice() -> None:
@@ -224,25 +227,30 @@ def test_str_len_chars() -> None:
     assert_series_equal(result, expected)
 
 
-def test_str_contains() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_contains(engine: RegexEngine) -> None:
     s = pl.Series(["messi", "ronaldo", "ibrahimovic"])
     expected = pl.Series([True, False, False])
-    assert_series_equal(s.str.contains("mes"), expected)
+    assert_series_equal(s.str.contains("mes", engine=engine), expected)
 
 
-def test_str_contains_wrong_length() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_contains_wrong_length(engine: RegexEngine) -> None:
     df = pl.DataFrame({"num": ["-10", "-1", "0"]})
     with pytest.raises(ShapeError):
-        df.select(pl.col("num").str.contains(pl.Series(["a", "b"])))  # type: ignore [arg-type]
+        df.select(pl.col("num").str.contains(pl.Series(["a", "b"]), engine=engine))  # type: ignore [arg-type]
 
 
-def test_count_match_literal() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_count_match_literal(engine: RegexEngine) -> None:
     s = pl.Series(["12 dbc 3xy", "cat\\w", "1zy3\\d\\d", None])
-    out = s.str.count_matches(r"\d", literal=True)
+    out = s.str.count_matches(r"\d", literal=True, engine=engine)
     expected = pl.Series([0, 0, 2, None], dtype=pl.UInt32)
     assert_series_equal(out, expected)
 
-    out = s.str.count_matches(pl.Series([r"\w", r"\w", r"\d", r"\d"]), literal=True)
+    out = s.str.count_matches(
+        pl.Series([r"\w", r"\w", r"\d", r"\d"]), literal=True, engine=engine
+    )
     expected = pl.Series([0, 1, 2, None], dtype=pl.UInt32)
     assert_series_equal(out, expected)
 
@@ -278,7 +286,8 @@ def test_str_decode_exception() -> None:
 
 
 @pytest.mark.parametrize("strict", [True, False])
-def test_str_find(strict: bool) -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_find(strict: bool, engine: RegexEngine) -> None:
     df = pl.DataFrame(
         data=[
             ("Dubai", 3564931, "b[ai]", "ai"),
@@ -303,11 +312,15 @@ def test_str_find(strict: bool) -> None:
 
     for match_lit in (True, False):
         res = df.select(
-            find_a_regex=city.str.find("(?i)a", strict=strict),
-            find_a_lit=city.str.find("a", literal=match_lit),
-            find_00_lit=pop.cast(pl.String).str.find("00", literal=match_lit),
-            find_col_lit=city.str.find(lit, strict=strict, literal=match_lit),
-            find_col_pat=city.str.find(pat, strict=strict),
+            find_a_regex=city.str.find("(?i)a", strict=strict, engine=engine),
+            find_a_lit=city.str.find("a", literal=match_lit, engine=engine),
+            find_00_lit=pop.cast(pl.String).str.find(
+                "00", literal=match_lit, engine=engine
+            ),
+            find_col_lit=city.str.find(
+                lit, strict=strict, literal=match_lit, engine=engine
+            ),
+            find_col_pat=city.str.find(pat, strict=strict, engine=engine),
         )
         assert res.to_dict(as_series=False) == {
             "find_a_regex": [3, 0, 2, 0, 0, 1, 3, 4, None],
@@ -318,27 +331,31 @@ def test_str_find(strict: bool) -> None:
         }
 
 
-def test_str_find_invalid_regex() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_find_invalid_regex(engine: RegexEngine) -> None:
     # test behaviour of 'strict' with invalid regular expressions
     df = pl.DataFrame({"txt": ["AbCdEfG"]})
     rx_invalid = "(?i)AB.))"
 
     with pytest.raises(ComputeError):
-        df.with_columns(pl.col("txt").str.find(rx_invalid, strict=True))
+        df.with_columns(pl.col("txt").str.find(rx_invalid, strict=True, engine=engine))
 
-    res = df.with_columns(pl.col("txt").str.find(rx_invalid, strict=False))
+    res = df.with_columns(
+        pl.col("txt").str.find(rx_invalid, strict=False, engine=engine)
+    )
     assert res.item() is None
 
 
-def test_str_find_escaped_chars() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_find_escaped_chars(engine: RegexEngine) -> None:
     # test behaviour of 'literal=True' with special chars
     df = pl.DataFrame({"txt": ["123.*465", "x(x?)x"]})
 
     res = df.with_columns(
-        x1=pl.col("txt").str.find("(x?)", literal=True),
-        x2=pl.col("txt").str.find(".*4", literal=True),
-        x3=pl.col("txt").str.find("(x?)"),
-        x4=pl.col("txt").str.find(".*4"),
+        x1=pl.col("txt").str.find("(x?)", literal=True, engine=engine),
+        x2=pl.col("txt").str.find(".*4", literal=True, engine=engine),
+        x3=pl.col("txt").str.find("(x?)", engine=engine),
+        x4=pl.col("txt").str.find(".*4", engine=engine),
     )
     # ┌──────────┬──────┬──────┬─────┬──────┐
     # │ txt      ┆ x1   ┆ x2   ┆ x3  ┆ x4   │
@@ -363,10 +380,11 @@ def test_str_find_escaped_chars() -> None:
 
 
 @pytest.mark.may_fail_auto_streaming
-def test_str_find_wrong_length() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_find_wrong_length(engine: RegexEngine) -> None:
     df = pl.DataFrame({"num": ["-10", "-1", "0"]})
     with pytest.raises(ShapeError):
-        df.select(pl.col("num").str.find(pl.Series(["a", "b"])))  # type: ignore [arg-type]
+        df.select(pl.col("num").str.find(pl.Series(["a", "b"]), engine=engine))  # type: ignore [arg-type]
 
 
 def test_hex_decode_return_dtype() -> None:
@@ -391,30 +409,42 @@ def test_base64_decode_return_dtype() -> None:
     assert ldf.collect_schema() == {"a": pl.Binary}
 
 
-def test_str_replace_str_replace_all() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_replace_str_replace_all(engine: RegexEngine) -> None:
     s = pl.Series(["hello", "world", "test", "rooted"])
     expected = pl.Series(["hell0", "w0rld", "test", "r0oted"])
-    assert_series_equal(s.str.replace("o", "0"), expected)
+    assert_series_equal(s.str.replace("o", "0", engine=engine), expected)
 
     expected = pl.Series(["hell0", "w0rld", "test", "r00ted"])
-    assert_series_equal(s.str.replace_all("o", "0"), expected)
+    assert_series_equal(s.str.replace_all("o", "0", engine=engine), expected)
 
 
-def test_str_replace_n_single() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_replace_n_single(engine: RegexEngine) -> None:
     s = pl.Series(["aba", "abaa"])
 
-    assert s.str.replace("a", "b", n=1).to_list() == ["bba", "bbaa"]
-    assert s.str.replace("a", "b", n=2).to_list() == ["bbb", "bbba"]
-    assert s.str.replace("a", "b", n=3).to_list() == ["bbb", "bbbb"]
+    assert s.str.replace("a", "b", n=1, engine=engine).to_list() == ["bba", "bbaa"]
+    assert s.str.replace("a", "b", n=2, engine=engine).to_list() == ["bbb", "bbba"]
+    assert s.str.replace("a", "b", n=3, engine=engine).to_list() == ["bbb", "bbbb"]
 
 
-def test_str_replace_n_same_length() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_str_replace_n_same_length(engine: RegexEngine) -> None:
     # pat and val have the same length
     # this triggers a fast path
     s = pl.Series(["abfeab", "foobarabfooabab"])
-    assert s.str.replace("ab", "AB", n=1).to_list() == ["ABfeab", "foobarABfooabab"]
-    assert s.str.replace("ab", "AB", n=2).to_list() == ["ABfeAB", "foobarABfooABab"]
-    assert s.str.replace("ab", "AB", n=3).to_list() == ["ABfeAB", "foobarABfooABAB"]
+    assert s.str.replace("ab", "AB", n=1, engine=engine).to_list() == [
+        "ABfeab",
+        "foobarABfooabab",
+    ]
+    assert s.str.replace("ab", "AB", n=2, engine=engine).to_list() == [
+        "ABfeAB",
+        "foobarABfooABab",
+    ]
+    assert s.str.replace("ab", "AB", n=3, engine=engine).to_list() == [
+        "ABfeAB",
+        "foobarABfooABAB",
+    ]
 
 
 def test_str_to_lowercase() -> None:
@@ -808,7 +838,8 @@ def test_str_json_path_match_wrong_length() -> None:
         df.select(pl.col("num").str.json_path_match(pl.Series(["a", "b"])))
 
 
-def test_extract_regex() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_extract_regex(engine: RegexEngine) -> None:
     s = pl.Series(
         [
             "http://vote.com/ballon_dor?candidate=messi&ref=polars",
@@ -817,10 +848,11 @@ def test_extract_regex() -> None:
         ]
     )
     expected = pl.Series(["messi", None, "ronaldo"])
-    assert_series_equal(s.str.extract(r"candidate=(\w+)", 1), expected)
+    assert_series_equal(s.str.extract(r"candidate=(\w+)", 1, engine=engine), expected)
 
 
-def test_extract() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_extract(engine: RegexEngine) -> None:
     df = pl.DataFrame(
         {
             "s": ["aron123", "12butler", "charly*", "~david", None],
@@ -829,9 +861,9 @@ def test_extract() -> None:
     )
 
     out = df.select(
-        all_expr=pl.col("s").str.extract(pl.col("pat"), 1),
-        str_expr=pl.col("s").str.extract("^([a-zA-Z]+)", 1),
-        pat_expr=pl.lit("aron123").str.extract(pl.col("pat")),
+        all_expr=pl.col("s").str.extract(pl.col("pat"), 1, engine=engine),
+        str_expr=pl.col("s").str.extract("^([a-zA-Z]+)", 1, engine=engine),
+        pat_expr=pl.lit("aron123").str.extract(pl.col("pat"), engine=engine),
     )
     expected = pl.DataFrame(
         {
@@ -843,9 +875,12 @@ def test_extract() -> None:
     assert_frame_equal(out, expected)
 
 
-def test_extract_binary() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_extract_binary(engine: RegexEngine) -> None:
     df = pl.DataFrame({"foo": ["aron", "butler", "charly", "david"]})
-    out = df.filter(pl.col("foo").str.extract("^(a)", 1) == "a").to_series()
+    out = df.filter(
+        pl.col("foo").str.extract("^(a)", 1, engine=engine) == "a"
+    ).to_series()
     assert out[0] == "aron"
 
 
@@ -861,18 +896,23 @@ def test_str_join_returns_scalar() -> None:
     assert grouped.dtype == pl.String
 
 
-def test_contains() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_contains(engine: RegexEngine) -> None:
     # test strict/non strict
     s_txt = pl.Series(["123", "456", "789"])
     assert (
         pl.Series([None, None, None]).cast(pl.Boolean).to_list()
-        == s_txt.str.contains("(not_valid_regex", literal=False, strict=False).to_list()
+        == s_txt.str.contains(
+            "(not_valid_regex", literal=False, strict=False, engine=engine
+        ).to_list()
     )
     with pytest.raises(ComputeError):
-        s_txt.str.contains("(not_valid_regex", literal=False, strict=True)
+        s_txt.str.contains(
+            "(not_valid_regex", literal=False, strict=True, engine=engine
+        )
     assert (
         pl.Series([True, False, False]).cast(pl.Boolean).to_list()
-        == s_txt.str.contains("1", literal=False, strict=False).to_list()
+        == s_txt.str.contains("1", literal=False, strict=False, engine=engine).to_list()
     )
 
     df = pl.DataFrame(
@@ -894,22 +934,28 @@ def test_contains() -> None:
     ):
         # series
         assert (
-            expected == df["text"].str.contains(pattern, literal=as_literal).to_list()
+            expected
+            == df["text"]
+            .str.contains(pattern, literal=as_literal, engine=engine)
+            .to_list()
         )
         # frame select
         assert (
             expected
-            == df.select(pl.col("text").str.contains(pattern, literal=as_literal))[
-                "text"
-            ].to_list()
+            == df.select(
+                pl.col("text").str.contains(pattern, literal=as_literal, engine=engine)
+            )["text"].to_list()
         )
         # frame filter
         assert sum(expected) == len(
-            df.filter(pl.col("text").str.contains(pattern, literal=as_literal))
+            df.filter(
+                pl.col("text").str.contains(pattern, literal=as_literal, engine=engine)
+            )
         )
 
 
-def test_contains_expr() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_contains_expr(engine: RegexEngine) -> None:
     df = pl.DataFrame(
         {
             "text": [
@@ -926,10 +972,10 @@ def test_contains_expr() -> None:
 
     assert df.select(
         pl.col("text")
-        .str.contains(pl.col("pattern"), literal=False, strict=False)
+        .str.contains(pl.col("pattern"), literal=False, strict=False, engine=engine)
         .alias("contains"),
         pl.col("text")
-        .str.contains(pl.col("pattern"), literal=True)
+        .str.contains(pl.col("pattern"), literal=True, engine=engine)
         .alias("contains_lit"),
     ).to_dict(as_series=False) == {
         "contains": [True, True, False, None, None, None],
@@ -938,7 +984,9 @@ def test_contains_expr() -> None:
 
     with pytest.raises(ComputeError):
         df.select(
-            pl.col("text").str.contains(pl.col("pattern"), literal=False, strict=True)
+            pl.col("text").str.contains(
+                pl.col("pattern"), literal=False, strict=True, engine=engine
+            )
         )
 
 
@@ -988,7 +1036,8 @@ def test_contains_any(
     )
 
 
-def test_replace() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace(engine: RegexEngine) -> None:
     df = pl.DataFrame(
         data=[(1, "* * text"), (2, "(with) special\n * chars **etc...?$")],
         schema=["idx", "text"],
@@ -1013,22 +1062,30 @@ def test_replace() -> None:
         assert (
             expected
             == df["text"]
-            .str.replace(pattern, replacement, literal=as_literal)
+            .str.replace(pattern, replacement, literal=as_literal, engine=engine)
             .to_list()
         )
         # expr
         assert (
             expected
             == df.select(
-                pl.col("text").str.replace(pattern, replacement, literal=as_literal)
+                pl.col("text").str.replace(
+                    pattern, replacement, literal=as_literal, engine=engine
+                )
             )["text"].to_list()
         )
 
-    assert pl.Series(["."]).str.replace(".", "$0", literal=True)[0] == "$0"
-    assert pl.Series(["(.)(?)"]).str.replace(".", "$1", literal=True)[0] == "($1)(?)"
+    assert (
+        pl.Series(["."]).str.replace(".", "$0", literal=True, engine=engine)[0] == "$0"
+    )
+    assert (
+        pl.Series(["(.)(?)"]).str.replace(".", "$1", literal=True, engine=engine)[0]
+        == "($1)(?)"
+    )
 
 
-def test_replace_all() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace_all(engine: RegexEngine) -> None:
     df = pl.DataFrame(
         data=[(1, "* * text"), (2, "(with) special\n * chars **etc...?$")],
         schema=["idx", "text"],
@@ -1062,38 +1119,45 @@ def test_replace_all() -> None:
         assert (
             expected
             == df["text"]
-            .str.replace_all(pattern, replacement, literal=as_literal)
+            .str.replace_all(pattern, replacement, literal=as_literal, engine=engine)
             .to_list()
         )
         # expr
         assert (
             expected
             == df.select(
-                pl.col("text").str.replace_all(pattern, replacement, literal=as_literal)
+                pl.col("text").str.replace_all(
+                    pattern, replacement, literal=as_literal, engine=engine
+                )
             )["text"].to_list()
         )
         # invalid regex (but valid literal - requires "literal=True")
         with pytest.raises(ComputeError):
-            df["text"].str.replace_all("*", "")
+            df["text"].str.replace_all("*", "", engine=engine)
 
     assert (
-        pl.Series([r"(.)(\?)(\?)"]).str.replace_all("\\?", "$0", literal=True)[0]
+        pl.Series([r"(.)(\?)(\?)"]).str.replace_all(
+            "\\?", "$0", literal=True, engine=engine
+        )[0]
         == "(.)($0)($0)"
     )
     assert (
-        pl.Series([r"(.)(\?)(\?)"]).str.replace_all("\\?", "$0", literal=False)[0]
+        pl.Series([r"(.)(\?)(\?)"]).str.replace_all(
+            "\\?", "$0", literal=False, engine=engine
+        )[0]
         == "(.)(\\?)(\\?)"
     )
 
 
-def test_replace_all_literal_no_caputures() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace_all_literal_no_caputures(engine: RegexEngine) -> None:
     # When using literal = True, capture groups should be disabled
 
     # Single row code path in Rust
     df = pl.DataFrame({"text": ["I found <amt> yesterday."], "amt": ["$1"]})
     df = df.with_columns(
         pl.col("text")
-        .str.replace_all("<amt>", pl.col("amt"), literal=True)
+        .str.replace_all("<amt>", pl.col("amt"), literal=True, engine=engine)
         .alias("text2")
     )
     assert df.get_column("text2")[0] == "I found $1 yesterday."
@@ -1107,20 +1171,23 @@ def test_replace_all_literal_no_caputures() -> None:
     )
     df2 = df2.with_columns(
         pl.col("text")
-        .str.replace_all("<amt>", pl.col("amt"), literal=True)
+        .str.replace_all("<amt>", pl.col("amt"), literal=True, engine=engine)
         .alias("text2")
     )
     assert df2.get_column("text2")[0] == "I found $1 yesterday."
     assert df2.get_column("text2")[1] == "I lost $2 yesterday."
 
 
-def test_replace_literal_no_caputures() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace_literal_no_caputures(engine: RegexEngine) -> None:
     # When using literal = True, capture groups should be disabled
 
     # Single row code path in Rust
     df = pl.DataFrame({"text": ["I found <amt> yesterday."], "amt": ["$1"]})
     df = df.with_columns(
-        pl.col("text").str.replace("<amt>", pl.col("amt"), literal=True).alias("text2")
+        pl.col("text")
+        .str.replace("<amt>", pl.col("amt"), literal=True, engine=engine)
+        .alias("text2")
     )
     assert df.get_column("text2")[0] == "I found $1 yesterday."
 
@@ -1137,7 +1204,9 @@ def test_replace_literal_no_caputures() -> None:
         }
     )
     df2 = df2.with_columns(
-        pl.col("text").str.replace("<amt>", pl.col("amt"), literal=True).alias("text2")
+        pl.col("text")
+        .str.replace("<amt>", pl.col("amt"), literal=True, engine=engine)
+        .alias("text2")
     )
     assert df2.get_column("text2")[0] == "I found $1 yesterday."
     assert (
@@ -1146,17 +1215,28 @@ def test_replace_literal_no_caputures() -> None:
     )
 
 
-def test_replace_expressions() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace_expressions(engine: RegexEngine) -> None:
     df = pl.DataFrame({"foo": ["123 bla 45 asd", "xyz 678 910t"], "value": ["A", "B"]})
-    out = df.select([pl.col("foo").str.replace(pl.col("foo").first(), pl.col("value"))])
+    out = df.select(
+        [
+            pl.col("foo").str.replace(
+                pl.col("foo").first(), pl.col("value"), engine=engine
+            )
+        ]
+    )
     assert out.to_dict(as_series=False) == {"foo": ["A", "xyz 678 910t"]}
-    out = df.select([pl.col("foo").str.replace(pl.col("foo").last(), "value")])
+    out = df.select(
+        [pl.col("foo").str.replace(pl.col("foo").last(), "value", engine=engine)]
+    )
     assert out.to_dict(as_series=False) == {"foo": ["123 bla 45 asd", "value"]}
 
     df = pl.DataFrame(
         {"foo": ["1 bla 45 asd", "xyz 6t"], "pat": [r"\d", r"\W"], "value": ["A", "B"]}
     )
-    out = df.select([pl.col("foo").str.replace_all(pl.col("pat").first(), "value")])
+    out = df.select(
+        [pl.col("foo").str.replace_all(pl.col("pat").first(), "value", engine=engine)]
+    )
     assert out.to_dict(as_series=False) == {
         "foo": ["value bla valuevalue asd", "xyz valuet"]
     }
@@ -1302,20 +1382,22 @@ def test_replace_many_invalid_inputs() -> None:
         s.str.replace_many(["a"], ["b", "c"])
 
 
-def test_extract_all_count() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_extract_all_count(engine: RegexEngine) -> None:
     df = pl.DataFrame({"foo": ["123 bla 45 asd", "xaz 678 910t", "boo", None]})
     assert (
         df.select(
-            pl.col("foo").str.extract_all(r"a").alias("extract"),
-            pl.col("foo").str.count_matches(r"a").alias("count"),
+            pl.col("foo").str.extract_all(r"a", engine=engine).alias("extract"),
+            pl.col("foo").str.count_matches(r"a", engine=engine).alias("count"),
         ).to_dict(as_series=False)
     ) == {"extract": [["a", "a"], ["a"], [], None], "count": [2, 1, 0, None]}
 
-    assert df["foo"].str.extract_all(r"a").dtype == pl.List
-    assert df["foo"].str.count_matches(r"a").dtype == pl.UInt32
+    assert df["foo"].str.extract_all(r"a", engine=engine).dtype == pl.List
+    assert df["foo"].str.count_matches(r"a", engine=engine).dtype == pl.UInt32
 
 
-def test_count_matches_many() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_count_matches_many(engine: RegexEngine) -> None:
     df = pl.DataFrame(
         {
             "foo": ["123 bla 45 asd", "xyz 678 910t", None, "boo"],
@@ -1324,16 +1406,20 @@ def test_count_matches_many() -> None:
     )
     assert (
         df.select(
-            pl.col("foo").str.count_matches(pl.col("bar")).alias("count")
+            pl.col("foo").str.count_matches(pl.col("bar"), engine=engine).alias("count")
         ).to_dict(as_series=False)
     ) == {"count": [5, 4, None, None]}
 
-    assert df["foo"].str.count_matches(df["bar"]).dtype == pl.UInt32
+    assert df["foo"].str.count_matches(df["bar"], engine=engine).dtype == pl.UInt32
 
     # Test broadcast.
     broad = df.select(
-        pl.col("foo").str.count_matches(pl.col("bar").first()).alias("count"),
-        pl.col("foo").str.count_matches(pl.col("bar").last()).alias("count_null"),
+        pl.col("foo")
+        .str.count_matches(pl.col("bar").first(), engine=engine)
+        .alias("count"),
+        pl.col("foo")
+        .str.count_matches(pl.col("bar").last(), engine=engine)
+        .alias("count_null"),
     )
     assert broad.to_dict(as_series=False) == {
         "count": [5, 6, None, 0],
@@ -1342,14 +1428,15 @@ def test_count_matches_many() -> None:
     assert broad.schema == {"count": pl.UInt32, "count_null": pl.UInt32}
 
 
-def test_extract_all_many() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_extract_all_many(engine: RegexEngine) -> None:
     df = pl.DataFrame(
         {
             "foo": ["ab", "abc", "abcd", "foo", None, "boo"],
             "re": ["a", "bc", "a.c", "a", "a", None],
         }
     )
-    assert df["foo"].str.extract_all(df["re"]).to_list() == [
+    assert df["foo"].str.extract_all(df["re"], engine=engine).to_list() == [
         ["a"],
         ["bc"],
         ["abc"],
@@ -1360,8 +1447,8 @@ def test_extract_all_many() -> None:
 
     # Test broadcast.
     broad = df.select(
-        pl.col("foo").str.extract_all(pl.col("re").first()).alias("a"),
-        pl.col("foo").str.extract_all(pl.col("re").last()).alias("null"),
+        pl.col("foo").str.extract_all(pl.col("re").first(), engine=engine).alias("a"),
+        pl.col("foo").str.extract_all(pl.col("re").last(), engine=engine).alias("null"),
     )
     assert broad.to_dict(as_series=False) == {
         "a": [["a"], ["a"], ["a"], [], None, []],
@@ -1370,7 +1457,8 @@ def test_extract_all_many() -> None:
     assert broad.schema == {"a": pl.List(pl.String), "null": pl.List(pl.String)}
 
 
-def test_extract_groups() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_extract_groups(engine: RegexEngine) -> None:
     def _named_groups_builder(pattern: str, groups: dict[str, str]) -> str:
         return pattern.format(
             **{name: f"(?<{name}>{value})" for name, value in groups.items()}
@@ -1396,24 +1484,26 @@ def test_extract_groups() -> None:
     df = pl.DataFrame({"iso_code": ["ISO 80000-1:2009", "ISO/IEC/IEEE 29148:2018"]})
 
     assert (
-        df.select(pl.col("iso_code").str.extract_groups(pattern))
+        df.select(pl.col("iso_code").str.extract_groups(pattern, engine=engine))
         .unnest("iso_code")
         .to_dict(as_series=False)
         == expected
     )
 
-    assert df.select(pl.col("iso_code").str.extract_groups("")).to_dict(
+    assert df.select(pl.col("iso_code").str.extract_groups("", engine=engine)).to_dict(
         as_series=False
     ) == {"iso_code": [{"iso_code": None}, {"iso_code": None}]}
 
     assert df.select(
-        pl.col("iso_code").str.extract_groups(r"\A(ISO\S*).*?(\d+)")
+        pl.col("iso_code").str.extract_groups(r"\A(ISO\S*).*?(\d+)", engine=engine)
     ).to_dict(as_series=False) == {
         "iso_code": [{"1": "ISO", "2": "80000"}, {"1": "ISO/IEC/IEEE", "2": "29148"}]
     }
 
     assert df.select(
-        pl.col("iso_code").str.extract_groups(r"\A(ISO\S*).*?(?<year>\d+)\z")
+        pl.col("iso_code").str.extract_groups(
+            r"\A(ISO\S*).*?(?<year>\d+)\z", engine=engine
+        )
     ).to_dict(as_series=False) == {
         "iso_code": [
             {"1": "ISO", "year": "2009"},
@@ -1422,7 +1512,7 @@ def test_extract_groups() -> None:
     }
 
     assert pl.select(
-        pl.lit(r"foobar").str.extract_groups(r"(?<foo>.{3})|(?<bar>...)")
+        pl.lit(r"foobar").str.extract_groups(r"(?<foo>.{3})|(?<bar>...)", engine=engine)
     ).to_dict(as_series=False) == {"literal": [{"foo": "foo", "bar": None}]}
 
 
@@ -1778,13 +1868,14 @@ def test_titlecase() -> None:
         assert ex_py == act, f"{ex_py} != {act}"
 
 
-def test_string_replace_with_nulls_10124() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_string_replace_with_nulls_10124(engine: RegexEngine) -> None:
     df = pl.DataFrame({"col1": ["S", "S", "S", None, "S", "S", "S", "S"]})
 
     assert df.select(
         pl.col("col1"),
-        pl.col("col1").str.replace("S", "O", n=1).alias("n_1"),
-        pl.col("col1").str.replace("S", "O", n=3).alias("n_3"),
+        pl.col("col1").str.replace("S", "O", n=1, engine=engine).alias("n_1"),
+        pl.col("col1").str.replace("S", "O", n=3, engine=engine).alias("n_3"),
     ).to_dict(as_series=False) == {
         "col1": ["S", "S", "S", None, "S", "S", "S", "S"],
         "n_1": ["O", "O", "O", None, "O", "O", "O", "O"],
@@ -1792,7 +1883,8 @@ def test_string_replace_with_nulls_10124() -> None:
     }
 
 
-def test_string_extract_groups_lazy_schema_10305() -> None:
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_string_extract_groups_lazy_schema_10305(engine: RegexEngine) -> None:
     df = pl.LazyFrame(
         data={
             "url": [
@@ -1803,9 +1895,9 @@ def test_string_extract_groups_lazy_schema_10305() -> None:
         }
     )
     pattern = r"candidate=(?<candidate>\w+)&ref=(?<ref>\w+)"
-    df = df.select(captures=pl.col("url").str.extract_groups(pattern)).unnest(
-        "captures"
-    )
+    df = df.select(
+        captures=pl.col("url").str.extract_groups(pattern, engine=engine)
+    ).unnest("captures")
 
     assert df.collect_schema() == {"candidate": pl.String, "ref": pl.String}
 
