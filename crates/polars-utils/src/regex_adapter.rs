@@ -1,5 +1,7 @@
 use std::borrow::Cow;
 
+pub use fancy_regex::Regex as FancyRegex;
+use fancy_regex::RegexBuilder as FancyRegexBuilder;
 use polars_error::{PolarsError, PolarsResult};
 pub use regex::Regex;
 use regex::{CaptureLocations as RegexCaptureLocations, NoExpand as RegexNoExpand, RegexBuilder};
@@ -14,6 +16,8 @@ pub enum RegexEngine {
     // `regex` crate
     #[default]
     Regex,
+    // `fancy-regex` crate
+    Fancy,
 }
 
 pub trait RegexTrait: Sized + Clone {
@@ -116,6 +120,7 @@ where
 
 pub enum CaptureNamesIterator<'a> {
     Regex(regex::CaptureNames<'a>),
+    Fancy(fancy_regex::CaptureNames<'a>),
 }
 
 impl<'a> Iterator for CaptureNamesIterator<'a> {
@@ -124,7 +129,50 @@ impl<'a> Iterator for CaptureNamesIterator<'a> {
     fn next(&mut self) -> Option<Self::Item> {
         match self {
             CaptureNamesIterator::Regex(iter) => iter.next(),
+            CaptureNamesIterator::Fancy(iter) => iter.next(),
         }
+    }
+}
+
+/// Helper to build a literal replacement result from an iterator of match spans.
+/// When a zero-width match occurs at the end of the string, advance beyond the end to signal termination.
+fn replace_all_literal_from_spans<'t, I>(text: &'t str, replacement: &str, spans: I) -> Cow<'t, str>
+where
+    I: IntoIterator<Item = (usize, usize)>,
+{
+    let mut result = String::with_capacity(text.len() + replacement.len() * 2);
+    let mut last_end = 0;
+    let mut has_matches = false;
+
+    for (start, end) in spans {
+        has_matches = true;
+        result.push_str(&text[last_end..start]);
+        result.push_str(replacement);
+        last_end = end;
+    }
+
+    if has_matches {
+        result.push_str(&text[last_end..]);
+        Cow::Owned(result)
+    } else {
+        Cow::Borrowed(text)
+    }
+}
+
+fn advance_position(text: &str, match_start: usize, match_end: usize) -> usize {
+    if match_end == match_start {
+        // Zero-width match, advance by one character
+        if match_start < text.len() {
+            text[match_start..]
+                .chars()
+                .next()
+                .map(|ch| match_start + ch.len_utf8())
+                .unwrap_or(text.len() + 1)
+        } else {
+            text.len() + 1
+        }
+    } else {
+        match_end
     }
 }
 
@@ -204,28 +252,201 @@ impl RegexTrait for Regex {
     }
 }
 
-/// Helper to build a literal replacement result from an iterator of match spans.
-/// When a zero-width match occurs at the end of the string, advance beyond the end to signal termination.
-fn replace_all_literal_from_spans<'t, I>(text: &'t str, replacement: &str, spans: I) -> Cow<'t, str>
-where
-    I: IntoIterator<Item = (usize, usize)>,
-{
-    let mut result = String::with_capacity(text.len() + replacement.len() * 2);
-    let mut last_end = 0;
-    let mut has_matches = false;
+struct FancyFindIterator<'r, 't> {
+    re: &'r FancyRegex,
+    text: &'t str,
+    pos: usize,
+    text_len: usize,
+}
 
-    for (start, end) in spans {
-        has_matches = true;
-        result.push_str(&text[last_end..start]);
-        result.push_str(replacement);
-        last_end = end;
+impl<'r, 't> Iterator for FancyFindIterator<'r, 't> {
+    type Item = Match<'t>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.pos > self.text_len {
+            return None;
+        }
+        match self.re.find_from_pos(self.text, self.pos) {
+            Ok(Some(m)) => {
+                let start = m.start();
+                let end = m.end();
+
+                let result = Match {
+                    text: m.as_str(),
+                    start,
+                    end,
+                };
+
+                self.pos = advance_position(self.text, start, end);
+                Some(result)
+            },
+            _ => {
+                self.pos = self.text_len + 1;
+                None
+            },
+        }
+    }
+}
+
+struct FancyCapturesIterator<'r, 't> {
+    re: &'r FancyRegex,
+    text: &'t str,
+    pos: usize,
+    text_len: usize,
+}
+
+impl<'r, 't> FancyCapturesIterator<'r, 't> {
+    fn new(re: &'r FancyRegex, text: &'t str) -> Self {
+        Self {
+            re,
+            text,
+            pos: 0,
+            text_len: text.len(),
+        }
+    }
+}
+
+impl<'r, 't> Iterator for FancyCapturesIterator<'r, 't> {
+    type Item = fancy_regex::Captures<'t>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.pos > self.text_len {
+            return None;
+        }
+
+        match self.re.captures_from_pos(self.text, self.pos) {
+            Ok(Some(caps)) => {
+                let full_match = caps.get(0).unwrap();
+                let start = full_match.start();
+                let end = full_match.end();
+
+                self.pos = advance_position(self.text, start, end);
+                Some(caps)
+            },
+            _ => {
+                self.pos = self.text_len + 1;
+                None
+            },
+        }
+    }
+}
+
+impl RegexTrait for FancyRegex {
+    fn new(pattern: &str) -> PolarsResult<Self> {
+        FancyRegexBuilder::new(pattern)
+            .case_insensitive(false)
+            .multi_line(false)
+            .ignore_whitespace(false)
+            .dot_matches_new_line(false)
+            .verbose_mode(false)
+            .unicode_mode(true)
+            .build()
+            .map_err(|e| PolarsError::ComputeError(e.to_string().into()))
     }
 
-    if has_matches {
-        result.push_str(&text[last_end..]);
-        Cow::Owned(result)
-    } else {
-        Cow::Borrowed(text)
+    fn is_match(&self, text: &str) -> bool {
+        matches!(self.is_match(text), Ok(true))
+    }
+
+    fn find<'t>(&self, text: &'t str) -> Option<Match<'t>> {
+        match self.find(text) {
+            Ok(Some(m)) => Some(Match {
+                start: m.start(),
+                end: m.end(),
+                text: m.as_str(),
+            }),
+            _ => None,
+        }
+    }
+
+    fn find_iter<'t>(&'t self, text: &'t str) -> Box<dyn Iterator<Item = Match<'t>> + 't> {
+        Box::new(FancyFindIterator {
+            re: self,
+            text,
+            pos: 0,
+            text_len: text.len(),
+        })
+    }
+
+    fn replace<'t>(&self, text: &'t str, replacement: &str) -> Cow<'t, str> {
+        match self.captures(text) {
+            Ok(Some(caps)) => {
+                let m = caps.get(0).unwrap();
+                let mut dest = String::with_capacity(text.len());
+                dest.push_str(&text[..m.start()]);
+                caps.expand(replacement, &mut dest);
+                dest.push_str(&text[m.end()..]);
+                Cow::Owned(dest)
+            },
+            _ => Cow::Borrowed(text),
+        }
+    }
+
+    fn replace_all<'t>(&self, text: &'t str, replacement: &str) -> Cow<'t, str> {
+        let mut dest = String::with_capacity(text.len() + replacement.len() * 4);
+        let mut last_match = 0;
+        let mut found_match = false;
+
+        for cap_result in FancyCapturesIterator::new(self, text) {
+            found_match = true;
+            let m = cap_result.get(0).unwrap();
+            let start = m.start();
+            let end = m.end();
+            dest.push_str(&text[last_match..start]);
+            cap_result.expand(replacement, &mut dest);
+            last_match = end;
+        }
+
+        if !found_match {
+            return Cow::Borrowed(text);
+        }
+
+        dest.push_str(&text[last_match..]);
+        Cow::Owned(dest)
+    }
+
+    fn captures<'t>(&self, text: &'t str) -> Option<CaptureGroups<'t>> {
+        match self.captures(text) {
+            Ok(Some(caps)) => Some(build_capture_groups(caps.len(), |i| {
+                caps.get(i).map(|m| m.as_str())
+            })),
+            _ => None,
+        }
+    }
+
+    fn captures_iter<'t>(
+        &'t self,
+        text: &'t str,
+    ) -> Box<dyn Iterator<Item = CaptureGroups<'t>> + 't> {
+        Box::new(
+            FancyCapturesIterator::new(self, text)
+                .map(|caps| build_capture_groups(caps.len(), |i| caps.get(i).map(|m| m.as_str()))),
+        )
+    }
+
+    fn capture_names(&self) -> CaptureNamesIterator {
+        CaptureNamesIterator::Fancy(fancy_regex::Regex::capture_names(self))
+    }
+
+    fn captures_len(&self) -> usize {
+        fancy_regex::Regex::captures_len(self)
+    }
+
+    fn count_matches(&self, text: &str) -> usize {
+        // Avoid building full capture structs when counting.
+        let mut pos = 0;
+        let mut count = 0;
+        let text_len = text.len();
+        while pos <= text_len {
+            match self.find_from_pos(text, pos) {
+                Ok(Some(m)) => {
+                    count += 1;
+                    pos = advance_position(text, m.start(), m.end());
+                },
+                _ => break,
+            }
+        }
+        count
     }
 }
 
@@ -233,6 +454,7 @@ macro_rules! dispatch {
     ($self:expr, $method:ident $(, $args:expr)*) => {
         match $self {
             RegexAdapter::Regex(re) => <Regex as RegexTrait>::$method(re, $($args),*),
+            RegexAdapter::Fancy(re) => <FancyRegex as RegexTrait>::$method(re, $($args),*),
         }
     }
 }
@@ -240,6 +462,7 @@ macro_rules! dispatch {
 #[derive(Clone)]
 pub enum RegexAdapter {
     Regex(Regex),
+    Fancy(FancyRegex),
 }
 
 impl RegexAdapter {
@@ -319,6 +542,7 @@ impl RegexAdapter {
             RegexAdapter::Regex(re) => CaptureLocationsBuffer {
                 locations: Some(LocationsInner::Regex(re.capture_locations())),
             },
+            RegexAdapter::Fancy(_) => CaptureLocationsBuffer::default(),
         }
     }
 
@@ -335,6 +559,10 @@ impl RegexAdapter {
                     }
                 }
                 None
+            },
+            RegexAdapter::Fancy(re) => match re.captures(text) {
+                Ok(Some(caps)) => Some(FastCaptureResult::FancyCaps(caps)),
+                _ => None,
             },
         }
     }
@@ -354,12 +582,17 @@ impl RegexAdapter {
                 }
                 None
             },
+            RegexAdapter::Fancy(re) => match re.captures(text) {
+                Ok(Some(caps)) => caps.get(group_index).map(|m| m.as_str()),
+                _ => None,
+            },
         }
     }
 }
 
 pub enum FastCaptureResult<'t, 'b> {
     RegexLocations(&'t str, &'b regex::CaptureLocations),
+    FancyCaps(fancy_regex::Captures<'t>),
 }
 
 impl<'t, 'b> FastCaptureResult<'t, 'b> {
@@ -369,6 +602,7 @@ impl<'t, 'b> FastCaptureResult<'t, 'b> {
             FastCaptureResult::RegexLocations(text, locs) => {
                 locs.get(index).map(|(start, end)| &text[start..end])
             },
+            FastCaptureResult::FancyCaps(caps) => caps.get(index).map(|m| m.as_str()),
         }
     }
 }
