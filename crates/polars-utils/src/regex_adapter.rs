@@ -424,7 +424,7 @@ impl RegexTrait for FancyRegex {
         )
     }
 
-    fn capture_names(&self) -> CaptureNamesIterator {
+    fn capture_names(&self) -> CaptureNamesIterator<'_> {
         CaptureNamesIterator::Fancy(fancy_regex::Regex::capture_names(self))
     }
 
@@ -552,14 +552,13 @@ impl RegexAdapter {
         buffer: &'b mut CaptureLocationsBuffer,
     ) -> Option<FastCaptureResult<'t, 'b>> {
         match self {
-            RegexAdapter::Regex(re) => {
-                if let Some(locs) = buffer.regex_locations_mut() {
-                    if re.captures_read(locs, text).is_some() {
-                        return Some(FastCaptureResult::RegexLocations(text, locs));
-                    }
+            RegexAdapter::Regex(re) => buffer.regex_locations_mut().and_then(|locs| {
+                if re.captures_read(locs, text).is_some() {
+                    Some(FastCaptureResult::RegexLocations(text, locs))
+                } else {
+                    None
                 }
-                None
-            },
+            }),
             RegexAdapter::Fancy(re) => match re.captures(text) {
                 Ok(Some(caps)) => Some(FastCaptureResult::FancyCaps(caps)),
                 _ => None,
@@ -574,14 +573,13 @@ impl RegexAdapter {
         buffer: &mut CaptureLocationsBuffer,
     ) -> Option<&'t str> {
         match self {
-            RegexAdapter::Regex(re) => {
-                if let Some(locs) = buffer.regex_locations_mut() {
-                    if re.captures_read(locs, text).is_some() {
-                        return locs.get(group_index).map(|(start, end)| &text[start..end]);
-                    }
+            RegexAdapter::Regex(re) => buffer.regex_locations_mut().and_then(|locs| {
+                if re.captures_read(locs, text).is_some() {
+                    locs.get(group_index).map(|(start, end)| &text[start..end])
+                } else {
+                    None
                 }
-                None
-            },
+            }),
             RegexAdapter::Fancy(re) => match re.captures(text) {
                 Ok(Some(caps)) => caps.get(group_index).map(|m| m.as_str()),
                 _ => None,
