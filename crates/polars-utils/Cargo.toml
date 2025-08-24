@@ -13,6 +13,7 @@ bincode = { workspace = true, optional = true }
 bytemuck = { workspace = true }
 bytes = { workspace = true }
 compact_str = { workspace = true }
+fancy-regex = { version = "0.16.1" }
 flate2 = { workspace = true, default-features = true, optional = true }
 foldhash = { workspace = true }
 hashbrown = { workspace = true }

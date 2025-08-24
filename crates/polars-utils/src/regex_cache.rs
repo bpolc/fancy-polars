@@ -1,11 +1,10 @@
 use std::cell::RefCell;
 
 use polars_error::{PolarsError, PolarsResult};
-use regex::Regex;
 
 use crate::cache::LruCache;
-use crate::regex_adapter::RegexAdapter;
 pub use crate::regex_adapter::RegexEngine;
+use crate::regex_adapter::{FancyRegex, Regex, RegexAdapter};
 
 // Regex compilation is really heavy, and the resulting regexes can be large as
 // well, so we should have a good caching scheme.
@@ -15,12 +14,14 @@ pub use crate::regex_adapter::RegexEngine;
 /// A multi-engine cache for runtime-compiled regular expressions
 pub struct RegexCache {
     regex_cache: LruCache<String, Regex>,
+    fancy_cache: LruCache<String, FancyRegex>,
 }
 
 impl RegexCache {
     fn new() -> Self {
         Self {
             regex_cache: LruCache::with_capacity(32),
+            fancy_cache: LruCache::with_capacity(32),
         }
     }
 
@@ -29,6 +30,13 @@ impl RegexCache {
             #[allow(clippy::disallowed_methods)]
             Regex::new(re)
         });
+        Ok(&*r?)
+    }
+
+    pub fn compile_fancy(&mut self, re: &str) -> Result<&FancyRegex, Box<fancy_regex::Error>> {
+        let r = self
+            .fancy_cache
+            .try_get_or_insert_with(re, |re| FancyRegex::new(re).map_err(Box::new));
         Ok(&*r?)
     }
 
@@ -41,6 +49,10 @@ impl RegexCache {
             RegexEngine::Regex => self
                 .compile_regex(re_str)
                 .map(|re| RegexAdapter::Regex(re.clone()))
+                .map_err(|e| PolarsError::ComputeError(e.to_string().into())),
+            RegexEngine::Fancy => self
+                .compile_fancy(re_str)
+                .map(|re| RegexAdapter::Fancy(re.clone()))
                 .map_err(|e| PolarsError::ComputeError(e.to_string().into())),
         }
     }

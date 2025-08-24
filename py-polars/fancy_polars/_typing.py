@@ -134,7 +134,7 @@ PivotAgg: TypeAlias = Literal[
     "min", "max", "first", "last", "sum", "mean", "median", "len"
 ]
 RankMethod: TypeAlias = Literal["average", "min", "max", "dense", "ordinal", "random"]
-RegexEngine: TypeAlias = Literal["regex"]
+RegexEngine: TypeAlias = Literal["regex", "fancy"]
 Roll: TypeAlias = Literal["raise", "forward", "backward"]
 RoundMode: TypeAlias = Literal["half_to_even", "half_away_from_zero"]
 SerializationFormat: TypeAlias = Literal["binary", "json"]
