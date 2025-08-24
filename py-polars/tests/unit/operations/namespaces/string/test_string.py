@@ -1242,6 +1242,36 @@ def test_replace_expressions(engine: RegexEngine) -> None:
     }
 
 
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace_named_capture_groups(engine: RegexEngine) -> None:
+    s = pl.Series(["hat", "hut", "xhatx", None])
+    expected = pl.Series(["b a d", "b u d", "xb a dx", None])
+
+    for cg_prefix in ("", "P"):
+        pat = rf"h(?{cg_prefix}<vowel>.)t"
+
+        assert_series_equal(s.str.replace(pat, "b ${vowel} d", engine=engine), expected)
+        assert_series_equal(s.str.replace(pat, "b $vowel d", engine=engine), expected)
+
+
+@pytest.mark.parametrize("engine", REGEX_ENGINES)
+def test_replace_all_named_capture_groups(engine: RegexEngine) -> None:
+    s = pl.Series(["hat hit hut", "hot", None])
+    expected = pl.Series(["b a d b i d b u d", "b o d", None])
+
+    for cg_prefix in ("", "P"):
+        pat = rf"h(?{cg_prefix}<vowel>.)t"
+
+        assert_series_equal(
+            s.str.replace_all(pat, "b ${vowel} d", engine=engine),
+            expected,
+        )
+        assert_series_equal(
+            s.str.replace_all(pat, "b $vowel d", engine=engine),
+            expected,
+        )
+
+
 @pytest.mark.parametrize(
     ("pattern", "replacement", "case_insensitive", "expected"),
     [
