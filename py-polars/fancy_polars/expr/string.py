@@ -26,6 +26,7 @@ if TYPE_CHECKING:
         IntoExprColumn,
         PolarsDataType,
         PolarsTemporalType,
+        RegexEngine,
         TimeUnit,
         TransferEncoding,
         UnicodeForm,
@@ -932,7 +933,12 @@ class ExprStringNameSpace:
         return wrap_expr(self._pyexpr.str_zfill(length))
 
     def contains(
-        self, pattern: str | Expr, *, literal: bool = False, strict: bool = True
+        self,
+        pattern: str | Expr,
+        *,
+        literal: bool = False,
+        strict: bool = True,
+        engine: RegexEngine = "regex",
     ) -> Expr:
         """
         Check if the string contains a substring that matches a pattern.
@@ -947,6 +953,8 @@ class ExprStringNameSpace:
         strict
             Raise an error if the underlying pattern is not a valid regex,
             otherwise mask out with a null value.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -999,10 +1007,15 @@ class ExprStringNameSpace:
         └─────────────┴───────┴─────────┘
         """
         pattern = parse_into_expression(pattern, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_contains(pattern, literal, strict))
+        return wrap_expr(self._pyexpr.str_contains(pattern, literal, strict, engine))
 
     def find(
-        self, pattern: str | Expr, *, literal: bool = False, strict: bool = True
+        self,
+        pattern: str | Expr,
+        *,
+        literal: bool = False,
+        strict: bool = True,
+        engine: RegexEngine = "regex",
     ) -> Expr:
         """
         Return the bytes offset of the first substring matching a pattern.
@@ -1019,6 +1032,8 @@ class ExprStringNameSpace:
         strict
             Raise an error if the underlying pattern is not a valid regex,
             otherwise mask out with a null value.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -1092,7 +1107,7 @@ class ExprStringNameSpace:
         └────────────┴───────────┴──────────┘
         """
         pattern = parse_into_expression(pattern, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_find(pattern, literal, strict))
+        return wrap_expr(self._pyexpr.str_find(pattern, literal, strict, engine))
 
     def ends_with(self, suffix: str | Expr) -> Expr:
         """
@@ -1387,7 +1402,12 @@ class ExprStringNameSpace:
             msg = f"`encoding` must be one of {{'hex', 'base64'}}, got {encoding!r}"
             raise ValueError(msg)
 
-    def extract(self, pattern: IntoExprColumn, group_index: int = 1) -> Expr:
+    def extract(
+        self,
+        pattern: IntoExprColumn,
+        group_index: int = 1,
+        engine: RegexEngine = "regex",
+    ) -> Expr:
         r"""
         Extract the target capture group from provided patterns.
 
@@ -1400,6 +1420,8 @@ class ExprStringNameSpace:
             Index of the targeted capture group.
             Group 0 means the whole pattern, the first group begins at index 1.
             Defaults to the first capture group.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -1468,9 +1490,9 @@ class ExprStringNameSpace:
         └───────────┴─────────┴───────┘
         """
         pattern = parse_into_expression(pattern, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_extract(pattern, group_index))
+        return wrap_expr(self._pyexpr.str_extract(pattern, group_index, engine))
 
-    def extract_all(self, pattern: str | Expr) -> Expr:
+    def extract_all(self, pattern: str | Expr, engine: RegexEngine = "regex") -> Expr:
         r'''
         Extract all matches for the given regex pattern.
 
@@ -1482,6 +1504,8 @@ class ExprStringNameSpace:
         pattern
             A valid regular expression pattern, compatible with the `regex crate
             <https://docs.rs/regex/latest/regex/>`_.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -1554,9 +1578,9 @@ class ExprStringNameSpace:
 
         '''
         pattern = parse_into_expression(pattern, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_extract_all(pattern))
+        return wrap_expr(self._pyexpr.str_extract_all(pattern, engine))
 
-    def extract_groups(self, pattern: str) -> Expr:
+    def extract_groups(self, pattern: str, engine: RegexEngine = "regex") -> Expr:
         r"""
         Extract all capture groups for the given regex pattern.
 
@@ -1565,6 +1589,8 @@ class ExprStringNameSpace:
         pattern
             A valid regular expression pattern containing at least one capture group,
             compatible with the `regex crate <https://docs.rs/regex/latest/regex/>`_.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -1644,9 +1670,15 @@ class ExprStringNameSpace:
         if not isinstance(pattern, str):
             msg = f"extract_groups expects a `str`, given a {qualified_type_name(pattern)!r}"
             raise TypeError(msg)
-        return wrap_expr(self._pyexpr.str_extract_groups(pattern))
+        return wrap_expr(self._pyexpr.str_extract_groups(pattern, engine))
 
-    def count_matches(self, pattern: str | Expr, *, literal: bool = False) -> Expr:
+    def count_matches(
+        self,
+        pattern: str | Expr,
+        *,
+        literal: bool = False,
+        engine: RegexEngine = "regex",
+    ) -> Expr:
         r"""
         Count all successive non-overlapping regex matches.
 
@@ -1657,6 +1689,8 @@ class ExprStringNameSpace:
             <https://docs.rs/regex/latest/regex/>`_.
         literal
             Treat `pattern` as a literal string, not as a regular expression.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Returns
         -------
@@ -1701,7 +1735,7 @@ class ExprStringNameSpace:
         └────────────┴──────────────┘
         """
         pattern = parse_into_expression(pattern, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_count_matches(pattern, literal))
+        return wrap_expr(self._pyexpr.str_count_matches(pattern, literal, engine))
 
     def split(self, by: IntoExpr, *, inclusive: bool = False) -> Expr:
         """
@@ -1898,6 +1932,7 @@ class ExprStringNameSpace:
         *,
         literal: bool = False,
         n: int = 1,
+        engine: RegexEngine = "regex",
     ) -> Expr:
         r"""
         Replace first matching regex/literal substring with a new string value.
@@ -1913,6 +1948,8 @@ class ExprStringNameSpace:
             Treat `pattern` as a literal string.
         n
             Number of matches to replace.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         See Also
         --------
@@ -2010,10 +2047,15 @@ class ExprStringNameSpace:
         """
         pattern = parse_into_expression(pattern, str_as_lit=True)
         value = parse_into_expression(value, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_replace_n(pattern, value, literal, n))
+        return wrap_expr(self._pyexpr.str_replace_n(pattern, value, literal, n, engine))
 
     def replace_all(
-        self, pattern: str | Expr, value: str | Expr, *, literal: bool = False
+        self,
+        pattern: str | Expr,
+        value: str | Expr,
+        *,
+        literal: bool = False,
+        engine: RegexEngine = "regex",
     ) -> Expr:
         r"""
         Replace all matching regex/literal substrings with a new string value.
@@ -2027,6 +2069,8 @@ class ExprStringNameSpace:
             String that will replace the matched substring.
         literal
             Treat `pattern` as a literal string.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         See Also
         --------
@@ -2130,7 +2174,7 @@ class ExprStringNameSpace:
         """
         pattern = parse_into_expression(pattern, str_as_lit=True)
         value = parse_into_expression(value, str_as_lit=True)
-        return wrap_expr(self._pyexpr.str_replace_all(pattern, value, literal))
+        return wrap_expr(self._pyexpr.str_replace_all(pattern, value, literal, engine))
 
     def reverse(self) -> Expr:
         """

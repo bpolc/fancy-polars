@@ -21,6 +21,7 @@ if TYPE_CHECKING:
         IntoExprColumn,
         PolarsDataType,
         PolarsTemporalType,
+        RegexEngine,
         TimeUnit,
         TransferEncoding,
         UnicodeForm,
@@ -382,7 +383,12 @@ class StringNameSpace:
         """
 
     def contains(
-        self, pattern: str | Expr, *, literal: bool = False, strict: bool = True
+        self,
+        pattern: str | Expr,
+        *,
+        literal: bool = False,
+        strict: bool = True,
+        engine: RegexEngine = "regex",
     ) -> Series:
         """
         Check if the string contains a substring that matches a pattern.
@@ -397,6 +403,8 @@ class StringNameSpace:
         strict
             Raise an error if the underlying pattern is not a valid regex,
             otherwise mask out with a null value.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -448,7 +456,12 @@ class StringNameSpace:
         """
 
     def find(
-        self, pattern: str | Expr, *, literal: bool = False, strict: bool = True
+        self,
+        pattern: str | Expr,
+        *,
+        literal: bool = False,
+        strict: bool = True,
+        engine: RegexEngine = "regex",
     ) -> Series:
         """
         Return the bytes offset of the first substring matching a pattern.
@@ -465,6 +478,8 @@ class StringNameSpace:
         strict
             Raise an error if the underlying pattern is not a valid regex,
             otherwise mask out with a null value.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -720,7 +735,12 @@ class StringNameSpace:
         ]
         """
 
-    def extract(self, pattern: IntoExprColumn, group_index: int = 1) -> Series:
+    def extract(
+        self,
+        pattern: IntoExprColumn,
+        group_index: int = 1,
+        engine: RegexEngine = "regex",
+    ) -> Series:
         r"""
         Extract the target capture group from provided patterns.
 
@@ -733,6 +753,8 @@ class StringNameSpace:
             Index of the targeted capture group.
             Group 0 means the whole pattern, the first group begins at index 1.
             Defaults to the first capture group.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Returns
         -------
@@ -784,7 +806,9 @@ class StringNameSpace:
         ]
         """
 
-    def extract_all(self, pattern: str | Series) -> Series:
+    def extract_all(
+        self, pattern: str | Series, engine: RegexEngine = "regex"
+    ) -> Series:
         r'''
         Extract all matches for the given regex pattern.
 
@@ -796,6 +820,8 @@ class StringNameSpace:
         pattern
             A valid regular expression pattern, compatible with the `regex crate
             <https://docs.rs/regex/latest/regex/>`_.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -854,7 +880,7 @@ class StringNameSpace:
 
         '''
 
-    def extract_groups(self, pattern: str) -> Series:
+    def extract_groups(self, pattern: str, engine: RegexEngine = "regex") -> Series:
         r"""
         Extract all capture groups for the given regex pattern.
 
@@ -863,6 +889,8 @@ class StringNameSpace:
         pattern
             A valid regular expression pattern containing at least one capture group,
             compatible with the `regex crate <https://docs.rs/regex/latest/regex/>`_.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Notes
         -----
@@ -910,7 +938,13 @@ class StringNameSpace:
         ]
         """
 
-    def count_matches(self, pattern: str | Series, *, literal: bool = False) -> Series:
+    def count_matches(
+        self,
+        pattern: str | Series,
+        *,
+        literal: bool = False,
+        engine: RegexEngine = "regex",
+    ) -> Series:
         r"""
         Count all successive non-overlapping regex matches.
 
@@ -922,6 +956,8 @@ class StringNameSpace:
             regular expressions.
         literal
             Treat `pattern` as a literal string, not as a regular expression.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         Returns
         -------
@@ -1091,7 +1127,13 @@ class StringNameSpace:
         """
 
     def replace(
-        self, pattern: str, value: str, *, literal: bool = False, n: int = 1
+        self,
+        pattern: str,
+        value: str,
+        *,
+        literal: bool = False,
+        n: int = 1,
+        engine: RegexEngine = "regex",
     ) -> Series:
         r"""
         Replace first matching regex/literal substring with a new string value.
@@ -1107,6 +1149,8 @@ class StringNameSpace:
             Treat `pattern` as a literal string.
         n
             Number of matches to replace.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         See Also
         --------
@@ -1199,7 +1243,14 @@ class StringNameSpace:
         ]
         """
 
-    def replace_all(self, pattern: str, value: str, *, literal: bool = False) -> Series:
+    def replace_all(
+        self,
+        pattern: str,
+        value: str,
+        *,
+        literal: bool = False,
+        engine: RegexEngine = "regex",
+    ) -> Series:
         r"""
         Replace all matching regex/literal substrings with a new string value.
 
@@ -1212,6 +1263,8 @@ class StringNameSpace:
             String that will replace the matched substring.
         literal
             Treat `pattern` as a literal string.
+        engine, optional
+            The regex engine to use, by default "regex".
 
         See Also
         --------
