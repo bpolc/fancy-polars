@@ -1,4 +1,5 @@
 use polars::prelude::*;
+use polars_utils::regex_cache::RegexEngine;
 use pyo3::prelude::*;
 
 use crate::PyExpr;
@@ -139,20 +140,33 @@ impl PyExpr {
     }
 
     #[cfg(feature = "regex")]
-    fn str_replace_n(&self, pat: Self, val: Self, literal: bool, n: i64) -> Self {
+    fn str_replace_n(
+        &self,
+        pat: Self,
+        val: Self,
+        literal: bool,
+        n: i64,
+        engine: Wrap<RegexEngine>,
+    ) -> Self {
         self.inner
             .clone()
             .str()
-            .replace_n(pat.inner, val.inner, literal, n, Default::default())
+            .replace_n(pat.inner, val.inner, literal, n, engine.0)
             .into()
     }
 
     #[cfg(feature = "regex")]
-    fn str_replace_all(&self, pat: Self, val: Self, literal: bool) -> Self {
+    fn str_replace_all(
+        &self,
+        pat: Self,
+        val: Self,
+        literal: bool,
+        engine: Wrap<RegexEngine>,
+    ) -> Self {
         self.inner
             .clone()
             .str()
-            .replace_all(pat.inner, val.inner, literal, Default::default())
+            .replace_all(pat.inner, val.inner, literal, engine.0)
             .into()
     }
 
@@ -176,30 +190,42 @@ impl PyExpr {
         self.inner.clone().str().zfill(length.inner).into()
     }
 
-    #[pyo3(signature = (pat, literal, strict))]
+    #[pyo3(signature = (pat, literal, strict, engine))]
     #[cfg(feature = "regex")]
-    fn str_contains(&self, pat: Self, literal: Option<bool>, strict: bool) -> Self {
+    fn str_contains(
+        &self,
+        pat: Self,
+        literal: Option<bool>,
+        strict: bool,
+        engine: Wrap<RegexEngine>,
+    ) -> Self {
         match literal {
             Some(true) => self.inner.clone().str().contains_literal(pat.inner).into(),
             _ => self
                 .inner
                 .clone()
                 .str()
-                .contains(pat.inner, strict, Default::default())
+                .contains(pat.inner, strict, engine.0)
                 .into(),
         }
     }
 
-    #[pyo3(signature = (pat, literal, strict))]
+    #[pyo3(signature = (pat, literal, strict, engine))]
     #[cfg(feature = "regex")]
-    fn str_find(&self, pat: Self, literal: Option<bool>, strict: bool) -> Self {
+    fn str_find(
+        &self,
+        pat: Self,
+        literal: Option<bool>,
+        strict: bool,
+        engine: Wrap<RegexEngine>,
+    ) -> Self {
         match literal {
             Some(true) => self.inner.clone().str().find_literal(pat.inner).into(),
             _ => self
                 .inner
                 .clone()
                 .str()
-                .find(pat.inner, strict, Default::default())
+                .find(pat.inner, strict, engine.0)
                 .into(),
         }
     }
@@ -259,38 +285,38 @@ impl PyExpr {
         self.inner.clone().str().json_path_match(pat.inner).into()
     }
 
-    fn str_extract(&self, pat: Self, group_index: usize) -> Self {
+    fn str_extract(&self, pat: Self, group_index: usize, engine: Wrap<RegexEngine>) -> Self {
         self.inner
             .clone()
             .str()
-            .extract(pat.inner, group_index, Default::default())
+            .extract(pat.inner, group_index, engine.0)
             .into()
     }
 
-    fn str_extract_all(&self, pat: Self) -> Self {
+    fn str_extract_all(&self, pat: Self, engine: Wrap<RegexEngine>) -> Self {
         self.inner
             .clone()
             .str()
-            .extract_all(pat.inner, Default::default())
+            .extract_all(pat.inner, engine.0)
             .into()
     }
 
     #[cfg(feature = "extract_groups")]
-    fn str_extract_groups(&self, pat: &str) -> PyResult<Self> {
+    fn str_extract_groups(&self, pat: &str, engine: Wrap<RegexEngine>) -> PyResult<Self> {
         Ok(self
             .inner
             .clone()
             .str()
-            .extract_groups(pat, Default::default())
+            .extract_groups(pat, engine.0)
             .map_err(PyPolarsErr::from)?
             .into())
     }
 
-    fn str_count_matches(&self, pat: Self, literal: bool) -> Self {
+    fn str_count_matches(&self, pat: Self, literal: bool, engine: Wrap<RegexEngine>) -> Self {
         self.inner
             .clone()
             .str()
-            .count_matches(pat.inner, literal, Default::default())
+            .count_matches(pat.inner, literal, engine.0)
             .into()
     }
 
