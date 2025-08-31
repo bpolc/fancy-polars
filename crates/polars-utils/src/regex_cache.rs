@@ -3,6 +3,8 @@ use std::cell::RefCell;
 use polars_error::PolarsResult;
 
 use crate::cache::LruCache;
+#[cfg(feature = "pcre2")]
+use crate::regex_adapter::Pcre2Regex;
 pub use crate::regex_adapter::RegexEngine;
 use crate::regex_adapter::{FancyRegex, Regex, RegexAdapter, RegexTrait};
 
@@ -15,6 +17,8 @@ use crate::regex_adapter::{FancyRegex, Regex, RegexAdapter, RegexTrait};
 pub struct RegexCache {
     regex_cache: LruCache<String, Regex>,
     fancy_cache: LruCache<String, FancyRegex>,
+    #[cfg(feature = "pcre2")]
+    pcre2_cache: LruCache<String, Pcre2Regex>,
 }
 
 impl RegexCache {
@@ -22,6 +26,8 @@ impl RegexCache {
         Self {
             regex_cache: LruCache::with_capacity(32),
             fancy_cache: LruCache::with_capacity(32),
+            #[cfg(feature = "pcre2")]
+            pcre2_cache: LruCache::with_capacity(32),
         }
     }
 
@@ -42,6 +48,13 @@ impl RegexCache {
                     .fancy_cache
                     .try_get_or_insert_with(re_str, <FancyRegex as RegexTrait>::new)?;
                 Ok(RegexAdapter::Fancy(re.clone()))
+            },
+            #[cfg(feature = "pcre2")]
+            RegexEngine::Pcre2 => {
+                let re = self
+                    .pcre2_cache
+                    .try_get_or_insert_with(re_str, <Pcre2Regex as RegexTrait>::new)?;
+                Ok(RegexAdapter::Pcre2(re.clone()))
             },
         }
     }

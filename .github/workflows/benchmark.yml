@@ -82,6 +82,10 @@ jobs:
           ln -sv \
             $(python -c "import importlib; print(importlib.util.find_spec('fancy_polars').submodule_search_locations[0] + '/fancy_polars.abi3.so')") \
             py-polars/fancy_polars/fancy_polars.abi3.so
+          # Also symlink the vendored shared libs (e.g. PCRE2)
+          ln -sfn \
+            $(python -c "import importlib, os; pkg = importlib.util.find_spec('fancy_polars').submodule_search_locations[0]; print(os.path.join(os.path.dirname(pkg), 'fancy_polars.libs'))") \
+            py-polars/fancy_polars.libs
 
       - name: Set wheel size
         run: |

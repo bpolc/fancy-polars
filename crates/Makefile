@@ -157,6 +157,7 @@ check-wasm:  ## Check wasm build without supported features
 		--exclude-features json               \
 		--exclude-features nightly            \
 		--exclude-features parquet            \
+		--exclude-features pcre2              \
 		--exclude-features performant         \
 		--exclude-features streaming          \
 		--exclude-features http               \
