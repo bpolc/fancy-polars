@@ -4,7 +4,7 @@ pub use fancy_regex::Regex as FancyRegex;
 use fancy_regex::RegexBuilder as FancyRegexBuilder;
 use polars_error::{PolarsError, PolarsResult};
 pub use regex::Regex;
-use regex::{CaptureLocations as RegexCaptureLocations, NoExpand as RegexNoExpand, RegexBuilder};
+use regex::{CaptureLocations as RegexCaptureLocations, RegexBuilder};
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use strum_macros::{AsRefStr, EnumString};
@@ -33,20 +33,7 @@ pub trait RegexTrait: Sized + Clone {
 
     fn replace_all<'t>(&self, text: &'t str, replacement: &str) -> Cow<'t, str>;
 
-    fn replace_all_literal<'t>(&self, text: &'t str, replacement: &str) -> Cow<'t, str> {
-        replace_all_literal_from_spans(
-            text,
-            replacement,
-            self.find_iter(text).map(|m| (m.start(), m.end())),
-        )
-    }
-
     fn captures<'t>(&self, text: &'t str) -> Option<CaptureGroups<'t>>;
-
-    fn captures_iter<'t>(
-        &'t self,
-        text: &'t str,
-    ) -> Box<dyn Iterator<Item = CaptureGroups<'t>> + 't>;
 
     /// Get an iterator over the capture group names
     fn capture_names(&self) -> CaptureNamesIterator<'_>;
@@ -54,9 +41,7 @@ pub trait RegexTrait: Sized + Clone {
     /// Returns the number of capture groups in the pattern.
     fn captures_len(&self) -> usize;
 
-    fn count_matches(&self, text: &str) -> usize {
-        self.find_iter(text).count()
-    }
+    fn count_matches(&self, text: &str) -> usize;
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -134,31 +119,6 @@ impl<'a> Iterator for CaptureNamesIterator<'a> {
     }
 }
 
-/// Helper to build a literal replacement result from an iterator of match spans.
-/// When a zero-width match occurs at the end of the string, advance beyond the end to signal termination.
-fn replace_all_literal_from_spans<'t, I>(text: &'t str, replacement: &str, spans: I) -> Cow<'t, str>
-where
-    I: IntoIterator<Item = (usize, usize)>,
-{
-    let mut result = String::with_capacity(text.len() + replacement.len() * 2);
-    let mut last_end = 0;
-    let mut has_matches = false;
-
-    for (start, end) in spans {
-        has_matches = true;
-        result.push_str(&text[last_end..start]);
-        result.push_str(replacement);
-        last_end = end;
-    }
-
-    if has_matches {
-        result.push_str(&text[last_end..]);
-        Cow::Owned(result)
-    } else {
-        Cow::Borrowed(text)
-    }
-}
-
 fn advance_position(text: &str, match_start: usize, match_end: usize) -> usize {
     if match_end == match_start {
         // Zero-width match, advance by one character
@@ -220,23 +180,9 @@ impl RegexTrait for Regex {
         self.replace_all(text, replacement)
     }
 
-    fn replace_all_literal<'t>(&self, text: &'t str, replacement: &str) -> Cow<'t, str> {
-        self.replace_all(text, RegexNoExpand(replacement))
-    }
-
     fn captures<'t>(&self, text: &'t str) -> Option<CaptureGroups<'t>> {
         self.captures(text)
             .map(|caps| build_capture_groups(caps.len(), |i| caps.get(i).map(|m| m.as_str())))
-    }
-
-    fn captures_iter<'t>(
-        &'t self,
-        text: &'t str,
-    ) -> Box<dyn Iterator<Item = CaptureGroups<'t>> + 't> {
-        Box::new(
-            self.captures_iter(text)
-                .map(|caps| build_capture_groups(caps.len(), |i| caps.get(i).map(|m| m.as_str()))),
-        )
     }
 
     fn capture_names(&self) -> CaptureNamesIterator<'_> {
@@ -414,16 +360,6 @@ impl RegexTrait for FancyRegex {
         }
     }
 
-    fn captures_iter<'t>(
-        &'t self,
-        text: &'t str,
-    ) -> Box<dyn Iterator<Item = CaptureGroups<'t>> + 't> {
-        Box::new(
-            FancyCapturesIterator::new(self, text)
-                .map(|caps| build_capture_groups(caps.len(), |i| caps.get(i).map(|m| m.as_str()))),
-        )
-    }
-
     fn capture_names(&self) -> CaptureNamesIterator<'_> {
         CaptureNamesIterator::Fancy(fancy_regex::Regex::capture_names(self))
     }
@@ -486,23 +422,8 @@ impl RegexAdapter {
         dispatch!(self, replace_all, text, replacement)
     }
 
-    pub fn replace_all_literal<'t>(
-        &self,
-        text: &'t str,
-        replacement: &str,
-    ) -> std::borrow::Cow<'t, str> {
-        dispatch!(self, replace_all_literal, text, replacement)
-    }
-
     pub fn captures<'t>(&self, text: &'t str) -> Option<CaptureGroups<'t>> {
         dispatch!(self, captures, text)
-    }
-
-    pub fn captures_iter<'t>(
-        &'t self,
-        text: &'t str,
-    ) -> Box<dyn Iterator<Item = CaptureGroups<'t>> + 't> {
-        dispatch!(self, captures_iter, text)
     }
 
     pub fn capture_names(&self) -> CaptureNamesIterator<'_> {
