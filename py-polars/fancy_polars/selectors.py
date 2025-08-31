@@ -112,7 +112,7 @@ def is_selector(obj: Any) -> bool:
     True
     """
     # note: don't want to expose the "_selector_proxy_" object
-    return isinstance(obj, _selector_proxy_) and hasattr(obj, "_attrs")
+    return hasattr(obj, "_pyexpr") and hasattr(obj, "_attrs")
 
 
 # TODO: Don't use this as it collects a schema (can be very expensive for LazyFrame).
