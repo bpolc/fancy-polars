@@ -1,10 +1,10 @@
 use std::cell::RefCell;
 
-use polars_error::{PolarsError, PolarsResult};
+use polars_error::PolarsResult;
 
 use crate::cache::LruCache;
 pub use crate::regex_adapter::RegexEngine;
-use crate::regex_adapter::{FancyRegex, Regex, RegexAdapter};
+use crate::regex_adapter::{FancyRegex, Regex, RegexAdapter, RegexTrait};
 
 // Regex compilation is really heavy, and the resulting regexes can be large as
 // well, so we should have a good caching scheme.
@@ -25,35 +25,24 @@ impl RegexCache {
         }
     }
 
-    pub fn compile_regex(&mut self, re: &str) -> Result<&Regex, regex::Error> {
-        let r = self.regex_cache.try_get_or_insert_with(re, |re| {
-            #[allow(clippy::disallowed_methods)]
-            Regex::new(re)
-        });
-        Ok(&*r?)
-    }
-
-    pub fn compile_fancy(&mut self, re: &str) -> Result<&FancyRegex, Box<fancy_regex::Error>> {
-        let r = self
-            .fancy_cache
-            .try_get_or_insert_with(re, |re| FancyRegex::new(re).map_err(Box::new));
-        Ok(&*r?)
-    }
-
     pub fn compile_adapter(
         &mut self,
         re_str: &str,
         engine: RegexEngine,
     ) -> PolarsResult<RegexAdapter> {
         match engine {
-            RegexEngine::Regex => self
-                .compile_regex(re_str)
-                .map(|re| RegexAdapter::Regex(re.clone()))
-                .map_err(|e| PolarsError::ComputeError(e.to_string().into())),
-            RegexEngine::Fancy => self
-                .compile_fancy(re_str)
-                .map(|re| RegexAdapter::Fancy(re.clone()))
-                .map_err(|e| PolarsError::ComputeError(e.to_string().into())),
+            RegexEngine::Regex => {
+                let re = self
+                    .regex_cache
+                    .try_get_or_insert_with(re_str, <Regex as RegexTrait>::new)?;
+                Ok(RegexAdapter::Regex(re.clone()))
+            },
+            RegexEngine::Fancy => {
+                let re = self
+                    .fancy_cache
+                    .try_get_or_insert_with(re_str, <FancyRegex as RegexTrait>::new)?;
+                Ok(RegexAdapter::Fancy(re.clone()))
+            },
         }
     }
 }
