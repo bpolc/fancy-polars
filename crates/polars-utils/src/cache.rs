@@ -81,6 +81,11 @@ impl<K, V, S> LruCache<K, V, S> {
             build_hasher,
         }
     }
+
+    #[inline]
+    pub fn cap(&self) -> usize {
+        self.max_capacity
+    }
 }
 
 impl<K: Hash + Eq, V, S: BuildHasher> LruCache<K, V, S> {
@@ -173,6 +178,29 @@ impl<K: Hash + Eq, V, S: BuildHasher> LruCache<K, V, S> {
         }
     }
 
+    pub fn remove<Q>(&mut self, key: &Q) -> Option<V>
+    where
+        K: Borrow<Q>,
+        Q: Hash + Eq + ?Sized,
+    {
+        let hash = self.build_hasher.hash_one(key);
+        match self
+            .table
+            .find_entry(hash, |lru_key| self.elements[*lru_key].key.borrow() == key)
+        {
+            Ok(entry) => {
+                let lru_key = *entry.get();
+                // Remove from hash table first to end the mutable borrow to the table entry.
+                entry.remove();
+                // Now we can safely unlink from the LRU list and remove from the elements.
+                self.lru_list_unlink(lru_key);
+                let removed = self.elements.remove(lru_key).unwrap();
+                Some(removed.value)
+            },
+            Err(_) => None,
+        }
+    }
+
     pub fn get_or_insert_with<Q, F: FnOnce(&Q) -> V>(&mut self, key: &Q, f: F) -> &mut V
     where
         K: Borrow<Q>,
@@ -221,6 +249,18 @@ impl<K: Hash + Eq, V, S: BuildHasher> LruCache<K, V, S> {
                 }
                 Ok(&mut self.elements[lru_key].value)
             },
+        }
+    }
+
+    pub fn resize(&mut self, new_capacity: usize) {
+        assert!(new_capacity > 0);
+        if new_capacity == self.max_capacity {
+            return;
+        }
+        self.max_capacity = new_capacity;
+        // When the cache shrinks, evict the least-recently-used entries that don't fit.
+        while self.elements.len() > self.max_capacity {
+            self.pop_lru();
         }
     }
 }
