@@ -846,6 +846,53 @@ def test_set_fmt_str_lengths_invalid_length() -> None:
             cfg.set_fmt_str_lengths(-2)
 
 
+def test_set_default_regex_engine_invalid_engine() -> None:
+    with (
+        pl.Config() as cfg,
+        pytest.raises(ValueError, match="Invalid regex engine: 'bad_engine_name'"),
+    ):
+        cfg.set_default_regex_engine("bad_engine_name")  # type: ignore[arg-type]
+
+
+def test_set_regex_cache_ttl_invalid_ttl() -> None:
+    with (
+        pl.Config() as cfg,
+        pytest.raises(ValueError, match="regex cache TTL must be > 0 ms"),
+    ):
+        cfg.set_regex_cache_ttl(0)
+
+
+def test_set_regex_cache_capacity_invalid_capacity() -> None:
+    with (
+        pl.Config() as cfg,
+        pytest.raises(ValueError, match="regex cache capacity must be > 0"),
+    ):
+        cfg.set_regex_cache_capacity(0)
+
+
+def test_set_local_regex_cache_capacity_invalid_capacity() -> None:
+    with (
+        pl.Config() as cfg,
+        pytest.raises(ValueError, match="local regex cache capacity must be > 0"),
+    ):
+        cfg.set_local_regex_cache_capacity(0)
+
+
+def test_regex_config() -> None:
+    with pl.Config() as cfg:
+        cfg.set_default_regex_engine("pcre2")
+        assert plr.get_default_regex_engine() == "pcre2"
+
+        cfg.set_regex_cache_ttl(1000)
+        assert plr.get_regex_cache_ttl() == 1000
+
+        cfg.set_regex_cache_capacity(100)
+        assert plr.get_regex_cache_capacity() == 100
+
+        cfg.set_local_regex_cache_capacity(10)
+        assert plr.get_local_regex_cache_capacity() == 10
+
+
 def test_truncated_rows_cols_values_ascii() -> None:
     df = pl.DataFrame({f"c{n}": list(range(-n, 100 - n)) for n in range(10)})
 
