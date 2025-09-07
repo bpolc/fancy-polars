@@ -1,4 +1,7 @@
 use std::cell::RefCell;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex, Weak};
+use std::time::{Duration, Instant};
 
 use polars_error::PolarsResult;
 
@@ -8,55 +11,97 @@ use crate::regex_adapter::Pcre2Regex;
 pub use crate::regex_adapter::RegexEngine;
 use crate::regex_adapter::{FancyRegex, Regex, RegexAdapter, RegexTrait};
 
-// Regex compilation is really heavy, and the resulting regexes can be large as
-// well, so we should have a good caching scheme.
-//
-// TODO: add larger global cache which has time-based flush.
+#[derive(Hash, Eq, PartialEq, Clone)]
+struct RegexKey {
+    engine: RegexEngine,
+    pattern: String,
+}
 
-/// A multi-engine cache for runtime-compiled regular expressions
+impl RegexKey {
+    #[inline]
+    fn new(pattern: &str, engine: RegexEngine) -> Self {
+        Self {
+            engine,
+            pattern: pattern.to_owned(),
+        }
+    }
+}
+
+struct GlobalRegexEntry {
+    compiled: Arc<RegexAdapter>,
+    created_at: Instant,
+}
+
+/// Thread-local cache storing weak references to globally cached regexes.
+/// This avoids duplicating the heavy compiled structures in each thread.
 pub struct RegexCache {
-    regex_cache: LruCache<String, Regex>,
-    fancy_cache: LruCache<String, FancyRegex>,
-    #[cfg(feature = "pcre2")]
-    pcre2_cache: LruCache<String, Pcre2Regex>,
+    cache: LruCache<RegexKey, Weak<RegexAdapter>>,
+    capacity: usize,
 }
 
 impl RegexCache {
     fn new() -> Self {
+        let capacity = current_local_capacity();
         Self {
-            regex_cache: LruCache::with_capacity(32),
-            fancy_cache: LruCache::with_capacity(32),
-            #[cfg(feature = "pcre2")]
-            pcre2_cache: LruCache::with_capacity(32),
+            cache: LruCache::with_capacity(capacity),
+            capacity,
         }
     }
 
-    pub fn compile_adapter(
-        &mut self,
-        re_str: &str,
-        engine: RegexEngine,
-    ) -> PolarsResult<RegexAdapter> {
-        match engine {
+    fn ensure_local_capacity_uptodate(&mut self) {
+        let new_capacity = current_local_capacity();
+        if new_capacity == self.capacity {
+            return;
+        }
+        self.cache.resize(new_capacity);
+        self.capacity = new_capacity;
+    }
+
+    #[inline]
+    pub fn compile(&mut self, re_str: &str, engine: RegexEngine) -> PolarsResult<RegexAdapter> {
+        let key = RegexKey::new(re_str, engine);
+
+        // Local weak-ref cache
+        if let Some(shared) = self.cache.get(&key).and_then(|weak| weak.upgrade()) {
+            return Ok(shared.as_ref().clone());
+        }
+
+        // Global LRU with TTL
+        if let Some(shared) = try_get_from_global(&key) {
+            self.ensure_local_capacity_uptodate();
+            self.cache.insert(key.clone(), Arc::downgrade(&shared));
+            return Ok(shared.as_ref().clone());
+        }
+
+        // Compile fresh (outside global lock), then publish to global and local
+        let compiled = match engine {
             RegexEngine::Regex => {
-                let re = self
-                    .regex_cache
-                    .try_get_or_insert_with(re_str, <Regex as RegexTrait>::new)?;
-                Ok(RegexAdapter::Regex(re.clone()))
+                let re = <Regex as RegexTrait>::new(re_str)?;
+                RegexAdapter::Regex(re)
             },
             RegexEngine::Fancy => {
-                let re = self
-                    .fancy_cache
-                    .try_get_or_insert_with(re_str, <FancyRegex as RegexTrait>::new)?;
-                Ok(RegexAdapter::Fancy(re.clone()))
+                let re = <FancyRegex as RegexTrait>::new(re_str)?;
+                RegexAdapter::Fancy(re)
             },
             #[cfg(feature = "pcre2")]
             RegexEngine::Pcre2 => {
-                let re = self
-                    .pcre2_cache
-                    .try_get_or_insert_with(re_str, <Pcre2Regex as RegexTrait>::new)?;
-                Ok(RegexAdapter::Pcre2(re.clone()))
+                let re = <Pcre2Regex as RegexTrait>::new(re_str)?;
+                RegexAdapter::Pcre2(re)
             },
+        };
+
+        // Another thread may have compiled concurrently; try global again to avoid duplicates
+        if let Some(shared) = try_get_from_global(&key) {
+            self.ensure_local_capacity_uptodate();
+            self.cache.insert(key.clone(), Arc::downgrade(&shared));
+            return Ok(shared.as_ref().clone());
         }
+
+        let shared = Arc::new(compiled);
+        insert_into_global(key.clone(), shared.clone());
+        self.ensure_local_capacity_uptodate();
+        self.cache.insert(key, Arc::downgrade(&shared));
+        Ok(shared.as_ref().clone())
     }
 }
 
@@ -64,12 +109,66 @@ thread_local! {
     static LOCAL_REGEX_CACHE: RefCell<RegexCache> = RefCell::new(RegexCache::new());
 }
 
-pub fn compile_regex(re: &str, engine: RegexEngine) -> PolarsResult<RegexAdapter> {
-    LOCAL_REGEX_CACHE.with_borrow_mut(|cache| cache.compile_adapter(re, engine))
+const DEFAULT_TTL_MS: usize = 10 * 60 * 1000;
+const DEFAULT_GLOBAL_CAPACITY: usize = 256;
+const DEFAULT_LOCAL_CAPACITY: usize = 64;
+
+static TTL_MS: AtomicUsize = AtomicUsize::new(DEFAULT_TTL_MS);
+static GLOBAL_CAPACITY: AtomicUsize = AtomicUsize::new(DEFAULT_GLOBAL_CAPACITY);
+static LOCAL_CAPACITY: AtomicUsize = AtomicUsize::new(DEFAULT_LOCAL_CAPACITY);
+
+static GLOBAL_REGEX_CACHE: std::sync::LazyLock<Mutex<LruCache<RegexKey, GlobalRegexEntry>>> =
+    std::sync::LazyLock::new(|| Mutex::new(LruCache::with_capacity(current_global_capacity())));
+
+#[inline]
+fn current_ttl() -> Duration {
+    Duration::from_millis(TTL_MS.load(Ordering::Relaxed) as u64)
 }
 
-pub fn with_regex_cache<R, F: FnOnce(&mut RegexCache) -> R>(f: F) -> R {
-    LOCAL_REGEX_CACHE.with_borrow_mut(f)
+#[inline]
+fn current_global_capacity() -> usize {
+    GLOBAL_CAPACITY.load(Ordering::Relaxed).max(1)
+}
+
+#[inline]
+fn current_local_capacity() -> usize {
+    LOCAL_CAPACITY.load(Ordering::Relaxed).max(1)
+}
+
+#[inline]
+fn now_instant() -> Instant {
+    Instant::now()
+}
+
+#[inline]
+fn is_expired(created_at: Instant) -> bool {
+    created_at.elapsed() >= current_ttl()
+}
+
+fn try_get_from_global(key: &RegexKey) -> Option<Arc<RegexAdapter>> {
+    let mut guard = GLOBAL_REGEX_CACHE.lock().unwrap();
+    if let Some(entry) = guard.get(key) {
+        if is_expired(entry.created_at) {
+            // Evict expired entries proactively to keep the cache tidy.
+            guard.remove(key);
+            return None;
+        }
+        return Some(Arc::clone(&entry.compiled));
+    }
+    None
+}
+
+fn insert_into_global(key: RegexKey, value: Arc<RegexAdapter>) {
+    let mut guard = GLOBAL_REGEX_CACHE.lock().unwrap();
+    let entry = GlobalRegexEntry {
+        compiled: value,
+        created_at: now_instant(),
+    };
+    guard.insert(key, entry);
+}
+
+pub fn compile_regex(re: &str, engine: RegexEngine) -> PolarsResult<RegexAdapter> {
+    LOCAL_REGEX_CACHE.with(|cache| cache.borrow_mut().compile(re, engine))
 }
 
 #[macro_export]

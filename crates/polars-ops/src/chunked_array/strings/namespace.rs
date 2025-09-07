@@ -7,7 +7,7 @@ use base64::engine::general_purpose;
 #[cfg(feature = "string_to_integer")]
 use num_traits::Num;
 use polars_core::prelude::arity::*;
-use polars_utils::regex_cache::{RegexEngine, compile_regex, with_regex_cache};
+use polars_utils::regex_cache::{RegexEngine, compile_regex};
 
 use super::*;
 #[cfg(feature = "binary_encoding")]
@@ -166,28 +166,24 @@ pub trait StringNameSpaceImpl: AsString {
                         src.contains(pat)
                     }))
                 } else if strict {
-                    with_regex_cache(|reg_cache| {
-                        broadcast_try_binary_elementwise(ca, pat, |opt_src, opt_pat| {
-                            match (opt_src, opt_pat) {
-                                (Some(src), Some(pat)) => {
-                                    let reg = reg_cache.compile_adapter(pat, engine)?;
-                                    Ok(Some(reg.is_match(src)))
-                                },
-                                _ => Ok(None),
-                            }
-                        })
+                    broadcast_try_binary_elementwise(ca, pat, |opt_src, opt_pat| {
+                        match (opt_src, opt_pat) {
+                            (Some(src), Some(pat)) => {
+                                let reg = compile_regex(pat, engine)?;
+                                Ok(Some(reg.is_match(src)))
+                            },
+                            _ => Ok(None),
+                        }
                     })
                 } else {
-                    with_regex_cache(|reg_cache| {
-                        Ok(broadcast_binary_elementwise(
-                            ca,
-                            pat,
-                            infer_re_match(|src, pat| {
-                                let reg = reg_cache.compile_adapter(pat?, engine).ok()?;
-                                Some(reg.is_match(src?))
-                            }),
-                        ))
-                    })
+                    Ok(broadcast_binary_elementwise(
+                        ca,
+                        pat,
+                        infer_re_match(|src, pat| {
+                            let reg = compile_regex(pat?, engine).ok()?;
+                            Some(reg.is_match(src?))
+                        }),
+                    ))
                 }
             },
         }
@@ -224,16 +220,14 @@ pub trait StringNameSpaceImpl: AsString {
                 |src: Option<&str>, pat: Option<&str>| src?.find(pat?).map(|idx| idx as u32),
             ))
         } else {
-            with_regex_cache(|reg_cache| {
-                let matcher = |src: Option<&str>, pat: Option<&str>| -> PolarsResult<Option<u32>> {
-                    if let (Some(src), Some(pat)) = (src, pat) {
-                        let re = reg_cache.compile_adapter(pat, engine)?;
-                        return Ok(re.find(src).map(|m| m.start() as u32));
-                    }
-                    Ok(None)
-                };
-                broadcast_try_binary_elementwise(ca, pat, matcher)
-            })
+            let matcher = |src: Option<&str>, pat: Option<&str>| -> PolarsResult<Option<u32>> {
+                if let (Some(src), Some(pat)) = (src, pat) {
+                    let re = compile_regex(pat, engine)?;
+                    return Ok(re.find(src).map(|m| m.start() as u32));
+                }
+                Ok(None)
+            };
+            broadcast_try_binary_elementwise(ca, pat, matcher)
         }
     }
 
@@ -542,14 +536,12 @@ pub trait StringNameSpaceImpl: AsString {
 
         let mut builder =
             ListStringChunkedBuilder::new(ca.name().clone(), ca.len(), ca.get_values_size());
-        with_regex_cache(|re_cache| {
-            binary_elementwise_for_each(ca, pat, |opt_s, opt_pat| match (opt_s, opt_pat) {
-                (_, None) | (None, _) => builder.append_null(),
-                (Some(s), Some(pat)) => match re_cache.compile_adapter(pat, engine) {
-                    Ok(re) => builder.append_values_iter(re.find_iter(s).map(|m| m.as_str())),
-                    Err(_) => builder.append_null(),
-                },
-            });
+        binary_elementwise_for_each(ca, pat, |opt_s, opt_pat| match (opt_s, opt_pat) {
+            (_, None) | (None, _) => builder.append_null(),
+            (Some(s), Some(pat)) => match compile_regex(pat, engine) {
+                Ok(re) => builder.append_values_iter(re.find_iter(s).map(|m| m.as_str())),
+                Err(_) => builder.append_null(),
+            },
         });
         Ok(builder.finish())
     }
@@ -605,20 +597,17 @@ pub trait StringNameSpaceImpl: AsString {
                 Some(s?.matches(p?).count() as u32)
             })
         } else {
-            with_regex_cache(|re_cache| {
-                let op = move |opt_s: Option<&str>,
-                               opt_pat: Option<&str>|
-                      -> PolarsResult<Option<u32>> {
+            let op =
+                move |opt_s: Option<&str>, opt_pat: Option<&str>| -> PolarsResult<Option<u32>> {
                     match (opt_s, opt_pat) {
                         (Some(s), Some(pat)) => {
-                            let reg = re_cache.compile_adapter(pat, engine)?;
+                            let reg = compile_regex(pat, engine)?;
                             Ok(Some(reg.count_matches(s) as u32))
                         },
                         _ => Ok(None),
                     }
                 };
-                broadcast_try_binary_elementwise(ca, pat, op)
-            })?
+            broadcast_try_binary_elementwise(ca, pat, op)?
         };
 
         Ok(out.with_name(ca.name().clone()))
