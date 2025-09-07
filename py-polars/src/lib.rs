@@ -286,6 +286,24 @@ fn fancy_polars(py: Python, m: &Bound<PyModule>) -> PyResult<()> {
     m.add_wrapped(wrap_pyfunction!(functions::set_trim_decimal_zeros))
         .unwrap();
 
+    // Regex configuration
+    m.add_wrapped(wrap_pyfunction!(functions::get_default_regex_engine))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::set_default_regex_engine))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::get_regex_cache_ttl))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::set_regex_cache_ttl))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::get_regex_cache_capacity))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::set_regex_cache_capacity))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::get_local_regex_cache_capacity))
+        .unwrap();
+    m.add_wrapped(wrap_pyfunction!(functions::set_local_regex_cache_capacity))
+        .unwrap();
+
     // Functions - misc
     m.add_wrapped(wrap_pyfunction!(functions::dtype_str_repr))
         .unwrap();

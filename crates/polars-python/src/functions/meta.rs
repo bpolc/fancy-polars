@@ -95,3 +95,67 @@ pub fn get_trim_decimal_zeros() -> PyResult<Option<bool>> {
     use polars_core::fmt::get_trim_decimal_zeros;
     Ok(Some(get_trim_decimal_zeros()))
 }
+
+#[pyfunction]
+pub fn set_default_regex_engine(engine: Option<&str>) -> PyResult<()> {
+    use std::str::FromStr;
+
+    use polars_utils::regex_adapter::{RegexEngine, set_default_regex_engine};
+
+    let regex_engine = match engine {
+        Some(s) => RegexEngine::from_str(s)
+            .map_err(|_| PyValueError::new_err(format!("Regex engine '{s}' not supported.")))?,
+        None => RegexEngine::default(),
+    };
+    set_default_regex_engine(regex_engine);
+    Ok(())
+}
+
+#[pyfunction]
+pub fn get_default_regex_engine() -> PyResult<String> {
+    use polars_utils::regex_adapter::get_default_regex_engine;
+    let regex_engine = get_default_regex_engine();
+    Ok(regex_engine.as_ref().to_lowercase())
+}
+
+#[pyfunction]
+#[pyo3(signature = (ttl_ms=None))]
+pub fn set_regex_cache_ttl(ttl_ms: Option<usize>) -> PyResult<()> {
+    use polars_utils::regex_cache::set_regex_cache_ttl_ms;
+    set_regex_cache_ttl_ms(ttl_ms);
+    Ok(())
+}
+
+#[pyfunction]
+pub fn get_regex_cache_ttl() -> PyResult<usize> {
+    use polars_utils::regex_cache::get_regex_cache_ttl_ms;
+    Ok(get_regex_cache_ttl_ms())
+}
+
+#[pyfunction]
+#[pyo3(signature = (capacity=None))]
+pub fn set_regex_cache_capacity(capacity: Option<usize>) -> PyResult<()> {
+    use polars_utils::regex_cache::set_global_regex_cache_capacity;
+    set_global_regex_cache_capacity(capacity);
+    Ok(())
+}
+
+#[pyfunction]
+pub fn get_regex_cache_capacity() -> PyResult<usize> {
+    use polars_utils::regex_cache::get_global_regex_cache_capacity;
+    Ok(get_global_regex_cache_capacity())
+}
+
+#[pyfunction]
+#[pyo3(signature = (capacity=None))]
+pub fn set_local_regex_cache_capacity(capacity: Option<usize>) -> PyResult<()> {
+    use polars_utils::regex_cache::set_local_regex_cache_capacity;
+    set_local_regex_cache_capacity(capacity);
+    Ok(())
+}
+
+#[pyfunction]
+pub fn get_local_regex_cache_capacity() -> PyResult<usize> {
+    use polars_utils::regex_cache::get_local_regex_cache_capacity;
+    Ok(get_local_regex_cache_capacity())
+}

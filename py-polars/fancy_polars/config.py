@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 from typing import TYPE_CHECKING, Literal, TypedDict, get_args
 
-from fancy_polars._typing import EngineType
+from fancy_polars._typing import EngineType, RegexEngine
 from fancy_polars._utils.various import normalize_filepath
 from fancy_polars.dependencies import json
 from fancy_polars.lazyframe.engine_config import GPUEngine
@@ -88,6 +88,10 @@ with contextlib.suppress(ImportError, NameError):
         "set_thousands_separator": plr.get_thousands_separator,
         "set_decimal_separator": plr.get_decimal_separator,
         "set_trim_decimal_zeros": plr.get_trim_decimal_zeros,
+        "set_default_regex_engine": plr.get_default_regex_engine,
+        "set_regex_cache_ttl": plr.get_regex_cache_ttl,
+        "set_regex_cache_capacity": plr.get_regex_cache_capacity,
+        "set_local_regex_cache_capacity": plr.get_local_regex_cache_capacity,
     }
 
 
@@ -118,6 +122,10 @@ class ConfigParameters(TypedDict, total=False):
     trim_decimal_zeros: bool | None
     verbose: bool | None
     expr_depth_warning: int
+    default_regex_engine: RegexEngine | None
+    regex_cache_ttl: int | None
+    regex_cache_capacity: int | None
+    local_regex_cache_capacity: int | None
 
     set_ascii_tables: bool | None
     set_auto_structify: bool | None
@@ -144,6 +152,10 @@ class ConfigParameters(TypedDict, total=False):
     set_verbose: bool | None
     set_expr_depth_warning: int
     set_engine_affinity: EngineType | None
+    set_default_regex_engine: RegexEngine | None
+    set_regex_cache_ttl: int | None
+    set_regex_cache_capacity: int | None
+    set_local_regex_cache_capacity: int | None
 
 
 class Config(contextlib.ContextDecorator):
@@ -1511,4 +1523,72 @@ class Config(contextlib.ContextDecorator):
             os.environ.pop("POLARS_ENGINE_AFFINITY", None)
         else:
             os.environ["POLARS_ENGINE_AFFINITY"] = engine
+        return cls
+
+    @classmethod
+    def set_default_regex_engine(cls, engine: RegexEngine | None) -> type[Config]:
+        """
+        Set the default engine for regex-powered `str` methods (default is "regex").
+
+        Parameters
+        ----------
+        engine : {'regex', 'fancy', 'pcre2'}
+            Default: "regex"
+
+        """
+        if engine is not None and engine not in get_args(RegexEngine):
+            msg = f"Invalid regex engine: {engine!r}. Valid engines are: {get_args(RegexEngine)}"
+            raise ValueError(msg)
+        plr.set_default_regex_engine(engine)
+        return cls
+
+    @classmethod
+    def set_regex_cache_ttl(cls, ttl_ms: int | None) -> type[Config]:
+        """
+        Set the time-to-live (ms) for regex cache entries.
+
+        Parameters
+        ----------
+        ttl_ms : int
+            Default: 10 minutes
+
+        """
+        if ttl_ms is not None and ttl_ms <= 0:
+            msg = "regex cache TTL must be > 0 ms"
+            raise ValueError(msg)
+        plr.set_regex_cache_ttl(ttl_ms)
+        return cls
+
+    @classmethod
+    def set_regex_cache_capacity(cls, capacity: int | None) -> type[Config]:
+        """
+        Set the max number of compiled regexes stored in the global cache.
+
+        Parameters
+        ----------
+        capacity : int
+            Default: 256
+
+        """
+        if capacity is not None and capacity <= 0:
+            msg = "regex cache capacity must be > 0"
+            raise ValueError(msg)
+        plr.set_regex_cache_capacity(capacity)
+        return cls
+
+    @classmethod
+    def set_local_regex_cache_capacity(cls, capacity: int | None) -> type[Config]:
+        """
+        Set the max number of compiled regex references in the thread-local cache.
+
+        Parameters
+        ----------
+        capacity : int
+            Default: 64
+
+        """
+        if capacity is not None and capacity <= 0:
+            msg = "local regex cache capacity must be > 0"
+            raise ValueError(msg)
+        plr.set_local_regex_cache_capacity(capacity)
         return cls

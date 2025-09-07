@@ -167,6 +167,51 @@ fn insert_into_global(key: RegexKey, value: Arc<RegexAdapter>) {
     guard.insert(key, entry);
 }
 
+pub fn get_regex_cache_ttl_ms() -> usize {
+    TTL_MS.load(Ordering::Relaxed)
+}
+
+pub fn set_regex_cache_ttl_ms(ttl_ms: Option<usize>) {
+    let new_ttl_ms = ttl_ms.unwrap_or(DEFAULT_TTL_MS).max(1);
+    let current = TTL_MS.load(Ordering::Relaxed);
+    if current == new_ttl_ms {
+        return;
+    }
+    TTL_MS.store(new_ttl_ms, Ordering::Relaxed);
+}
+
+pub fn get_global_regex_cache_capacity() -> usize {
+    GLOBAL_CAPACITY.load(Ordering::Relaxed)
+}
+
+pub fn set_global_regex_cache_capacity(capacity: Option<usize>) {
+    let new_capacity = capacity.unwrap_or(DEFAULT_GLOBAL_CAPACITY).max(1);
+    let current = GLOBAL_CAPACITY.load(Ordering::Relaxed);
+    if current == new_capacity {
+        return;
+    }
+    GLOBAL_CAPACITY.store(new_capacity, Ordering::Relaxed);
+
+    // Resize the global cache with the new capacity.
+    let mut guard = GLOBAL_REGEX_CACHE.lock().unwrap();
+    guard.resize(new_capacity);
+}
+
+pub fn get_local_regex_cache_capacity() -> usize {
+    LOCAL_CAPACITY.load(Ordering::Relaxed)
+}
+
+pub fn set_local_regex_cache_capacity(capacity: Option<usize>) {
+    let new_capacity = capacity.unwrap_or(DEFAULT_LOCAL_CAPACITY).max(1);
+    let current = LOCAL_CAPACITY.load(Ordering::Relaxed);
+    if current == new_capacity {
+        return;
+    }
+    LOCAL_CAPACITY.store(new_capacity, Ordering::Relaxed);
+    // Reconfigure the current thread's local cache immediately; others will update lazily.
+    LOCAL_REGEX_CACHE.with(|cache| cache.borrow_mut().ensure_local_capacity_uptodate());
+}
+
 pub fn compile_regex(re: &str, engine: RegexEngine) -> PolarsResult<RegexAdapter> {
     LOCAL_REGEX_CACHE.with(|cache| cache.borrow_mut().compile(re, engine))
 }

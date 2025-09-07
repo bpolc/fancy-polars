@@ -388,7 +388,7 @@ class StringNameSpace:
         *,
         literal: bool = False,
         strict: bool = True,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Series:
         """
         Check if the string contains a substring that matches a pattern.
@@ -461,7 +461,7 @@ class StringNameSpace:
         *,
         literal: bool = False,
         strict: bool = True,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Series:
         """
         Return the bytes offset of the first substring matching a pattern.
@@ -739,7 +739,7 @@ class StringNameSpace:
         self,
         pattern: IntoExprColumn,
         group_index: int = 1,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Series:
         r"""
         Extract the target capture group from provided patterns.
@@ -807,7 +807,7 @@ class StringNameSpace:
         """
 
     def extract_all(
-        self, pattern: str | Series, engine: RegexEngine = "regex"
+        self, pattern: str | Series, engine: RegexEngine | None = None
     ) -> Series:
         r'''
         Extract all matches for the given regex pattern.
@@ -880,7 +880,7 @@ class StringNameSpace:
 
         '''
 
-    def extract_groups(self, pattern: str, engine: RegexEngine = "regex") -> Series:
+    def extract_groups(self, pattern: str, engine: RegexEngine | None = None) -> Series:
         r"""
         Extract all capture groups for the given regex pattern.
 
@@ -943,7 +943,7 @@ class StringNameSpace:
         pattern: str | Series,
         *,
         literal: bool = False,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Series:
         r"""
         Count all successive non-overlapping regex matches.
@@ -1133,7 +1133,7 @@ class StringNameSpace:
         *,
         literal: bool = False,
         n: int = 1,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Series:
         r"""
         Replace first matching regex/literal substring with a new string value.
@@ -1249,7 +1249,7 @@ class StringNameSpace:
         value: str,
         *,
         literal: bool = False,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Series:
         r"""
         Replace all matching regex/literal substrings with a new string value.

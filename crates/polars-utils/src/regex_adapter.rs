@@ -1,4 +1,5 @@
 use std::borrow::Cow;
+use std::sync::{LazyLock, RwLock};
 
 pub use fancy_regex::Regex as FancyRegex;
 use fancy_regex::RegexBuilder as FancyRegexBuilder;
@@ -18,7 +19,7 @@ use crate::aliases::PlHashMap;
 
 #[derive(AsRefStr, Clone, Copy, Debug, Default, EnumString, Eq, Hash, PartialEq)]
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[strum(serialize_all = "snake_case")]
+#[strum(ascii_case_insensitive, serialize_all = "snake_case")]
 pub enum RegexEngine {
     // `regex` crate
     #[default]
@@ -28,6 +29,17 @@ pub enum RegexEngine {
     // `pcre2` crate
     #[cfg(feature = "pcre2")]
     Pcre2,
+}
+
+static DEFAULT_REGEX_ENGINE: LazyLock<RwLock<RegexEngine>> =
+    LazyLock::new(|| RwLock::new(RegexEngine::default()));
+
+pub fn get_default_regex_engine() -> RegexEngine {
+    *DEFAULT_REGEX_ENGINE.read().unwrap()
+}
+
+pub fn set_default_regex_engine(engine: RegexEngine) {
+    *DEFAULT_REGEX_ENGINE.write().unwrap() = engine;
 }
 
 pub trait RegexTrait: Sized + Clone {

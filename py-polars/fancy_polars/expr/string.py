@@ -938,7 +938,7 @@ class ExprStringNameSpace:
         *,
         literal: bool = False,
         strict: bool = True,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Expr:
         """
         Check if the string contains a substring that matches a pattern.
@@ -1015,7 +1015,7 @@ class ExprStringNameSpace:
         *,
         literal: bool = False,
         strict: bool = True,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Expr:
         """
         Return the bytes offset of the first substring matching a pattern.
@@ -1406,7 +1406,7 @@ class ExprStringNameSpace:
         self,
         pattern: IntoExprColumn,
         group_index: int = 1,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Expr:
         r"""
         Extract the target capture group from provided patterns.
@@ -1492,7 +1492,9 @@ class ExprStringNameSpace:
         pattern = parse_into_expression(pattern, str_as_lit=True)
         return wrap_expr(self._pyexpr.str_extract(pattern, group_index, engine))
 
-    def extract_all(self, pattern: str | Expr, engine: RegexEngine = "regex") -> Expr:
+    def extract_all(
+        self, pattern: str | Expr, engine: RegexEngine | None = None
+    ) -> Expr:
         r'''
         Extract all matches for the given regex pattern.
 
@@ -1580,7 +1582,7 @@ class ExprStringNameSpace:
         pattern = parse_into_expression(pattern, str_as_lit=True)
         return wrap_expr(self._pyexpr.str_extract_all(pattern, engine))
 
-    def extract_groups(self, pattern: str, engine: RegexEngine = "regex") -> Expr:
+    def extract_groups(self, pattern: str, engine: RegexEngine | None = None) -> Expr:
         r"""
         Extract all capture groups for the given regex pattern.
 
@@ -1677,7 +1679,7 @@ class ExprStringNameSpace:
         pattern: str | Expr,
         *,
         literal: bool = False,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Expr:
         r"""
         Count all successive non-overlapping regex matches.
@@ -1932,7 +1934,7 @@ class ExprStringNameSpace:
         *,
         literal: bool = False,
         n: int = 1,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Expr:
         r"""
         Replace first matching regex/literal substring with a new string value.
@@ -2055,7 +2057,7 @@ class ExprStringNameSpace:
         value: str | Expr,
         *,
         literal: bool = False,
-        engine: RegexEngine = "regex",
+        engine: RegexEngine | None = None,
     ) -> Expr:
         r"""
         Replace all matching regex/literal substrings with a new string value.
